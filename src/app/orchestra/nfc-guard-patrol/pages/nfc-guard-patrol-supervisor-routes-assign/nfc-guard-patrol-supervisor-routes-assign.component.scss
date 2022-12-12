@@ -1,0 +1,18 @@
+@import "./../../../../../variables"; // import material Colors from _variable.scss
+// @import "../../../../../assets/bootswatch/yeti/variables.scss";
+// @import "../../../../../assets/bootswatch/yeti/bootstrap.css";
+// @import "../../../../../assets/bootswatch/yeti/bootstrap.min.css";
+@import "./../../nfc-guard-patrol-styles.scss"; //
+.table {
+    thead {
+        th {
+            padding: 8px 10px 8px 10px !important;
+        }
+    }
+    tbody {
+        th,
+        td {
+            padding: 6px 10px 6px 10px !important;
+        }
+    }
+}

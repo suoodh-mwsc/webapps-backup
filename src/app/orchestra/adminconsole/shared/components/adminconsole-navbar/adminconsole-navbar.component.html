@@ -1,0 +1,94 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.navbar-dark .dmenu').hover(function() {
+            $(this).find('.sm-menu').first().stop(true, true).slideDown(150);
+        }, function() {
+            $(this).find('.sm-menu').first().stop(true, true).slideUp(105)
+        });
+    });
+</script>
+
+<nav class="navbar navbar-expand-sm  navbar-dark fixed-top bg-dark">
+    <div class="row row-custom">
+        <div class="col-sm-03 col-custom-01">
+            <div class="sidebar-brand">
+                <a class="navbar-brand"> <i class="fa fa-shield" aria-hidden="true"></i> Admin Console </a>
+            </div>
+        </div>
+
+        <div class="col-sm-07 col-custom-02">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <!-- <ul class="navbar-nav mr-auto mt-2 mt-lg-0"> -->
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link">Home</a>
+                    </li>
+                    <!-- <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">ICT Apps</a>
+                        <div class="dropdown-menu sm-menu">
+                            <a class="dropdown-item">Test</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">HR Apps</a>
+                        <div class="dropdown-menu sm-menu">
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['dutyroster']}}]">DutyRoster</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">Security</a>
+                        <div class="dropdown-menu sm-menu">
+                            <a class="dropdown-item">Guard Tour System</a>
+                        </div>
+                    </li> -->
+                    <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">Admin</a>
+                        <div class="dropdown-menu sm-menu">
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['promotionReport']}}]">Promotion Report</a>
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['promotionReport']}}]">service 2</a>
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['promotionReport']}}]">service 3</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">E-Service</a>
+                        <div class="dropdown-menu sm-menu">
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['promotionReport']}}]">Promotion Report</a>
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['e-service-root-disable-user']}}]">Disable User</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">IT Admin</a>
+                        <div class="dropdown-menu sm-menu">
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['itadmin-active-directory']}}]">Disable User</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">Online Application</a>
+                        <div class="dropdown-menu sm-menu">
+                            <a class="dropdown-item" [routerLink]="['/root', {outlets: {pages: ['promotionReport']}}]">Report</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-02 col-custom-03">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-success">Welcome root</a>
+                    </li>
+                    <li class="nav-item dropdown dmenu">
+                        <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+                            <i class="material-icons">&#xe8b8;</i>
+                        </a>
+                        <div class="dropdown-menu sm-menu dropdown-menu-right">
+                            <a class="dropdown-item">Setting</a>
+                            <a class="dropdown-item">Advance</a>
+                            <a class="dropdown-item">Log Out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

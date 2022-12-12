@@ -1,0 +1,44 @@
+<p>
+    hr-appraisal-mass-assign-appraisal-types works!
+</p>
+
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Type</th>
+            <th scope="col">Employee Id</th>
+            <th scope="col">OrganizationsAppraisal_Id</th>
+            <th scope="col">OrganizationsAppraisal</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let appraisal of allAppraisals; let i = index">
+        <tr>
+            <th scope="row"></th>
+            <td>{{appraisal.EmployeeId}}</td>
+            <td>{{appraisal.OrganizationsAppraisal_Id}}</td>
+            <td>{{appraisal.OrganizationsAppraisal}}</td>
+            <td>
+                <div class="col-sm-3">
+                    <!-- <select [(ngModel)]="updateAppraisalList.OrganizationsAppraisal_Id[j]" #Id="appraisalType{{j}}" class="hideLabel form-control" id="updateOrganizationsAppraisal_Id" name="updateOrganizationsAppraisal_Id">
+                        <option [ngValue]="appraisalType.Id" *ngFor="let appraisalType of organizationsAppraisals; let j = index">
+                            {{appraisalType.Name}}</option>
+                    </select> -->
+                </div>
+            </td>
+            <td>
+                <!-- <input type="checkbox" name="sapuploadSelected" value="{{sapupload.Selected}}" *ngIf="!selectSAPuploadsAll" (change)="updateSelected(sapupload, $event)" /> -->
+            </td>
+            <td>
+                <!-- <i class="fa fa-bars fa-lg text-warning bg-secondary" (click)="postDefaultAppraisalTypesUpdate(appraisal)"> -->
+
+                    
+                <!-- <button type="button" class="btn btn-primary btn-sm" (click)="postDefaultAppraisalTypesUpdate(appraisal, updateAppraisalList.OrganizationsAppraisal_Id[j])">Update Appraisal Types</button> -->
+            </td>
+        </tr>
+    </tbody>
+</table>

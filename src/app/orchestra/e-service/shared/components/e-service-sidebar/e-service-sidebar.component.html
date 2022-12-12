@@ -1,0 +1,31 @@
+<div class="row" style="padding-bottom: 15px;">
+  <div class="col-sm-12">
+      <app-e-service-profile-card></app-e-service-profile-card>
+  </div>
+</div>
+
+<div class="row" style="">
+  <div class="col-sm-12">
+      <ul class="sidebar-nav">
+          <!-- <li class="sidebar-brand">
+          <a>Logo</a>
+        </li> -->
+          <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/e-service']">
+                <i class="fa fa-home"></i> Home</a>
+          </li>
+          <!-- <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/e-service', {outlets: {pages: ['dashboard']}}]">
+                  <i class="fa fa-file-text"></i> Pending</a>
+          </li> -->
+          <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/e-service', {outlets: {pages: ['search-user']}}]">
+                  <i class="fa fa-search"></i> Search </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/e-service', {outlets: {pages: ['account-notifications']}}]">
+                  <i class="fa fa-times-circle-o"></i> Account Notification</a>
+          </li>
+      </ul>
+  </div>
+</div>

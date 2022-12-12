@@ -1,0 +1,342 @@
+<!-- Security Group -->
+<section>
+    <div class="card card-main-4 sm-12" *ngIf="!selectedPatrollingGroup">
+        <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+            <div class="row">
+                <div class="col-sm-8">
+                    Overview (Supervisor)
+                </div>
+                <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                        <div class="row">
+                            <div class="col-sm-7" *ngIf="!viewAsTile">
+                                <!-- <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a> -->
+                            </div>
+                            <div class="col-sm-7" *ngIf="viewAsTile">
+                                <!-- <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a> -->
+                            </div>
+                            <div class="col-sm-4">
+                                <!-- <a class="add" title="Add" (click)="addGroupModal.show()">
+                                        <i class="material-icons">&#xe147;</i>
+                                    </a> -->
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row" *ngIf="!groups || groups.length < 1">
+                <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information !</strong> No Security Group data found. Please add new No Security Group...
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="groups && groups.length > 0">
+                <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information !</strong> Please Select Security Group to Continue ...
+                    </div>
+                </div>
+            </div>
+            <!-- Show Loader -->
+            <div class="row" *ngIf="showLoader">
+                <div class="col-sm-12">
+                    <app-nfc-guard-patrol-loader></app-nfc-guard-patrol-loader>
+                </div>
+            </div>
+            <!-- SecurityGroup TilesView -->
+            <div *ngIf="groups && viewAsTile">
+                <div class="row">
+                    <div class="col-sm-3" *ngFor="let group of groups">
+                        <div class="card" [ngClass]="{'card-tabContent-09-Active': !group.IsDeleted, 'card-tabContent-09-InActive': group.IsDeleted}" (click)="!group.IsDeleted && selectSecurityGroup(group)">
+                            <div class="card-header">
+                                <div class="rotate">
+                                    <i class="fa fa-users fa-4x"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <span [ngClass]="{'cardTitle-02-Active': !group.IsDeleted, 'cardTitle-02-InActive': group.IsDeleted}">{{group.Name}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <!-- <div class="float-right custom-button-div">
+                                                <a class="delete-data" title="Delete" *ngIf="!group.IsDeleted" (click)="updateSecurityGroupDelete(group)">
+                                                    <i class="material-icons">&#xe92b;</i>
+                                                </a>
+                                                <a class="restore-data" title="Restore" *ngIf="group.IsDeleted" (click)="updateSecurityGroupRestore(group)">
+                                                    <i class="material-icons">&#xe929;</i>
+                                                </a>
+                                            </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row" *ngIf="groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber"> -->
+                <div class="row" *ngIf="groupsPaginationInfo && (groupsPaginationInfo?.TotalPages > groupsPaginationInfo?.PageNumber)">
+                    <div class="col-sm-3">
+                        <button type="button" title="(Select New Security Group)" class="btn btn-link btn-sm bg-primary-700 text-primary-50" (click)="postSecurityGroupAll(groupsPaginationInfo?.PageSize, (groupsPaginationInfo?.PageNumber + 1))">
+                                Show More  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                            </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SecurityGroup TableView -->
+            <div *ngIf="groups && !viewAsTile">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-hover groupTbl" id="groupTbl" *ngIf="groups?.length > 0">
+                            <thead class="thead-light  thead-custom">
+                                <tr class="text-primary-600 bg-primary-100">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody-custom">
+                                <tr *ngFor="let group of groups; let p = index" [ngClass]="{'text-danger bg-light': group.IsDeleted}">
+                                    <th scope="row"></th>
+                                    <td>{{group.Name}}</td>
+                                    <td>
+                                        <span class="badge badge-secondary" *ngIf="group.IsDeleted">InActive</span>
+                                        <span class="badge badge-success" *ngIf="!group.IsDeleted">Active</span>
+                                    </td>
+                                    <td>
+                                        <a class="delete-data" title="Delete" *ngIf="!group.IsDeleted" (click)="updateSecurityGroupDelete(group)"><i class="material-icons">&#xe92b;</i></a>
+                                        <a class="restore-data" title="Restore" *ngIf="group.IsDeleted" (click)="updateSecurityGroupRestore(group)"><i class="material-icons">&#xe929;</i></a>
+                                        <a class="view" title="Manage Group" (click)="!group.IsDeleted && selectSecurityGroup(group)"><i class="material-icons">&#xe8ee;</i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" *ngIf="groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber">
+                    <div class="col-sm-3">
+                        <button type="button" title="(Select New Security Group)" class="btn btn-link btn-sm bg-primary-700 text-primary-50" (click)="postSecurityGroupAll(groupsPaginationInfo.PageSize, (groupsPaginationInfo.PageNumber + 1))">
+                                    Show More  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                            </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Assigned Tasks| Overview -->
+<section>
+    <div class="card card-main-1 sm-12" *ngIf="selectedPatrollingGroup">
+        <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+            <div class="row">
+                <div class="col-sm-6">
+                    Assign Route Overview
+                </div>
+                <div class="col-sm-6">
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb bg-primary-50">
+                            <li class="breadcrumb-item font-weight-bold">
+                                <a (click)="unSelectSecurityGroup()">
+                                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Go Back
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active font-weight-bold" aria-current="page">
+                                <span class="text-primary-400">Security Group: </span>
+                                <span class="text-primary-700">{{selectedPatrollingGroup.Name}}</span>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li *ngFor="let tabButton of tabButtons; let first = first;" [ngClass]="{firstItem: first}" role="presentation" class="nav-item" [class.active]="selectedTabButton.id===tabButton.id">
+                                <a class="nav-link" (click)="selectTab(tabButton)" aria-controls="one" role="tab" data-toggle="tab">
+                                    {{tabButton.title}}
+                                    <!-- <span class="badge badge-success">{{tabButton.weekNo}}</span> -->
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="one">
+                                <!-- <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-dismissible alert-info">
+                                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                            <strong>Heads up!</strong> No Pending Assigned Tasks
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <!-- Show Loader -->
+                                <div class="row" *ngIf="showLoader">
+                                    <div class="col-sm-12">
+                                        <app-nfc-guard-patrol-loader></app-nfc-guard-patrol-loader>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <table class="table table-bordered weekViewTbl" id="weekViewTbl">
+                                            <thead class="thead-custom">
+                                                <tr class="text-info">
+                                                    <th scope="col" class="text-center custom-th custom-th-sun  table-info" *ngFor="let weekDetail of selectedTabButton.weekDates">
+                                                        <div><span class="header-day">{{weekDetail.date | date: 'EEEE'}}</span>
+                                                        </div>
+                                                        <div><span class="header-date">{{weekDetail.date | date: 'dd MMM yyyy'}}</span>
+                                                        </div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="tbody-custom">
+                                                <tr>
+                                                    <!-- <td (click)="showShiftAssignModal(weekDetail.nightShifts, weekDetail.date, '00:00', '07:59')"
+                                                        *ngFor="let weekDetail of weekAssignedRoutes"> -->
+                                                    <td *ngFor="let weekDay of weekAssignedRoutes">
+                                                        <div class="card card-custom-001">
+                                                            <div class="card-body">
+                                                                <div *ngFor="let dailyAssignedRoutes of weekDay.dailyPendingAssignedRoutes">
+                                                                    <span class="badge badge-success custom-badge-pending shiftCell" (click)="showAssignRoute(dailyAssignedRoutes)">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                {{dailyAssignedRoutes.PatrollingRoute.Name}} ({{dailyAssignedRoutes.AssignedTo_Id}})
+                                                                            </div>
+                                                                            <!-- <div class="col-sm-12">
+                                                                                ({{dailyAssignedRoutes.AssignedTo_Id}})
+                                                                            </div> -->
+                                                                        </div>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card card-custom-001">
+                                                            <div class="card-body">
+                                                                <div *ngFor="let dailyAssignedRoutes of weekDay.dailyCompletedAssignedRoutes">
+                                                                    <span class="badge badge-success custom-badge-completed shiftCell" (click)="showAssignRoute(dailyAssignedRoutes)">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                {{dailyAssignedRoutes.PatrollingRoute.Name}} ({{dailyAssignedRoutes.AssignedTo_Id}})
+                                                                            </div>
+                                                                            <!-- <div class="col-sm-12">
+                                                                                ({{dailyAssignedRoutes.AssignedTo_Id}})
+                                                                            </div> -->
+                                                                        </div>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+
+
+<!-- showAssignRouteDetailsModal -->
+<div bsModal #showAssignRouteDetailsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Assign Route Details</h5>
+                <button type="button" class="close pull-right" (click)="showAssignRouteDetailsModal.hide()" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+            </div>
+            <div class="modal-body" *ngIf="assignedRouteDetails && assignedRouteDetails.PatrollingRoute">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="card card-main-4 sm-12">
+                            <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        {{assignedRouteDetails.PatrollingRoute.Name}}
+                                        <span class="badge badge-success" *ngIf="assignedRouteDetails.Status ==='Completed'">Completed</span>
+                                        <span class="badge badge-danger" *ngIf="assignedRouteDetails.Status ==='Pending'">Pending</span>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="float-right">
+                                            {{assignedRouteDetails.AssignedTo_Id}} <i class="fa fa-user-circle-o"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let assignedTag of assignedRouteDetails.PatrollingRoute?.PatrollingTags">
+                                        <div class="card" [ngClass]="{'card-tabContent-08-Active': assignedTag.IsActive, 'card-tabContent-08-InActive': !assignedTag.IsActive}">
+                                            <div class="card-header">
+                                                <div class="rotate">
+                                                    <i class="fa fa-users fa-4x"></i>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <span [ngClass]="{'cardTitle-02-Active': !assignedTag.IsActive, 'cardTitle-02-InActive': assignedTag.IsActive}">{{assignedTag.Name}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="card-body" *ngIf="assignedTag.Tasks || !assignedTag.Tasks.length < 1"> -->
+                                            <div class="card-body">
+                                                <ul class="list-group" *ngFor="let assignedTask of assignedTag?.PatrollingTask">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: 3px;">
+                                                        {{assignedTask.Name}}
+                                                        <span class="badge badge-danger badge-pill" *ngIf="assignedRouteDetails.Status ==='Pending'"></span>
+                                                        <span class="badge badge-success badge-pill" *ngIf="assignedRouteDetails.Status ==='Completed'"></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showAssignRouteDetailsModal.hide()">Cancel</button>
+                <!-- <button type="button" class="btn btn-success" (click)="showAssignRouteDetailsModal.hide()" (click)="assignRouteBulk()">Add New</!-->
+            </div>
+        </div>
+    </div>
+</div>

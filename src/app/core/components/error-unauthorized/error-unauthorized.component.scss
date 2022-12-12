@@ -1,0 +1,54 @@
+
+$bg-primary-50: #EBF7FC;
+$bg-primary-100: #BCE2EF;
+$bg-primary-200: #8DCCE2;
+$bg-primary-300: #5EB7D4;
+$bg-primary-400: #2FA1C7;
+$bg-primary-500: #008CBA;
+$bg-primary-600: #0080A9;
+$bg-primary-700: #017399;
+$bg-primary-800: #016788;
+$bg-primary-900: #015A77;
+
+$bg-primary-1100: #0B79A0;
+$bg-primary-1200: #166585;
+$bg-primary-1300: #21526B;
+$bg-primary-1400: #2C3E50;
+
+
+// html { background-color: $bg-primary-200 !important; }
+
+// .body-bg { 
+//     background-color: $bg-primary-200 !important; 
+//     height: 100% !important; 
+// }
+
+.avatar {
+    position: absolute;
+    left: 50%;
+    top: 10px;
+    margin-left: -60px;
+    z-index: 5;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: $bg-primary-500 !important;
+    border: 3px solid $bg-primary-100 !important;
+
+    padding-bottom: 120px !important;
+    margin-bottom: 120px !important;
+
+    img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: auto;
+    }
+}

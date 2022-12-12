@@ -1,0 +1,76 @@
+<div class="card card-main-3 mb-3">
+  <h3 class="card-header h5 bg-primary-200 font-weight-bold">Tppa Payments | Search Transactions</h3>
+  <div class="card-body">
+
+    <div class="row">
+      <div class="col-lg-3">
+        <div class="form-group">
+          <input type="text" class="form-control" [(ngModel)]="searchValue" placeholder="Search text">
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="form-group">
+          <input type="date" class="form-control" [(ngModel)]="searchDate">
+        </div>
+      </div>
+      <div class="col-lg-auto">
+        <div class="form-group form-check mt-2 mb-1">
+          <input type="checkbox" class="form-check-input" id="searchShowPending" name="searchShowPending"
+            [(ngModel)]="searchShowPending">
+          <label class="form-check-label" for="exampleCheck1">Pending SAP Upload Only</label>
+        </div>
+      </div>
+      <div class="col">
+        <button class="btn btn-primary" (click)="searchForPageOneOnly(1)">Search <i class="fa fa-search"
+            aria-hidden="true"></i></button>
+      </div>
+      <div class="col-lg-2">
+      </div>
+    </div>
+  
+    <app-tppa-payment-loader *ngIf="showLoader"></app-tppa-payment-loader>
+    <!-- <app-comp-lib-loading-lg *ngIf="showLoader"></app-comp-lib-loading-lg> -->
+
+    <div class="row" *ngIf="transactionsList">
+      <div class="col-lg-12" *ngIf="transactionsListWithPagination && transactionsListWithPagination.length < 1">
+        <div class="alert alert-dismissible alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <h5 class="alert-heading">Warning!</h5>
+          <p class="mb-0">There are no pending transactions for the selected criteria.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-12" *ngIf="localStorePagination.pageNoStart && transactionsListWithPagination">
+        <div class="row">
+          <div class="col-auto">
+            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+              <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-secondary"
+                  [ngClass]="localStorePagination.currentPage === localStorePagination.pageNoStart ? 'disabled' : 'enabled'"
+                  (click)="getTppaFromPaginationPrv(localStorePagination.currentPage)" [disabled]="localStorePagination.currentPage === localStorePagination.pageNoStart"><i class="fa fa-angle-left"></i></button>
+                <ng-container *ngFor="let data of transactionsListWithPagination">
+                  <button type="button" class="btn"
+                    [ngClass]="data.pagination.pageNo === localStorePagination.currentPage ? 'btn-primary' : 'btn-secondary'"
+                    (click)="searchFromPagination(data.pagination.pageNo)" *ngIf="data.pagination.showPageNo">{{data.pagination.pageNo}}</button>
+                </ng-container>
+                <button type="button" class="btn btn-secondary"
+                [ngClass]="{'disabled': localStorePagination.currentPage === localStorePagination.pageNoEnd}"
+                (click)="getTppaFromPaginationNext(localStorePagination.currentPage)" [disabled]="localStorePagination.currentPage === localStorePagination.pageNoEnd"><i class="fa fa-angle-right"></i></button>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-lg-12 mt--4">
+        <app-tppa-payment-transactions [transactionsList]="transactionsList"
+          [transactionsListWithPagination]="transactionsListWithPagination" [showLoader]="showLoader">
+        </app-tppa-payment-transactions>
+      </div>
+
+    </div>
+  </div>
+</div>

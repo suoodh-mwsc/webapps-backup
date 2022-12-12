@@ -1,0 +1,252 @@
+@import "./../../../../../variables"; // import material Colors from _variable.scss
+// @import "../../../../../assets/bootswatch/yeti/variables.scss";
+// @import "../../../../../assets/bootswatch/yeti/bootstrap.css";
+// @import "../../../../../assets/bootswatch/yeti/bootstrap.min.css";
+@import "./../../nfc-guard-patrol-styles.scss"; //
+// =====================================================
+.customTwo-col-sm-12 {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+a:hover,
+a:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.nav-tabs>li>a {
+    border-radius: 0px;
+    border: 1px solid #e4e4e4;
+    border-right: 0px none;
+    margin-right: 0px;
+    padding: 8px 17px;
+    // color: #1b9db0;
+    color: $bg-primary-800 !important;
+    transition: all 0.3s ease-in 0s;
+}
+
+.nav-tabs>li:last-child {
+    border-right: 1px solid #e4e4e4;
+}
+
+.nav-tabs>li>a {
+    margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.nav-tabs>li>a:hover {
+    // border: 1px solid #ea5e50;
+    border: 1px solid #b6e3eb;
+    border-right: 0px none;
+    // background: #1b9db0;
+    background: $bg-primary-200 !important;
+    color: #d1ecf1;
+}
+
+.nav-tabs>li.active {
+    // border-top: 1px solid #ea5e50;
+    // border-top: 1px solid #1b9db0;
+    border-top: 1px solid $bg-primary-800 !important;
+    border-right: 0px none;
+    // background: #f1fbfd;
+    background: $bg-primary-50 !important;
+    // color: #1b9db0;
+    color: $bg-primary-800 !important;
+}
+
+// .nav-tabs > li.active > a,
+// .nav-tabs > li.active > a:hover
+.nav-tabs>li.active>a:focus {
+    // border-top: 1px solid #1b9db0;
+    border-top: 1px solid $bg-primary-800 !important;
+    border-right: 0px none;
+    background: #b6e3eb;
+    // color: #138a9c;
+    color: $bg-primary-800 !important;
+}
+
+.tab-content>.tab-pane {
+    border: 1px solid #e4e4e4;
+    border-top: 0px none;
+    padding: 20px;
+    line-height: 22px;
+    color: #7e828a;
+}
+
+
+/*==============================================*/
+
+#weekViewTbl .thead-custom th:nth-child(1) {
+    background-color: #f1fbfd;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    min-width: 103px;
+    max-width: 9%; // width: 9%;
+}
+
+#weekViewTbl .thead-custom th:nth-child(1),
+#weekViewTbl .thead-custom th:nth-child(2),
+#weekViewTbl .thead-custom th:nth-child(3),
+#weekViewTbl .thead-custom th:nth-child(4),
+#weekViewTbl .thead-custom th:nth-child(5),
+#weekViewTbl .thead-custom th:nth-child(6),
+#weekViewTbl .thead-custom th:nth-child(7),
+#weekViewTbl .thead-custom th:nth-child(8) {
+    background-color: #f1fbfd;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    max-width: 14.28%;
+    min-width: 10%;
+    width: 14.28%;
+    // max-width: 115px !important;
+    // min-width: 115px !important;
+}
+
+#weekViewTbl .thead-custom th:nth-child(6),
+#weekViewTbl .thead-custom th:nth-child(7) {
+    color: #970000;
+}
+
+#weekViewTbl .tbody-custom th:nth-child(1) {
+    background-color: #f1fbfd;
+    font-size: 14px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#weekViewTbl .tbody-custom td:nth-child(1),
+#weekViewTbl .tbody-custom td:nth-child(2),
+#weekViewTbl .tbody-custom td:nth-child(3),
+#weekViewTbl .tbody-custom td:nth-child(4),
+#weekViewTbl .tbody-custom td:nth-child(5),
+#weekViewTbl .tbody-custom td:nth-child(6),
+#weekViewTbl .tbody-custom td:nth-child(7),
+#weekViewTbl .tbody-custom td:nth-child(8) {
+    font-size: 15px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+    align-items: center;
+    height: 50px !important;
+    min-height: 50px !important;
+}
+
+#weekViewTbl .tbody-custom td:nth-child(6),
+#weekViewTbl .tbody-custom td:nth-child(7) {
+    color: #970000;
+}
+
+#weekViewTbl .tbody-custom tr:nth-child(2),
+#weekViewTbl .tbody-custom tr:nth-child(4),
+#weekViewTbl .tbody-custom tr:nth-child(6),
+#weekViewTbl .tbody-custom tr:nth-child(8),
+#weekViewTbl .tbody-custom tr:nth-child(10) {
+    background-color: #f1fbfd;
+    color: #bbbbbb;
+}
+
+
+/*==============================================*/
+
+.card.card-custom-001 {
+    border-radius: 0rem !important;
+    margin: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important; // padding-right: 0px !important;
+    // padding-left: 0px !important;
+    // margin: 3px !important;
+    // max-width: 140px !important;
+    // min-width: 140px !important;
+    border-radius: 0rem !important;
+    border: none !important;
+}
+
+.card.card-custom-001>.card-header {
+    // background-color: #0a3761;
+    color: white; // font-weight: bold;
+    // font-size: 14px;
+    padding-top: 2px !important;
+    padding-bottom: 0px !important; // padding-right: 3px !important;
+    // padding-left: 3px !important;
+    margin: 0px !important;
+    text-align: center !important;
+    align-items: center !important;
+    border-radius: 0rem !important;
+    border: none !important;
+}
+
+.card.card-custom-001>.card-body {
+    // overflow-y: auto;
+    padding-top: 1px !important;
+    padding-bottom: 2px !important;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin: 0px !important; // display:flex;
+    text-align: center !important;
+    align-items: center !important;
+    border-radius: 0rem !important;
+    border: none !important;
+}
+
+.card.card-custom-001>.card-footer {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin: 0px !important;
+    background-color: #738aa6; // border: 1px;
+    text-align: center !important;
+    align-items: center !important;
+    border-radius: 0rem !important;
+    border: none !important;
+}
+
+
+/*==============================================*/
+
+.custom-badge-pending {
+    background: $red-100 !important;
+    color: $red-900 !important;
+    max-width: 97% !important;
+    min-width: 97% !important;
+    white-space: normal !important;
+    font-family: Arial Narrow, Arial, sans-serif;
+    font-size: 12px;
+}
+
+.custom-badge-completed {
+    background: $green-100 !important;
+    color: $green-900 !important;
+    max-width: 97% !important;
+    min-width: 97% !important;
+    white-space: normal !important;
+    font-family: Arial Narrow, Arial, sans-serif;
+    font-size: 12px;
+}
+
+
+/*==============================================*/

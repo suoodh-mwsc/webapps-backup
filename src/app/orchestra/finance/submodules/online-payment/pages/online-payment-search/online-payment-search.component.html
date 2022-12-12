@@ -1,0 +1,34 @@
+<div class="card card-main-3 mb-3">
+    <h3 class="card-header text-primary-900 bg-primary-200 font-weight-bold"> Online Payments | Search Transactions</h3>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="searchType1" name="searchType"  checked="true" [(ngModel)]="searchType" value="customer" class="custom-control-input">
+                            <label class="custom-control-label" for="searchType1">Search by Customer ID</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="searchType2" name="searchType" [(ngModel)]="searchType" value="transaction" class="custom-control-input">
+                            <label class="custom-control-label" for="searchType2">Search by Transaction ID</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <input class="form-control" (keyup.enter)= "search()" [(ngModel)]="searchValue" id="accountNo">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" (click)="search()">Search <i class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <app-online-payment-loader *ngIf="showLoader"> </app-online-payment-loader>
+        <!-- <app-online-payments [transactions]="transactions" [pageTopStatus]="pageTopStatus"></app-online-payments>!-->
+        <app-online-payment-transaction [transactions]="transactions" [pageTopStatus]="pageTopStatus"></app-online-payment-transaction>
+    </div>
+</div>

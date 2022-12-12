@@ -1,0 +1,34 @@
+<div class="toast-notification-server" *ngIf="applicationEnvironment !=='yoda-live'">
+  <div class="alert alert-info" role="alert">
+    <div class="row">
+      <div class="col-sm-12">
+        Development Server : <span class="badge badge-light">{{applicationEnvironment}}</span>
+      </div>
+      <div class="col-sm-12" *ngIf="applicationEnvironment ==='localhost'">
+        Api Server : <span class="badge badge-light">{{apiEnvironment}}</span>
+      </div>
+      <!-- <div class="col-sm-12" *ngIf="applicationEnvironment ==='localhost'">
+        Token Expiry : <span class="badge badge-light">{{adalService.userInfo.profile.exp | date:'short'}}</span>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="adalService.userInfo.authenticated;else error_content">
+  <!-- <p>{{adalService.userInfo.authenticated}}</p> -->
+  <router-outlet></router-outlet>
+</div>
+
+<ng-template #error_content>
+  <!-- <p>{{adalService.userInfo.authenticated}}</p> -->
+  <app-error-unauthorized></app-error-unauthorized>
+</ng-template>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+  integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+  integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

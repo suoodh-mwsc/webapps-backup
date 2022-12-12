@@ -1,0 +1,43 @@
+@import "../../../../../../../../assets/bootswatch/yeti/variables.scss";
+@import "../../../../../../../../assets/bootswatch/yeti/bootstrap.css";
+@import "../../../../../../../../assets/bootswatch/yeti/bootstrap.min.css";
+@import "../../../../../../../../variables";
+@import "./../../../online-payment-styles.scss";
+
+
+
+.transactionDataTbl {
+  width: 100% !important;
+  font-size: 13px !important;
+
+  thead {
+    tr {
+      padding-top: 5px !important;
+      padding-bottom: 5px !important;
+
+      th {
+        color: $light !important;
+        background: $bg-primary-400 !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+
+      th {
+        background: $bg-primary-50 !important;
+      }
+
+      th,
+      td {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+      }
+    }
+  }
+}

@@ -1,0 +1,267 @@
+<br>
+<div class="container-fluid">
+  <div class="alert alert-dismissible alert-secondary">
+    <div class="row">
+      <div class='col-lg-4'>
+        <div class="form-group">
+          <label for="exampleSelect1">FROM</label>
+          <div class="input-group">
+            <input class="form-control" type="datetime-local" [(ngModel)]="newBooking.takenFrom">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="exampleSelect">TO</label>
+          <input class="form-control" type="datetime-local" [(ngModel)]="newBooking.takenTo">
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="exampleSelect1">FACILITY</label>
+          <select class="form-control" [(ngModel)]="newBooking.facilities">
+            <option value="{{facilities.Id}}" *ngFor="let facilities of salesFacility"> {{facilities.Description}} -
+              {{facilities.Name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="exampleSelect1">REASON</label>
+          <select class="form-control" [(ngModel)]="newBooking.reason">
+            <option value="{{reason.Id}}" *ngFor="let reason of salesReason"> {{reason.Name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="exampleSelect1">BOOKING TYPE</label>
+          <select class="form-control" [(ngModel)]="newBooking.bookingtype">
+            <option value="{{bookingtype.Id}}" *ngFor="let bookingtype of bookingType"> {{bookingtype.Name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="form-group">
+          <label for="exampleSelect1">CUSTOMER TYPE</label>
+          <select class="form-control" [(ngModel)]="newBooking.customertype">
+            <option value="{{customertype.Id}}" *ngFor="let customertype of salesCustomerType"> {{customertype.Name}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class='col-lg-11'>
+        <div class="form-group">
+          <label for="exampleSelect1">REMARKS</label>
+          <div class="input-group">
+            <input class="form-control" type="text" [(ngModel)]="newBooking.remarks">
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-1" style="padding-top:27px !important">
+        <button type="button" class="btn btn-primary" (click)="NewBooking()">Book</button>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <app-facility-booking-loader *ngIf="isRunning"></app-facility-booking-loader>
+
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+          (viewDateChange)="activeDayIsOpen = false">
+          Previous
+        </div>
+        <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+          Today
+        </div>
+        <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+          (viewDateChange)="activeDayIsOpen = false">
+          Next
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn-primary" (click)="view = 'month'" [class.active]="view === 'month'">
+          Month
+        </div>
+        <div class="btn btn-primary" (click)="view = 'week'" [class.active]="view === 'week'">
+          Week
+        </div>
+        <div class="btn btn-primary" (click)="view = 'day'" [class.active]="view === 'day'">
+          Day
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+      (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-day-view>
+  </div>
+  <br>
+</div>
+
+
+
+<!-- addShiftGroupModal -->
+<div bsModal #bookingModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">BOOKING DETAILS</h5>
+        <button type="button" class="close pull-right" (click)="bookingModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="bookingDetails" class="modal-body">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Facility: </strong>{{bookingDetails.SalesFacilities.Description}} -
+            {{bookingDetails.SalesFacilities.Name}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Customer: </strong>{{bookingDetails.SalesCustomerType.Name}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Event: </strong>{{bookingDetails.SalesReason.Name}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Taken From: </strong>{{bookingDetails.TakenFrom | date: 'dd MMM yyyy HH:mm'}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Taken To: </strong>{{bookingDetails.TakenTo | date: 'dd MMM yyyy HH:mm'}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Requested By: </strong>{{bookingDetails.RequestedBy}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Booked By:</strong>{{bookingDetails.BookingType.Name}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Remarks:</strong>{{bookingDetails.Remarks}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Status:</strong>{{bookingDetails.StatusText}}
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <button type="button" class="btn btn-danger" (click)="DeleteBooking(bookingDetails)"
+              [disabled]="bookingDetails.IsDeleted === true">Delete</button>
+            {{bookingDetails.IsDeleted}}
+          </li>
+        </ul>
+
+        <div *ngIf="bookingDetails">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item active">BOOKING HISTORY</li>
+          </ol>
+          <table class="table">
+            <tr *ngFor="let bookingDetail of bookingDetails.History">
+              <td>
+                <div>
+                  <span class="badge badge-secondary">History Type:</span>
+                  <span class="badge badge-info">{{bookingDetail.HistoryType}}</span>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <span class="badge badge-secondary">Description:</span>
+                  <span class="badge badge-info"> {{bookingDetail.Description}}</span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="bookingModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="bookingModal.hide()" (click)="addNewShiftGroups()">Add New</button>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">BOOKING DETAILS</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div *ngIf="bookingDetails" class="modal-body">
+    <ul class="list-group">
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Facility: </strong>{{bookingDetails.SalesFacilities.Description}} -
+        {{bookingDetails.SalesFacilities.Name}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Customer: </strong>{{bookingDetails.SalesCustomerType.Name}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Event: </strong>{{bookingDetails.SalesReason.Name}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Taken From: </strong>{{bookingDetails.TakenFrom | date: 'dd MMM yyyy HH:mm'}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Taken To: </strong>{{bookingDetails.TakenTo | date: 'dd MMM yyyy HH:mm'}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Requested By: </strong>{{bookingDetails.RequestedBy}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Booked By:</strong>{{bookingDetails.BookingType.Name}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Remarks:</strong>{{bookingDetails.Remarks}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <strong>Status:</strong>{{bookingDetails.StatusText}}
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <button type="button" class="btn btn-danger" (click)="DeleteBooking(bookingDetails)"
+          [disabled]="bookingDetails.IsDeleted === true">Delete</button>
+        {{bookingDetails.IsDeleted}}
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="bookingDetails">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active">BOOKING HISTORY</li>
+    </ol>
+    <table class="table">
+      <tr *ngFor="let bookingDetail of bookingDetails.History">
+        <td>
+          <div>
+            <span class="badge badge-secondary">History Type:</span>
+            <span class="badge badge-info">{{bookingDetail.HistoryType}}</span>
+          </div>
+        </td>
+        <td>
+          <div>
+            <span class="badge badge-secondary">Description:</span>
+            <span class="badge badge-info"> {{bookingDetail.Description}}</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-primary" (click)="close()">OK</button>
+  </div>
+</ng-template>

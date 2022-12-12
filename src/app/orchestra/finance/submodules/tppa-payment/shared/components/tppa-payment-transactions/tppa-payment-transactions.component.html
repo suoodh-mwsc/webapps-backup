@@ -1,0 +1,394 @@
+<div class="row" *ngIf="transactionsList && transactionsList.length > 0">
+  <!-- <div class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-12">
+        <span class="text-muted">{{pageTopStatus}}</span>
+      </div>
+    </div>
+  </div> -->
+  <div class="col-lg-12" *ngIf="transactionsList && transactionsList.length > 0">
+    <div class="row" style="padding-bottom: 5px;">
+      <div class="col-lg-10">
+        <!-- <button type="button" (click)="showAll(transactions)"
+          class="badge badge-primary">{{transactions.length}}</button>
+        Total Transactions
+        <button type="button" (click)="showAllSuccessful(transactions)"
+          class="badge badge-success">{{successfulTransactions(transactions)}}</button>
+        Successful Transactions
+        <button type="button" (click)="showUnSuccessful(transactions)"
+          class="badge badge-danger">{{failedTransactions}}</button>
+        Unsuccessful Transactions -->
+      </div>
+      <div class="col-lg-2 float-right">
+        <div class="float-right">
+          <button class="btn btn-secondary btn-sm" (click)="downloadCSV()"> Download CSV </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="transactionsList && transactionsList.length > 0">
+  <div class="col-lg-12">
+    <table class="table table-hover table-bordered transactionDataTbl">
+      <thead class="thead-light thead-custom">
+        <tr>
+          <th scope="col">External App & Ref</th>
+          <th scope="col">Meter & Account</th>
+          <th scope="col">MWSC Ref</th>
+          <!-- <th scope="col">Payment App</th> -->
+          <th scope="col">Payment Details</th>
+          <th scope="col">SAP Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="tbody-custom">
+        <tr *ngFor="let transaction of transactionsList">
+          <td>
+            <div class="col-lg-12 p-0">
+              <strong>
+                <span class="text-muted">{{transaction?.third_party_payment_app_name}}</span>
+              </strong>
+            </div>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary">{{transaction?.payment_external_reference}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <span
+                class="text-primary">{{transaction?.payment_external_reference_updated_on | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+          </td>
+
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary">{{transaction?.payment_account_no}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <div>
+                <span class="text-primary">{{transaction?.payment_meter_no}}</span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary">{{transaction?.payment_mwsc_reference}}</span>
+            </div>
+          </td>
+
+          <!-- <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-muted">{{transaction?.third_party_payment_app_name}}</span>
+            </div>
+          </td> -->
+
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary float-right">Payment MVR <strong>{{transaction?.payment_amount | number: '0.2'}}</strong> </span>
+            </div>
+            <br>
+            <div class="col-lg-12 p-0">
+              <span class="text-muted float-right">Balance MVR {{transaction?.payment_balance_amount | number: '0.2'}}
+              </span>
+            </div>
+            <br>
+            <div class="col-lg-12 p-0">
+              <span class="text-muted float-right">Due MVR {{transaction?.payment_due_amount | number: '0.2'}}
+              </span>
+            </div>
+          </td>
+
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary">{{transaction?.payment_external_reference_updated_on | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+                <span class="text-success">Updated to SAP on {{transaction?.payment_sap_reference_updated_on | date: 'dd MMM yyyy HH:mm'}} 
+                  Ref # {{transaction?.payment_sap_reference}}
+                </span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <span class="text-success">Ref # {{transaction?.payment_sap_reference}}
+              </span>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-secondary btn-sm" (click)="showTransactionHistory(transaction, transaction?.payment_id )">History</button>
+            <button class="btn btn-secondary btn-sm" *ngIf='transaction?.payment_external_reference_updated_on == null'
+              (click)="showManualUpdateToSAPModal(transaction)">Manually Updated to SAP</button>
+            <button class="btn btn-secondary btn-sm" *ngIf='transaction?.can_upload_to_sap'
+              (click)="showUpdateToSAPModal(transaction)">Update to SAP</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div #transactionHistoryModalBackdrop class=""></div>
+
+
+<div #transactionHistoryModel class="modal fade hide" style="display: none; padding-right: 17px;">
+  <!-- <div class="modal-dialog modal-lg" role="document" style="max-width: 700px;"> -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Transaction History</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="hideTransactionHistory()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="historyTransaction && historyTransaction.payment_account_no">
+        <div class="row">
+          <div class="col-lg-12">
+            <span>Account</span>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="col-lg-12">Account:
+              <span class="text-primary">{{historyTransaction?.payment_account_no}}</span>
+            </div>
+            <div class="col-lg-12">Meter:
+              <span class="text-muted">{{historyTransaction?.payment_meter_no}}</span>
+            </div>
+            <div class="col-lg-12">3rd Party App
+              <span class="text-muted">{{historyTransaction?.third_party_payment_app_name}}</span>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+            <hr />
+          </div>
+
+          <div class="col-lg-12">
+            <span>Payment Details</span>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="col-lg-12">Payment Amount:
+              <span>{{historyTransaction?.payment_amount}}</span>
+            </div>
+            <div class="col-lg-12">Balance Amount:
+              <span class="text-muted">{{historyTransaction?.payment_balance_amount}}</span>
+            </div>
+            <div class="col-lg-12" style="color: red;">Due Amount:
+              <span class="text-muted" class="text-danger">{{historyTransaction?.payment_due_amount}}</span>
+            </div>
+            <div class="col-lg-12" style="color:green;">Paid on:
+              <span class="text-muted" class="text-success">{{historyTransaction?.payment_paid_on}}</span>
+            </div>
+            <div class="col-lg-12">SAP Reference:
+              <span class="text-muted">{{historyTransaction?.payment_sap_reference}}</span>
+            </div>
+          </div>
+        </div>
+
+         <!-- <span class="text-muted">History Details</span> -->
+         <table class="table table-hover table-striped" *ngIf="tppaDetails">
+          <tr *ngFor=" let tppa of tppaDetails ">
+            <td>
+              <span class="badge badge-primary">{{tppa.payments_additional_detail_category}}</span>
+            </td>
+            <td>{{tppa.payments_additional_detail_type}}</td>
+            <td>{{tppa.payments_additional_detail_value}}</td>
+            <td>{{tppa.payment_additional_detail_created_on | date: 'dd MMM yyyy HH:mm'}}</td>
+          </tr>
+        </table>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- <div #banksApprovalModal class="modal fade hide" style="display: none; padding-right: 17px;">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter Banks Approval</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="hideBanksApprovalModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="historyTransaction && historyTransaction.payment_account_no">
+
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<div #updateToSAPModal class="modal fade hide" style="display: none; padding-right: 17px;">
+  <!-- <div class="modal-dialog modal-lg" role="document" style="max-width: 700px;"> -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update To SAP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="hideUpdateToSAPModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"  *ngIf="updateToSAPTransaction && updateToSAPTransaction.payment_account_no">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{updateToSAPTransaction?.payment_mwsc_reference}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{updateToSAPTransaction?.third_party_payment_app_name}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{updateToSAPTransaction?.third_party_payment_app_id}}</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{updateToSAPTransaction?.payment_account_no}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{updateToSAPTransaction?.payment_meter_no}}</span>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <hr />
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">MVR
+                <strong>{{updateToSAPTransaction?.payment_amount}}</strong>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span
+                class="text-primary">{{updateToSAPTransaction?.payment_paid_on | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12">
+              <!-- <div class="col-lg-12" *ngIf="!updateToSAPTransaction?.payment_sap_reference == null"> -->
+              <span class="text-success">Transaction is successful</span>
+              <span class="text-success">{{updateToSAPTransaction?.payment_sap_reference}}</span>
+            </div>
+            <!-- <div class="col-lg-12" *ngIf="!updateToSAPTransaction?.transaction?.IsSuccessful">
+              <span class="text-danger">{{updateToSAPTransaction?.transaction?.BanksReasonCodeDescription}}</span>
+            </div> -->
+            <!-- <div class="col-lg-12" *ngIf="!updateToSAPTransaction?.transaction?.ResponseRecievedOn">
+              <span class="text-warning">No Response recieved from Bank</span>
+            </div> -->
+          </div>
+        </div>
+        <hr />
+        <!-- <div *ngIf='updateToSAPTransaction?.payment_sap_reference_updated_on == null'> -->
+          <div>
+          <div class="alert alert-dismissible alert-warning">
+            <h4 class="alert-heading">Warning!</h4>
+            <p class="mb-0">You are about to update this transaction to SAP. Please make sure all the transaction
+              details are correct.</p>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-9" *ngIf="enableUpdateToSAP">
+              <button class="btn btn-primary" (click)="updateToSAP(updateToSAPTransaction?.payment_mwsc_reference)">Update to SAP</button>
+            </div>
+            <span>{{updateToSAPStatus}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div #manualUpdateToSAPModal class="modal fade hide" style="display: none; padding-right: 17px;">
+  <!-- <div class="modal-dialog modal-lg" role="document" style="max-width: 700px;"> -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Manually Updated To SAP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          (click)="hideManualUpdateToSAPModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="manualupdateToSAPTransaction && manualupdateToSAPTransaction.payment_account_no">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{manualupdateToSAPTransaction?.payment_mwsc_reference}}</span>
+            </div>
+     
+            <div class="col-lg-12">
+              <span class="text-muted">{{manualupdateToSAPTransaction?.third_party_payment_app_name}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{manualupdateToSAPTransaction?.payment_paid_on}}</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{manualupdateToSAPTransaction?.payment_account_no}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{manualupdateToSAPTransaction?.payment_meter_no}}</span>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <hr />
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">MVR
+                <strong>{{manualupdateToSAPTransaction?.payment_amount}}</strong>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span
+                class="text-primary">{{manualupdateToSAPTransaction?.payment_paid_on | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!manualupdateToSAPTransaction?.payment_sap_reference == null">
+              <span class="text-success">Transaction is successful</span>
+              <span class="text-success">{{manualupdateToSAPTransaction?.payment_sap_reference}}</span>
+            </div>
+            <!-- <div class="col-lg-12" *ngIf="!manualupdateToSAPTransaction?.transaction?.IsSuccessful">
+              <span class="text-danger">{{manualupdateToSAPTransaction?.BanksReasonCodeDescription}}</span>
+            </div> -->
+            <!-- <div class="col-lg-12" *ngIf="!manualupdateToSAPTransaction?.transaction?.ResponseRecievedOn">
+              <span class="text-warning">No Response recieved from Bank</span>
+            </div> -->
+          </div>
+        </div>
+        <hr />
+        <div >
+          <!-- <div *ngIf='manualupdateToSAPTransaction?.transaction?.IsSuccessful && manualupdateToSAPTransaction?.transaction?.UpdatedToSAPOn == null'></div> -->
+          <div class="alert alert-dismissible alert-warning">
+            <h4 class="alert-heading">Warning!</h4>
+            <p class="mb-0">You are about to mark this transaction as updated to SAP. Please make sure all the
+              transaction details are correct.</p>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">SAP Reference No</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" required [(ngModel)]="manualUpdateSAPReference">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-9">
+              <button class="btn btn-primary" (click)="updateToSAPManually(manualupdateToSAPTransaction?.payment_mwsc_reference)">Mark as
+                Updated</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+

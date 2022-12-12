@@ -1,0 +1,60 @@
+<!-- <div class="card card-one">
+  <header>
+    <div class="avatar">
+      <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="Jhon Doe" />
+    </div>
+  </header>
+
+  <h3>Jhon Doe</h3>
+  <div class="desc">
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit et cupiditate deleniti.
+  </div>
+  <div class="contacts">
+    <a href=""><i class="fa fa-plus"></i></a>
+    <a href=""><i class="fa fa-whatsapp"></i></a>
+    <a href=""><i class="fa fa-envelope"></i></a>
+    <div class="clear"></div>
+  </div>
+
+  <footer>
+    <a href=""><i class="fa fa-facebook"></i></a>
+    <a href=""><i class="fa fa-linkedin"></i></a>
+    <a href=""><i class="fa fa-twitter"></i></a>
+    <a href=""><i class="fa fa-instagram"></i></a>
+  </footer>
+</div> -->
+
+<div class="card card-two">
+  <header>
+    <div class="avatar" *ngIf="!myProfilePictureBase64">
+      <img src="../../../../../assets/images/profile-image-1.jpg" alt="profile-image" />
+    </div>
+    <div class="avatar" *ngIf="myProfilePictureBase64">
+      <img [src]="myProfilePictureBase64" alt="{{myProfile.Name}}" />
+    </div>
+  </header>
+
+  <div class="card-name">
+    <div class="row justify-content-center">
+      <div class="col-sm-12">
+        <div class="card-name-text">{{myProfile?.Name}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-desc">
+    <div class="row  justify-content-center" style="padding-bottom: 10px;">
+      <div class="col-sm-12">
+          <div class="card-desc-text-1">{{myProfile?.Designation}}</div>
+      </div>
+      <div class="col-sm-12">
+          <div class="card-desc-text-2">{{myProfile?.Department}}</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>
+      <a href=""><i class="fa fa-clock-o"></i> {{today | date: 'dd MMM yyyy HH:mm'}} </a>
+    </p>
+  </footer>
+</div>

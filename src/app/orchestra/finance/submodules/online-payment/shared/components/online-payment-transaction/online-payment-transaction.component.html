@@ -1,0 +1,498 @@
+<div class="row" *ngIf="transactions && transactions.length > 0">
+  <div class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-12">
+        <span class="text-muted">{{pageTopStatus}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12" *ngIf="transactions && transactions.length > 0">
+    <div class="row" style="padding-bottom: 5px;">
+      <div class="col-lg-10">
+        <button type="button" (click)="showAll(transactions)"
+          class="badge badge-primary">{{transactions.length}}</button>
+        Total Transactions
+        <button type="button" (click)="showAllSuccessful(transactions)"
+          class="badge badge-success">{{successfulTransactions(transactions)}}</button>
+        Successful Transactions
+        <button type="button" (click)="showUnSuccessful(transactions)"
+          class="badge badge-danger">{{failedTransactions}}</button>
+        Unsuccessful Transactions
+      </div>
+      <div class="col-lg-2 float-right">
+        <div class="float-right">
+          <button class="btn btn-secondary btn-sm" (click)="downloadCSV()"> Download CSV </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="transactions && transactions.length > 0">
+  <div class="col-lg-12">
+    <table class="table table-hover table-bordered transactionDataTbl">
+      <thead class="thead-light thead-custom">
+        <tr>
+          <th scope="col">Transaction</th>
+          <th scope="col">Meter & Account</th>
+          <th scope="col">E-Service User</th>
+          <th scope="col">Payment Details</th>
+          <th scope="col">Bank Response & SAP Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="tbody-custom">
+        <tr *ngFor="let transaction of transactions">
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary">{{transaction.Transaction.OurReference}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <span class="text-muted">{{transaction.Transaction.PaymentGatewayDescription}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <label>Bank Reference: </label>
+              <span class="text-muted">{{transaction.Transaction.BanksReferenceNo}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <span class="text-muted">
+                <strong>{{transaction.Transaction.PaymentTypeDescription}}</strong>
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary">{{transaction.AccountNo}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <div>
+                <span class="{{ transaction.WasDisconnected ? 'text-danger' : 'text-success' }}">
+                  <i class="{{ transaction.WasDisconnected ? 'fa fa-lock' : 'fa fa-unlock' }}" aria-hidden="true">
+                    {{transaction.MeterNo}}</i>
+                </span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary"><i class="fa fa-phone" aria-hidden="true"></i> {{transaction.MobileNo}}</span>
+            </div>
+            <div class="col-lg-12 p-0">
+              <span class="text-secondary"><i class="fa fa-user" aria-hidden="true"></i>
+                {{transaction.Transaction.PaidBy}}</span>
+            </div>
+          </td>
+
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary float-right">Payment Amount MVR
+                <strong>{{transaction.Transaction.PaymentAmount | number: '0.2'}}</strong>
+              </span>
+            </div>
+            <br>
+            <div class="col-lg-12 p-0">
+              <span class="text-muted float-right">Balance MVR {{transaction.BalanceAmount | number: '0.2'}}
+              </span>
+            </div>
+            <br>
+            <div class="col-lg-12 p-0">
+              <span class="text-muted float-right">Due MVR {{transaction.DueAmount | number: '0.2'}}
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="col-lg-12 p-0">
+              <span class="text-primary">{{transaction.Transaction.PaidOn | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12 p-0" *ngIf="transaction.Transaction.IsSuccessful">
+              <span class="text-success">Transaction is successful</span>
+              <div>
+                <span class="text-success">Updated to SAP on
+                  {{transaction.Transaction.UpdatedToSAPOn | date: 'dd MMM yyyy HH:mm'}} Ref #
+                  {{transaction.Transaction.SAPReference}}
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-12 p-0"
+              *ngIf="!transaction.Transaction.IsSuccessful && transaction.Transaction.BanksReasonCodeDescription">
+              <br>
+              <span class="text-danger">Gateway Response: {{transaction.Transaction.BanksReasonCodeDescription}}</span>
+            </div>
+            <div class="col-lg-12 p-0" *ngIf="!transaction.Transaction.ResponseRecievedOn">
+              <br>
+              <span class="text-warning">No Response recieved from Bank</span>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-secondary btn-sm" (click)="showTransactionHistory(transaction)">History</button>
+            <button class="btn btn-secondary btn-sm" *ngIf="!transaction.Transaction.IsSuccessful"
+              (click)="showBanksApprovalModal(transaction)">Banks Approval</button>
+            <!-- <button class="btn btn-secondary btn-sm" *ngIf='transaction.Transaction.IsSuccessful && transaction.Transaction.UpdatedToSAPOn == null' (click)="showUpdateToSAPModal(transaction)">Update to SAP</button> -->
+            <button class="btn btn-secondary btn-sm"
+              *ngIf='transaction.Transaction.IsSuccessful && transaction.Transaction.UpdatedToSAPOn == null'
+              (click)="showManualUpdateToSAPModal(transaction)">Manually Updated to SAP</button>
+            <button class="btn btn-secondary btn-sm"
+              *ngIf='transaction.Transaction.IsSuccessful && transaction.Transaction.UpdatedToSAPOn == null'
+              (click)="showUpdateToSAPModal(transaction)">Update to SAP</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+<div #transactionHistoryModalBackdrop class=""></div>
+
+
+
+<div #transactionHistoryModel class="modal fade hide" style="display: none; padding-right: 17px;">
+  <!-- <div class="modal-dialog modal-lg" role="document" style="max-width: 700px;"> -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Transaction History</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="hideTransactionHistory()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="historyTransaction && historyTransaction.Transaction">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{historyTransaction.Transaction.OurReference}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{historyTransaction.Transaction.PaymentGatewayDescription}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{historyTransaction.Transaction.PaymentTypeDescription}}</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{historyTransaction.AccountNo}}</span>
+              <span class="{{ historyTransaction.WasDisconnected ? 'text-danger' : 'text-success' }}">
+                <i class="{{ historyTransaction.WasDisconnected ? 'fa fa-lock' : 'fa fa-unlock' }}"
+                  aria-hidden="true">{{historyTransaction.MeterNo}}</i>
+              </span>
+            </div>
+            <div class="col-lg-12">
+              <div class="">
+                <span class="text-muted">Balance MVR
+                  <strong>{{historyTransaction.BalanceAmount | number: '0.2'}}</strong>
+                </span>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="">
+                <span class="text-muted">Due MVR <strong>{{historyTransaction.DueAmount | number: '0.2'}}</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <hr />
+          </div>
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="">
+                  <span class="text-primary">Payment Amount MVR
+                    <strong>{{historyTransaction.Transaction.PaymentAmount | number: '0.2'}}</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="col-lg-12">
+                <span class="text-primary">Paid MVR
+                  <strong>{{historyTransaction.Transaction.PaymentAmount}}</strong>
+                </span>
+              </div> -->
+          </div>
+
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{historyTransaction.Transaction.PaidOn | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="historyTransaction.Transaction.IsSuccessful">
+              <span class="text-success">Transaction is successful</span>
+              <span class="text-success">{{historyTransaction.Transaction.SAPReference}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!historyTransaction.Transaction.IsSuccessful">
+              <span class="text-danger">Gateway Response:
+                {{historyTransaction.Transaction.BanksReasonCodeDescription}}</span>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <!-- <span class="text-muted">History Details</span> -->
+        <table class="table table-hover table-striped" *ngIf="historyTransaction.Transaction">
+          <tr *ngFor="let history of historyTransaction.Transaction.History">
+            <td>
+              <span class="badge badge-primary">{{history.HistoryType}}</span>
+            </td>
+            <td>{{history.Details}}</td>
+            <td>{{history.CreatedOn | date: 'dd MMM yyyy HH:mm'}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          (click)="hideTransactionHistory()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div #banksApprovalModal class="modal fade hide" style="display: none; padding-right: 17px;">
+  <!-- <div class="modal-dialog modal-lg" role="document" style="max-width: 700px;"> -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Enter Banks Approval</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="hideBanksApprovalModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="bankApprovalTransaction && bankApprovalTransaction.Transaction">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{bankApprovalTransaction.Transaction.OurReference}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{bankApprovalTransaction.Transaction.PaymentGatewayDescription}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{bankApprovalTransaction.Transaction.PaymentTypeDescription}}</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{bankApprovalTransaction.AccountNo}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{bankApprovalTransaction.MeterNo}}</span>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <hr />
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">MVR
+                <strong>{{bankApprovalTransaction.Transaction.PaymentAmount}}</strong>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span
+                class="text-primary">{{bankApprovalTransaction.Transaction.PaidOn | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="bankApprovalTransaction.Transaction.IsSuccessful">
+              <span class="text-success">Transaction is successful</span>
+              <span class="text-success">{{bankApprovalTransaction.Transaction.SAPReference}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!bankApprovalTransaction.Transaction.IsSuccessful">
+              <span class="text-danger">{{bankApprovalTransaction.Transaction.BanksReasonCodeDescription}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!bankApprovalTransaction.Transaction.ResponseRecievedOn">
+              <span class="text-warning">No Response recieved from Bank</span>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div *ngIf="!bankApprovalTransaction.Transaction.IsSuccessful">
+          <div class="alert alert-dismissible alert-warning">
+            <h4 class="alert-heading">Warning!</h4>
+            <p class="mb-0">You are about to mark this transaction as approved from the corresponding payment gateway.
+              Please enter the correct reference number.
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Banks Reference No</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" [(ngModel)]="bankApprovalReference" *ngIf="bankApprovalAllowed">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Banks Reference No</label>
+            <div class="col-sm-9">
+              <button class="btn btn-primary btn-sm"
+                (click)="bankApproval(bankApprovalTransaction, bankApprovalReference)">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div #updateToSAPModal class="modal fade hide" style="display: none; padding-right: 17px;">
+  <!-- <div class="modal-dialog modal-lg" role="document" style="max-width: 700px;"> -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update To SAP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="hideUpdateToSAPModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="updateToSAPTransaction && updateToSAPTransaction.Transaction">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{updateToSAPTransaction.Transaction.OurReference}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{updateToSAPTransaction.Transaction.PaymentGatewayDescription}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{updateToSAPTransaction.Transaction.PaymentTypeDescription}}</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{updateToSAPTransaction.AccountNo}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{updateToSAPTransaction.MeterNo}}</span>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <hr />
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">MVR
+                <strong>{{updateToSAPTransaction.Transaction.PaymentAmount}}</strong>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span
+                class="text-primary">{{updateToSAPTransaction.Transaction.PaidOn | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="updateToSAPTransaction.Transaction.IsSuccessful">
+              <span class="text-success">Transaction is successful</span>
+              <span class="text-success">{{updateToSAPTransaction.Transaction.SAPReference}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!updateToSAPTransaction.Transaction.IsSuccessful">
+              <span class="text-danger">{{updateToSAPTransaction.Transaction.BanksReasonCodeDescription}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!updateToSAPTransaction.Transaction.ResponseRecievedOn">
+              <span class="text-warning">No Response recieved from Bank</span>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div
+          *ngIf='updateToSAPTransaction.Transaction.IsSuccessful && updateToSAPTransaction.Transaction.UpdatedToSAPOn == null'>
+          <div class="alert alert-dismissible alert-warning">
+            <h4 class="alert-heading">Warning!</h4>
+            <p class="mb-0">You are about to update this transaction to SAP. Please make sure all the transaction
+              details are correct.</p>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-9" *ngIf="enableUpdateToSAP">
+              <button class="btn btn-primary" (click)="updateToSAP(updateToSAPTransaction)">Update to SAP</button>
+            </div>
+            <span>{{updateToSAPStatus}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #manualUpdateToSAPModal class="modal fade hide" style="display: none; padding-right: 17px;">
+  <!-- <div class="modal-dialog modal-lg" role="document" style="max-width: 700px;"> -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Manually Updated To SAP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          (click)="hideManualUpdateToSAPModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="manualUpdateToSAPTransaction && manualUpdateToSAPTransaction.Transaction">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{manualUpdateToSAPTransaction.Transaction.OurReference}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{manualUpdateToSAPTransaction.Transaction.PaymentGatewayDescription}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{manualUpdateToSAPTransaction.Transaction.PaymentTypeDescription}}</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">{{manualUpdateToSAPTransaction.AccountNo}}</span>
+            </div>
+            <div class="col-lg-12">
+              <span class="text-muted">{{manualUpdateToSAPTransaction.MeterNo}}</span>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <hr />
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span class="text-primary">MVR
+                <strong>{{manualUpdateToSAPTransaction.Transaction.PaymentAmount}}</strong>
+              </span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="col-lg-12">
+              <span
+                class="text-primary">{{manualUpdateToSAPTransaction.Transaction.PaidOn | date: 'dd MMM yyyy HH:mm'}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="manualUpdateToSAPTransaction.Transaction.IsSuccessful">
+              <span class="text-success">Transaction is successful</span>
+              <span class="text-success">{{manualUpdateToSAPTransaction.Transaction.SAPReference}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!manualUpdateToSAPTransaction.Transaction.IsSuccessful">
+              <span class="text-danger">{{manualUpdateToSAPTransaction.Transaction.BanksReasonCodeDescription}}</span>
+            </div>
+            <div class="col-lg-12" *ngIf="!manualUpdateToSAPTransaction.Transaction.ResponseRecievedOn">
+              <span class="text-warning">No Response recieved from Bank</span>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div
+          *ngIf='manualUpdateToSAPTransaction.Transaction.IsSuccessful && manualUpdateToSAPTransaction.Transaction.UpdatedToSAPOn == null'>
+          <div class="alert alert-dismissible alert-warning">
+            <h4 class="alert-heading">Warning!</h4>
+            <p class="mb-0">You are about to mark this transaction as updated to SAP. Please make sure all the
+              transaction details are correct.</p>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label">SAP Reference No</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" [(ngModel)]="manualUpdateSAPReference">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-9">
+              <button class="btn btn-primary" (click)="updateToSAPManually(manualUpdateToSAPTransaction)">Mark as
+                Updated</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

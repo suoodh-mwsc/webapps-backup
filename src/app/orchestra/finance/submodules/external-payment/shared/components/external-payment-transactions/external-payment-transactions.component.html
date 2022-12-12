@@ -1,0 +1,102 @@
+<div class="row" *ngIf="transactions && transactions.length > 0">
+  <div class="col-lg-12">
+    <div class="row" style="padding-bottom: 5px;">
+      <div class="col-lg-10">
+      </div>
+      <div class="col-lg-2">
+        <div class="float-right">
+          <button class="btn btn-secondary btn-sm" (click)="downloadCSV()"> Download CSV </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-hover table-bordered transactionDataTbl">
+          <thead class="thead-light thead-custom">
+            <tr>
+              <th>Transaction </th>
+              <th>Account Info</th>
+              <th>Organization & Outlet</th>
+              <th>
+                <div class="float-right">
+                  Payment
+                </div>
+              </th>
+              <th>Payment Method</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody class="tbody-custom">
+            <tr *ngFor="let transaction of transactions">
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-muted">{{transaction.TakenOn | date: 'dd MMM yyyy HH:mm'}}</span>
+                </div>
+                <div class="col-lg-12  p-0">
+                  <span class="text-primary">{{transaction.Id}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-primary">{{transaction.CustomerSearch.CustomerDetail.AccountNo}}</span>
+                </div>
+                <div class="col-lg-12 p-0">
+                  <div>
+                    <span
+                      class="{{ transaction.CustomerSearch.WasMeterDisconnected ? 'text-danger' : 'text-success' }}">
+                      <i class="{{ transaction.CustomerSearch.WasMeterDisconnected ? 'fa fa-lock' : 'fa fa-unlock' }}"
+                        aria-hidden="true"> {{transaction.CustomerSearch.CustomerDetail.MeterNo}}</i>
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-primary">{{transaction.Outlet.Organaization.Name}}</span>
+                </div>
+                <div class="col-lg-12 p-0">
+                  <span class="text-success">{{transaction.Outlet.Name}}</span>
+                </div>
+              </td>
+              <td>
+                <div class="col-lg-12  p-0">
+                  <span class="text-primary  float-right">Payment Amount MVR
+                    <strong>{{transaction.PaymentAmount | number: '0.2'}}</strong>
+                  </span>
+                </div>
+                <br>
+                <div class="col-lg-12  p-0">
+                  <span class="text-muted  float-right">Balance MVR
+                    <strong>{{transaction.CustomerSearch.BalanceAmount | number: '0.2'}}</strong>
+                  </span>
+                </div>
+                <br>
+                <div class="col-lg-12  p-0">
+                  <span class="text-muted float-right">Due MVR
+                    <strong>{{transaction.CustomerSearch.DueAmount | number: '0.2'}}</strong>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="col-lg-12  p-0">
+                  <span class="text-primary">{{transaction.PaymentMethod == 0 ? 'Cash': 'Card'}}</span>
+                </div>
+                <div class="col-lg-12  p-0">
+                  <span class="text-primary">{{transaction.CardType}}</span>
+                </div>
+                <div class="col-lg-12  p-0">
+                  <span class="text-primary">{{transaction.TraceNo}}</span>
+                </div>
+              </td>
+              <td>
+                <span
+                  class="text-primary">{{transaction.PaymentStatus == 0 ? 'Created': transaction.PaymentStatus == 1 ? 'Voided': 'Approved' }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

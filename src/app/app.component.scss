@@ -1,0 +1,22 @@
+.toast-notification-server {
+    position: fixed !important;
+    // position: relative !important;
+    // display: flex;
+    // position: relative;
+    z-index: 3000 !important; //change your number as per elements lies on your page.
+    text-align: center !important;
+    vertical-align: middle !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 0.5;
+    top: -3px;
+    right: 200px;
+    max-width: 300px !important;
+}
+
+.alert {
+    border-radius: -10px -10px 5px 5px;
+    position: relative !important;
+    padding: 8px 15px 6px 15px !important;
+    font: 11px arial, sans-serif;
+}

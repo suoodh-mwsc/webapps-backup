@@ -1,0 +1,170 @@
+<app-dutyroster-loader *ngIf="!selectedShiftGroup && !shiftGroups"></app-dutyroster-loader>
+
+<div class="card card-tabContent-02" *ngIf="selectedShiftGroup">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 id="cardTitle">My Shift</h2>
+            </div>
+            <div class="col-sm-4">
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="nav-item {{shiftGroupsWeeklyShift && shiftGroupsWeeklyShift.WeekNumber === topButton.weekNo ? 'active': ''}}" *ngFor="let topButton of topButtons">
+                            <a class="nav-link" href="#lastWeek" aria-controls="lastWeek" role="tab" data-toggle="tab" (click)="getWeekDetails(topButton.weekNo, topButton.year)">
+                {{topButton.title}}
+              </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12" *ngIf="selectedShiftGroup">
+                <div class="row">
+                    <div class="col-sm-12" *ngIf="!shiftGroupsWeeklyShift?.IsReleased">
+                        <br>
+                        <div class="alert alert-dismissible alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>Oh snap!</strong> This Week Shift is not Published from Department Supervisor. Please Contact Department Supervisor for more information ...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="shiftGroupsWeeklyShift?.IsReleased">
+                    <div class="col-sm-12">
+                        <h2 *ngIf="shiftGroupsWeeklyShift.ShiftGroup" class="text-muted" id="tabTitle"><span class="text-muted">Shift
+                Group:</span> {{shiftGroupsWeeklyShift.ShiftGroup.Name}}</h2>
+                    </div>
+                    <div class="col-sm-2">
+                        <table class="table table-hover shiftListTbl text-custom" id="shiftListTbl">
+                            <thead class="thead-light thead-custom">
+                                <tr>
+                                    <th class="col-sm-6" scope="col">Employee</th>
+                                    <th class="col-sm-4" scope="col">Shifts</th>
+                                    <th class="col-sm-4" scope="col">Offs</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody-custom" *ngFor="let shiftEmployeesDetail of shiftEmployeesDetails">
+                                <tr (click)="showStaffStuff(shiftEmployeesDetail)" class="{{ selectedStaff && selectedStaff.EmployeeId === shiftEmployeesDetail.EmployeeId ? 'table-primary' : ''}}">
+                                    <td>{{ shiftEmployeesDetail.Name }}</td>
+                                    <td>{{ shiftEmployeesDetail.noOfNormalShifts }}</td>
+                                    <td>{{ shiftEmployeesDetail.noOfOffShifts }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-10">
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h2 id="cardTitle">{{shiftGroupsWeeklyShift.StartsOn | date : 'dd MMM yyyy'}} - {{shiftGroupsWeeklyShift.EndsOn | date : 'dd MMM yyyy'}}</h2>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="pull-right">
+                                    <span class="badge badge-success" *ngIf="shiftGroupsWeeklyShift?.IsReleased">Released</span>
+                                    <span class="badge badge-danger" *ngIf="!shiftGroupsWeeklyShift?.IsReleased">Not Released</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-bordered dutyRosterTbl" id="dutyRosterTbl">
+                                    <thead class="thead-custom">
+                                        <tr class="text-info">
+                                            <th scope="col" class="text-center custom-th custom-th-txt"></th>
+                                            <th scope="col" class="text-center custom-th custom-th-sun  table-info" *ngFor="let weekDetail of weekDetails">
+                                                <div><span class="header-day">{{weekDetail.date | date: 'EEEE'}}</span></div>
+                                                <div><span class="header-date">{{weekDetail.date | date: 'dd MMM yyyy'}}</span></div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="tbody-custom">
+                                        <ng-container *ngFor="let shiftTempateTimes of shiftGroupsWeeklyShift.ShiftTemplate.Times">
+                                            <tr>
+                                                <th scope="row">
+                                                    <div>
+                                                        <span class="header-shift">{{shiftTempateTimes.Name}}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="header-time">{{shiftTempateTimes.StartingHour | number: '2.'}}:{{shiftTempateTimes.StartingMinute | number: '2.'}}
+                          -
+                          {{shiftTempateTimes.EndingHour | number: '2.'}}:{{shiftTempateTimes.EndingMinute | number: '2.'}}</span>
+                                                    </div>
+                                                </th>
+                                                <td *ngFor="let weekDetail of weekDetails">
+                                                    <!-- Shift Start -->
+                                                    <div class="card card-custom-001">
+                                                        <div class="card-body">
+                                                            <div *ngFor="let shift of getShiftsByDateAndShiftTime(weekDetail, shiftTempateTimes)">
+                                                                <span class="badge badge-success custom-badge-dutyOn shiftCell">
+                              {{shift.ShiftEmployee.Name}} ({{shift.ShiftEmployee.EmployeeId}})
+                            </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card card-custom-001" *ngIf="showCancelledHistory">
+                                                        <div class="card-body">
+                                                            <div *ngFor="let shift of getCancelledShiftsByDateAndShiftTime(weekDetail, shiftTempateTimes)">
+                                                                <!-- <span class="badge badge-secondary custom-badge-dutyOn-Removed shiftCell" *ngIf="!selectedStaff || (selectedStaff && selectedStaff.EmployeeId === shift.ShiftEmployee.EmployeeId)"> -->
+                                                                <span class="badge badge-secondary custom-badge-dutyOn-Removed shiftCell" *ngIf="!selectedStaff || (selectedStaff && selectedStaff.EmployeeId === shift.ShiftEmployee.EmployeeId)">
+                              {{shift.ShiftEmployee.Name}} ({{shift.ShiftEmployee.EmployeeId}})
+                            </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Shift End -->
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+
+                                        <tr>
+                                            <th scope="row">
+                                                <div>
+                                                    <span class="header-shift">Shift Holiday</span>
+                                                </div>
+                                                <div>
+                                                    <span class="header-time">00:00 - 23:59</span>
+                                                </div>
+                                            </th>
+                                            <td *ngFor="let weekDetail of weekDetails">
+                                                <!-- Shift Start -->
+                                                <div class="card card-custom-001">
+                                                    <div class="card-body">
+                                                        <div *ngFor="let shift of weekDetail.offShifts">
+                                                            <span class="badge badge-success custom-badge-dutyOff shiftCell" *ngIf="shift.CancelledOn === null && !selectedStaff || (selectedStaff && selectedStaff.EmployeeId === shift.ShiftEmployee.EmployeeId)">
+                            {{shift.ShiftEmployee.Name}} ({{shift.ShiftEmployee.EmployeeId}})
+                          </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card card-custom-001" *ngIf="showCancelledHistory">
+                                                    <div class="card-body">
+                                                        <div *ngFor="let shift of weekDetail.offShifts">
+                                                            <span class="badge badge-secondary custom-badge-dutyOn-Removed shiftCell" *ngIf="shift.CancelledOn !== null && !selectedStaff || (selectedStaff && selectedStaff.EmployeeId === shift.ShiftEmployee.EmployeeId)">
+                            {{shift.ShiftEmployee.Name}} ({{shift.ShiftEmployee.EmployeeId}})
+                          </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Shift End -->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

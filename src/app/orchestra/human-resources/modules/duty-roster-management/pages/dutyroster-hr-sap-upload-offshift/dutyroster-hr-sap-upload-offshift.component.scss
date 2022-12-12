@@ -1,0 +1,99 @@
+// @import "../../../../../assets/bootswatch/yeti/variables.scss";
+// @import "../../../../../assets/bootswatch/yeti/bootstrap.css";
+// @import "../../../../../assets/bootswatch/yeti/bootstrap.min.css";
+@import "./../../duty-roster-styles.scss";
+// // =====================================================
+#uploadDataTbl .thead-custom th:nth-child(1) {
+    background-color: #f1fbfd;
+    font-size: 13px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    max-width: 50px;
+    width: 50px;
+    vertical-align: middle;
+}
+
+#uploadDataTbl .thead-custom th:nth-child(2),
+#uploadDataTbl .thead-custom th:nth-child(3),
+#uploadDataTbl .thead-custom th:nth-child(4),
+#uploadDataTbl .thead-custom th:nth-child(5),
+#uploadDataTbl .thead-custom th:nth-child(6),
+#uploadDataTbl .thead-custom th:nth-child(7),
+#uploadDataTbl .thead-custom th:nth-child(8),
+#uploadDataTbl .thead-custom th:nth-child(9),
+#uploadDataTbl .thead-custom th:nth-child(10) {
+    background-color: #f1fbfd;
+    font-size: 13px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    vertical-align: middle;
+}
+
+#uploadDataTbl .thead-custom td:last-child {
+    max-width: 300px;
+    width: 300px;
+    color: #970000;
+}
+
+#uploadDataTbl .tbody-custom th:nth-child(1) {
+    background-color: #f1fbfd;
+    font-size: 13px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    vertical-align: middle;
+}
+
+#uploadDataTbl .tbody-custom td:nth-child(2),
+#uploadDataTbl .tbody-custom td:nth-child(3),
+#uploadDataTbl .tbody-custom td:nth-child(4),
+#uploadDataTbl .tbody-custom td:nth-child(5),
+#uploadDataTbl .tbody-custom td:nth-child(6),
+#uploadDataTbl .tbody-custom td:nth-child(7),
+#uploadDataTbl .tbody-custom td:nth-child(8),
+#uploadDataTbl .tbody-custom td:nth-child(9),
+#uploadDataTbl .tbody-custom td:nth-child(10) {
+    font-size: 13px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    vertical-align: middle;
+}
+
+#uploadDataTbl .tbody-custom td:last-child {
+    max-width: 150px;
+    width: 150px;
+    // color: #970000;
+}
+
+#uploadDataTbl .tbody-custom .td.btn {
+    color: #970000 !important;
+    font-size: 10px !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+
+.table {
+    thead {
+        font-size: 13px !important;
+        th {
+            padding: 8px 10px 8px 10px !important;
+        }
+    }
+    tbody {
+        font-size: 13px !important;
+        th,
+        td {
+            padding: 6px 10px 6px 10px !important;
+        }
+    }
+}

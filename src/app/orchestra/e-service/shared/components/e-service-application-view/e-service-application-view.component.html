@@ -1,0 +1,153 @@
+<!-- eService | Application -->
+<section>
+  <!-- eServiceApplication | ShowLoader -->
+  <div class="row" *ngIf="eServiceApplicationShowLoader">
+    <div class="col-sm-12">
+      <app-e-service-loader></app-e-service-loader>
+    </div>
+  </div>
+
+  <!-- eServiceApplications -->
+  <!-- <div class="row" *ngIf="eServiceApplication && eServiceApplications.length > 0"> -->
+  <div class="row" *ngIf="eServiceApplications?.UserName">
+    <div class="col-sm-12" style="padding-left: 5px;">
+
+      <div class="list-group">
+        <div class="list-group-item list-group-item-application-view list-group-item-action flex-column align-items-start">
+          <h3 class="application-title-main-1">{{eServiceApplications.UserName}}</h3>
+
+          <!-- User Details -->
+          <div class="row application-fieldset bg-secondary">
+            <h6 class="application-legend"> User Details</h6>
+            <div class="col-sm-12">
+              <div class="row">
+                <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                  <div class="row">
+                    <div class="col-sm-12 application-label">
+                      Name
+                    </div>
+                    <div class="col-sm-12 application-text">
+                      {{eServiceApplications.Name}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                  <div class="row">
+                    <div class="col-sm-12 application-label">
+                      User Name
+                    </div>
+                    <div class="col-sm-12 application-text">
+                      {{eServiceApplications.UserName}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                  <div class="row">
+                    <div class="col-sm-12 application-label">
+                      Email
+                    </div>
+                    <div class="col-sm-12 application-text">
+                      {{eServiceApplications.Email}}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                  <div class="row">
+                    <div class="col-sm-12 application-label">
+                      PhoneNumber
+                    </div>
+                    <div class="col-sm-12 application-text">
+                      {{eServiceApplications.PhoneNumber}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Details -->
+          <div class="row application-fieldset bg-secondary" *ngIf="eServiceApplications.UtilityAccounts?.length > 0">
+            <h6 class="application-legend"> Account Details</h6>
+            <div class="col-sm-12" style="padding-left:0px; padding-right:0px;"
+              *ngIf="eServiceApplications.UtilityAccounts?.length > 0">
+              <div class="flex-container application-accounts-flex-container">
+                <div class="col-sm-2" *ngFor="let utilityAccount of eServiceApplications.UtilityAccounts"
+                  style="padding-left:0px; padding-right:5px;">
+                  <div class="list-group-item application-accounts-list-group-item">
+                    <a class="col-sm-2" title="{{utilityAccount.AccountNo}}" style="margin:0px; padding:0px;">
+                      <div class="row" style="margin:0px; padding:0px;">
+                        <div class="col-sm-6 application-accounts-label">
+                          <p class="text-center account-label">Account No</p>
+                        </div>
+                        <div class="col-sm-6 application-accounts-label">
+                          <p class="text-center account-label">Meter No</p>
+                        </div>
+                      </div>
+                      <div class="row" style="margin:0px; padding:0px;">
+                        <div class="col-sm-6 application-accounts-text">
+                          <h4 class="text-center account-text">{{utilityAccount.AccountNo}}</h4>
+                        </div>
+                        <div class="col-sm-6 application-accounts-text">
+                          <h4 class="text-center account-text">{{utilityAccount.MeterNo}}</h4>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Online Applications Details -->
+          <div class="row application-fieldset bg-secondary"
+            *ngIf="eServiceApplications.OnlineApplications.UtilityApplications?.length > 0">
+            <h6 class="application-legend"> Online Applications Details</h6>
+            <div class="col-sm-12">
+              <div class="row">
+
+                <div class="col-sm-12 list-group-item list-group-item-action flex-column align-items-start">
+                  <table class="table table-hover" id="accordion">
+                    <thead>
+                      <tr class="text-primary-600 bg-primary-100">
+                        <th scope="col">Created On</th>
+                        <th scope="col">Created By</th>
+                        <th scope="col">Application Type</th>
+                        <th scope="col">Sales Order No</th>
+                        <th scope="col">Application Status</th>
+                        <!-- <th scope="col">Actions</th> -->
+                      </tr>
+                    </thead>
+                    <tbody
+                      *ngFor="let onlineApplication of eServiceApplications.OnlineApplications.UtilityApplications">
+                      <tr>
+                        <td>{{onlineApplication.CreatedOn | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                        <td>{{onlineApplication.CreatedBy}}</td>
+                        <td>{{onlineApplication.ApplicationType.Description}}</td>
+                        <td>{{onlineApplication.SalesOrderNo}}</td>
+                        <td>{{onlineApplication.CurrentStageDescription}}</td>
+                        <!-- <td>
+                                    <i class="fa fa-bars fa-lg text-warning bg-secondary"
+                                      (click)="hideRejectReason(); viewSelectedApplication(pending)"></i>
+                                  </td> -->
+                      </tr>
+                      <tr
+                        *ngIf="eServiceApplications.OnlineApplications.PaginationInfo?.TotalPages > eServiceApplications.OnlineApplications.PaginationInfo?.PageNumber">
+                        <th scope="row" colspan="5">
+                          <button type="button" class="btn btn-primary"
+                            *ngIf="eServiceApplications.OnlineApplications.PaginationInfo?.TotalPages > eServiceApplications.OnlineApplications.PaginationInfo?.PageNumber"
+                            (click)="getPendingApplications(eServiceApplications.OnlineApplications.PaginationInfo?.PageSize, (eServiceApplications.OnlineApplications.PaginationInfo?.PageNumber + 1))">Show
+                            More</button>
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

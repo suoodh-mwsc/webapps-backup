@@ -1,0 +1,83 @@
+
+$danger: #ff4444;
+$danger-dark: #CC0000;
+$warning: #ffbb33;
+$warning-dark: #FF8800;
+$success: #00C851;
+$success-dark: #007E33;
+$info: #33b5e5;
+$info-dark: #0099CC;
+$primary: #4285F4;
+$primary-dark: #0d47a1;
+$white: #ffffff;
+
+$default-color: #2BBBAD;
+$default-color-dark: #00695c;
+$primary-color: #4285F4;
+$primary-color-dark: #0d47a1;
+$secondary-color: #aa66cc;
+$secondary-color-dark: #9933CC;
+$elegant-color: #2E2E2E;
+$elegant-color-dark: #212121;
+$stylish-color: #4B515D;
+$stylish-color-dark: #3E4551;
+
+$bg-primary-50: #e2f5f8;
+$bg-primary-100: #D1ECF1;
+$bg-primary-200: #BAE2E9;
+$bg-primary-300: #A4D8E1;
+$bg-primary-400: #8DCED9;
+$bg-primary-500: #76C5D1;
+$bg-primary-600: #5FBBC8;
+$bg-primary-700: #49B1C0;
+$bg-primary-800: #32A7B8;
+$bg-primary-900: #17a2b8;
+$bg-primary-1100: #188697;
+$bg-primary-1200: #157B8B;
+$bg-primary-1300: #12707F;
+$bg-primary-1400: #0F6572;
+
+.selfcare-page-title-01 {
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: $bg-primary-600 !important;
+}
+
+.selfcare-page-title-02 {
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 17px;
+    padding-bottom: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: $bg-primary-600 !important;
+}
+
+
+.selfcare-table-title-01 {
+    text-align: left;
+    font-size: 13px;
+    font-weight: bold;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: $bg-primary-800 !important;
+}
+
+.selfcare-table-title-02 {
+    text-align: left;
+    font-size: 12px;
+    font-weight: bold;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: $bg-primary-100 !important;
+}

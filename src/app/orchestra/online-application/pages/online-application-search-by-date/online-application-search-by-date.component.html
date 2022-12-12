@@ -1,0 +1,62 @@
+<!-- Search Completed Applications | with SalesOrderNo -->
+<section>
+    <div class="card card-main-1 sm-12">
+      <div class="card-header text-primary-500 bg-primary-100 font-weight-bold">
+        <div class="row">
+          <div class="col-sm-6">
+            Completed Applications
+          </div>
+          <div class="col-sm-6">
+            <div class="btn-custom">
+              <a class="btn-custom" (click)="viewPendingApplicationList()"><i
+                  class="fa fa-refresh fa-lg fa-pull-right fa-border" aria-hidden="true"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <form>
+              <div class="form-group row">
+                <div class="col-sm-4">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Sales Order No</span>
+                    </div>
+                    <!-- <input type="number" class="form-control" [(ngModel)]="searchSalesOrderNo" name="searchSalesOrderNo"
+                      id="searchSalesOrderNo" aria-label="With textarea"> -->
+  
+                      <input [(ngModel)]="searchDate" name="searchDate" id="searchDate" type="date"/>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <button type="button" class="btn btn-success" [disabled]="!searchDate"
+                    (click)="searchOnlineApplicationsByDate(searchDate)"><i class="fa fa-search"
+                      aria-hidden="true"></i> Search For Application</button>
+                </div>
+                <div class="col-sm-4">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+  
+  
+  
+        <div class="row">
+          <div class="col-sm-12" *ngIf="showLoader">
+            <app-online-application-loader *ngIf="showLoader"></app-online-application-loader>
+          </div>
+          <div class="col-sm-12" *ngIf="!showLoader && applicationList">
+            <!-- Pending Applications | Select Application -->
+            <section>
+              <div class="card card card-main-3 sm-12" *ngFor="let selectedApplication of applicationList">
+                <p>{{selectedApplication | json}}</p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

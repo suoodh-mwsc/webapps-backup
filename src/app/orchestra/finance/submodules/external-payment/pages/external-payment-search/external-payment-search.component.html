@@ -1,0 +1,88 @@
+<div class="card card-main-3 mb-3">
+    <h3 class="card-header text-primary-900 bg-primary-200 font-weight-bold">External Payments | Search Transactions</h3>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <div class="input-group mb-2">
+                        <input class="form-control" (keyup.enter)= "search(searchValue)" [(ngModel)]="searchValue" id="searchValue" name="searchValue" placeholder="Account Number">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" (click)="search(searchValue)">Search <i class="fa fa-search"
+                  aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <app-external-payment-loader *ngIf="showLoader"></app-external-payment-loader>
+
+        <div class="row" *ngIf="transactions">
+            <div class="col-lg-12" *ngIf="transactions && transactions.length == 0">
+                <div class="alert alert-dismissible alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h5 class="alert-heading">Warning!</h5>
+                    <p class="mb-0">There are no pending transactions for the selected criteria.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <app-external-payment-transactions [transactions]="transactions" [pageTopStatus]="pageTopStatus" [showLoader]="showLoader"></app-external-payment-transactions>
+            </div>
+
+            <!-- <div class="col-lg-12" *ngIf="transactions && transactions.length > 0">
+                <div class="row">
+                    <div class="col-lg-11">
+                    </div>
+                    <div class="col-lg-1">
+                        <div class="float-right">
+                            <button class="btn btn-secondary btn-sm" (click)="downloadCSV()"> Download CSV </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Taken On</th>
+                                    <th>Transaction ID</th>
+                                    <th>Account No</th>
+                                    <th>Organization</th>
+                                    <th>Outlet</th>
+                                    <th>
+                                        <div class="float-right">
+                                            Payment Amount
+                                        </div>
+                                    </th>
+                                    <th>Payment Method</th>
+                                    <th>Trace No</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let transaction of transactions">
+                                    <td>{{transaction.TakenOn | date: 'dd MMM yyyy HH:mm'}}</td>
+                                    <td>{{transaction.Id}}</td>
+                                    <td>{{transaction.CustomerSearch.CustomerDetail.AccountNo}}</td>
+                                    <td>{{transaction.Outlet.Organaization.Name}}</td>
+                                    <td>{{transaction.Outlet.Name}}</td>
+                                    <td>
+                                        <div class="float-right">
+                                            {{transaction.PaymentAmount | number: '0.2'}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{transaction.PaymentMethod == 0 ? 'Cash': 'Card'}}
+                                    </td>
+                                    <td>{{transaction.TraceNo}}</td>
+                                    <td>
+                                        {{transaction.PaymentStatus == 0 ? 'Created': transaction.PaymentStatus == 1 ? 'Voided': 'Approved' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>

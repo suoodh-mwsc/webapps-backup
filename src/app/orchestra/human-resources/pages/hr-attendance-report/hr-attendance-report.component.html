@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-lg-1">ROLL CALL REPORT</div>
+  <div class="col-lg-2">
+    <div class="form-group">
+      <input class="form-control" type="date" [(ngModel)]="rollcallDate" />
+    </div>
+  </div>
+  <div class="col-lg-1">
+    <div class="form-group">
+        <button class="btn btn-primary btn-sm" (click)="download(rollcallDate)">Download</button>
+    </div>
+  </div>
+</div>

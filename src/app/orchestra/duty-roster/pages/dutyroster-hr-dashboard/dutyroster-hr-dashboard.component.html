@@ -1,0 +1,1020 @@
+<!-- selectedShiftGroup -->
+<section *ngIf="!selectedShiftGroup">
+  <main role="main" class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <h5 class="dutyroster-page-title-01">HR Dashboard | ShiftGroups</h5>
+      </div>
+      <div class="col-sm-6">
+        <div class="mt-3 float-right">
+          <a class="add" title="Add" (click)="addShiftGroupModal.show()">
+            <i class="material-icons">&#xe147;</i>
+          </a>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <hr style="margin-bottom: 10px; margin-top: 5px;">
+      </div>
+      <div class="col-sm-12">
+        <!-- Select Groups -->
+        <div class="row" *ngIf="!selectedShiftGroup && shiftGroups">
+          <div class="col-sm-12">
+            <div class="alert alert-dismissible alert-danger" *ngIf="!shiftGroups">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong>Oh Snap!</strong> No Shift Group Found, Please and new Shift Group to Continue ...
+            </div>
+            <div class="alert alert-dismissible alert-info" *ngIf="shiftGroups">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong>Information !</strong> Please select Shift Group to Continue ...
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <app-dutyroster-loader *ngIf="showShiftGroupLoader"></app-dutyroster-loader>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="row d-flex">
+              <div class="col-sm-3" *ngFor="let shiftGroup of shiftGroups">
+                <div class="card"
+                  [ngClass]="{'card-shiftGroup-tile-01-Active': !shiftGroup.IsDeleted, 'card-shiftGroup-tile-01-InActive': shiftGroup.IsDeleted}">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-sm-9" (click)="selectShiftGroup(shiftGroup)">
+                        <div class="row">
+                          <div class="col-sm-12  no-gutters">
+                            <h6 class="card-title-shiftGroup-tile-01">{{shiftGroup.Name}}</h6>
+                          </div>
+                          <div class="col-sm-12  no-gutters">
+                            <p class="card-title-shiftGroup-tile-02">{{shiftGroup.Description}}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="float-right custom-button-div">
+                          <a class="delete-data" title="Delete" *ngIf="!shiftGroup.IsDeleted"
+                            (click)="deleteShiftGroups(shiftGroup)">
+                            <i class="material-icons">&#xe92b;</i>
+                          </a>
+                          <a class="restore-data" title="Restore" *ngIf="shiftGroup.IsDeleted"
+                            (click)="restoreShiftGroups(shiftGroup)">
+                            <i class="material-icons">&#xe929;</i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div class="mt-2 mb-1 float-left">
+              <button type="button" class="btn btn-info btn-sm"
+                *ngIf="shiftGroupsPaginationInfo.TotalPages > shiftGroupsPaginationInfo.PageNumber"
+                (click)="getAllShiftGroups(shiftGroupsPaginationInfo.PageSize, (shiftGroupsPaginationInfo.PageNumber + 1))">
+                Show More
+                <!-- <i class="material-icons" style="vertical-align: middle !important;">&#xe5cc;</i> -->
+                <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+
+
+
+
+<!-- ManageShiftGroup -->
+<section *ngIf="selectedShiftGroup">
+  <main role="main" class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <h5 class="dutyroster-page-title-01">HR Dashboard | Manage ShiftGroup</h5>
+      </div>
+      <div class="col-sm-6">
+        <div class="mt-3 float-right">
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <hr style="margin-bottom: 10px; margin-top: 5px;">
+      </div>
+      <div class="col-sm-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item font-weight-bold">
+              <a (click)="unSelectShiftGroup()">
+                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Go Back
+              </a>
+            </li>
+            <li class="breadcrumb-item active font-weight-bold" aria-current="page">
+              <span class="text-primary-400">Shift Group: </span>
+              <span class="text-primary-700">{{selectedShiftGroup.Name}} ({{selectedShiftGroup.Description}})</span>
+            </li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="col-sm-12" *ngIf="showShiftGroupLoader">
+        <app-dutyroster-loader></app-dutyroster-loader>
+      </div>
+
+      <div class="col-sm-12">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="nav-item" [ngClass]="{active: selectedTab === 'shiftSupervisors'}">
+            <a class="nav-link active" href="#shiftSupervisors" aria-controls="shiftSupervisors" role="tab"
+              data-toggle="tab" (click)="selectActive('shiftSupervisors')">Shift Supervisors</a>
+          </li>
+          <li role="presentation" class="nav-item" [ngClass]="{active: selectedTab === 'shiftEmployees'}">
+            <a class="nav-link" href="#shiftEmployees" aria-controls="shiftEmployees" role="tab" data-toggle="tab"
+              (click)="selectActive('shiftEmployees')">Shift Employees</a>
+          </li>
+          <li role="presentation" class="nav-item" [ngClass]="{active: selectedTab === 'weeklyShifts'}">
+            <a class="nav-link" href="#weeklyShifts" aria-controls="weeklyShifts" role="tab" data-toggle="tab"
+              (click)="initializeWeeklyShiftsTab(); selectActive('weeklyShifts')">Weekly Shifts</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <!-- Start-weeklyShifts -->
+          <div role="tabpanel" class="tab-pane py-2 fade" id="weeklyShifts"
+            [ngClass]="{active:selectedTab ==='weeklyShifts'}" *ngIf="selectedTab ==='weeklyShifts'">
+            <div class="row">
+              <!-- Start-yearList -->
+              <div class="col-sm-12" *ngIf="!selectedWeeklyShifts && yearList && !shiftGroupWeeklyShiftData">
+                <div class="row">
+                  <div class="col-sm-6 align-text-bottom">
+                    <h5 class="dutyroster-tab-title-01">Manage WeeklyShift | By Year</h5>
+                  </div>
+                  <div class="col-sm-6 align-text-bottom">
+                    <div class="mt-3 float-right">
+                      <a class="add" title="Add" (click)="addWeeklyShiftsModal.show()">
+                        <i class="material-icons">&#xe147;</i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <hr style="margin-bottom: 10px; margin-top: 5px;">
+                  </div>
+                  <div class="col-sm-12" *ngIf="!selectedWeeklyShifts && yearList.length < 1">
+                    <div class="alert alert-dismissible alert-info">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <strong>Information !</strong> No ShiftWeek data found for this Shiftgroup. Please add new
+                      ShiftWeek ...
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+
+                    <div class="d-flex flex-row">
+                      <div *ngFor="let year of yearList" class="col-sm-3" style="margin-left: 3px;">
+                        <div class="card card-dutyroster-year-tile-01">
+                          <div class="card-body" style="vertical-align: middle;">
+                            <div class="row">
+                              <div class="col-sm-9" (click)="getWeeklyShiftsForYear(year)">
+                                <div class="row">
+                                  <div class="col-sm-3 btn-card">
+                                    <i class="fa fa-calendar text-white" aria-hidden="true"></i>
+                                  </div>
+                                  <div class="col-sm-9" style="vertical-align: middle;">
+                                    <span class="text-white">{{year}}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <!-- End-yearList -->
+
+              <!-- Start-selectedWeeklyShifts -->
+              <div class="col-sm-12" *ngIf="selectedWeeklyShifts && !shiftGroupWeeklyShiftData">
+                <div class="row">
+                  <div class="col-sm-6 align-text-bottom">
+                    <h5 class="dutyroster-tab-title-01">Manage WeeklyShift | By Week No</h5>
+                  </div>
+                  <div class="col-sm-6 align-text-bottom">
+                    <div class="mt-3 float-right">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <hr style="margin-bottom: 10px; margin-top: 5px;">
+                  </div>
+                  <div class="col-sm-12" *ngIf="selectedWeeklyShifts < 1">
+                    <div class="alert alert-dismissible alert-info">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <strong>Information !</strong> No ShiftWeek data found for this Shiftgroup. Please add new
+                      ShiftWeek ...
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+
+                    <table class="table table-hover weeklyShiftsTbl" id="weeklyShiftsTbl"
+                      *ngIf="selectedWeeklyShifts.length > 0">
+                      <thead class="thead-light thead-custom">
+                        <tr>
+                          <th scope="col"></th>
+                          <th scope="col">Week No</th>
+                          <th scope="col">Starts On</th>
+                          <th scope="col">Ends On</th>
+                          <th scope="col">View Roster</th>
+                          <th scope="col">Editing</th>
+                          <th scope="col">Published</th>
+                          <th scope="col">Shift Group</th>
+                          <th scope="col">Shift Template</th>
+                        </tr>
+                      </thead>
+                      <tbody class="tbody-custom">
+                        <ng-container *ngFor="let weeklyShift of selectedWeeklyShifts; let r = index">
+                          <tr>
+                            <th scope="row"></th>
+                            <td>
+                              <span class="badge badge-secondary badge-weeklyShiftYear">{{weeklyShift?.Year}}</span>
+                              {{weeklyShift?.WeekNumber}}
+                            </td>
+                            <td>{{weeklyShift?.StartsOn | date : 'dd MMM yyyy'}}</td>
+                            <td>{{weeklyShift?.EndsOn | date: 'dd MMM yyyy'}}</td>
+                            <td>
+                              <button type="button" class="btn btn-link btn-sm"
+                                (click)="showThisWeekDutyRoster(selectedShiftGroup.Id, weeklyShift.WeekNumber,weeklyShift.Year)">
+                                <i class="fa fa-calendar text-warning" aria-hidden="true"></i>
+                              </button>
+                            </td>
+                            <td>
+                              <span class="text-success" *ngIf="weeklyShift.IsEditingPossible">
+                                <i class="fa fa-unlock-alt fa-lg" aria-hidden="true"></i>
+                              </span>
+                              <span class="text-danger" *ngIf="!weeklyShift.IsEditingPossible">
+                                <i class="fa fa-lock fa-lg" aria-hidden="true"></i>
+                              </span> {{weeklyShift?.EditingPossibleUpto | date: 'dd MMM yyyy'}}
+                              <button type="button" class="btn btn-link btn-sm"
+                                (click)="showUpdateShiftAssignModal(weeklyShift)">
+                                <i class="fa fa-pencil-square-o text-warning" aria-hidden="true"></i>
+                              </button>
+                            </td>
+                            <td>
+                              <span class="text-success" *ngIf="weeklyShift.ReleasedOn">
+                                <i class="fa fa-check-circle fa-lg" aria-hidden="true"></i>
+                              </span>
+                              <span class="text-danger" *ngIf="!weeklyShift.ReleasedOn">
+                                <i class="fa fa-times-circle fa-lg" aria-hidden="true"></i>
+                              </span> {{weeklyShift?.ReleasedOn | date: 'dd MMM yyyy'}}
+                            </td>
+                            <td>
+                              {{selectedShiftGroup.Name}} ({{selectedShiftGroup.Description}})
+                            </td>
+                            <td>{{weeklyShift?.ShiftTemplate.Name}}
+                              <button type="button" class="btn btn-link btn-sm"
+                                (click)="showShiftTemplateModal(weeklyShift)">
+                                <i class="fa fa-pencil-square-o text-warning" aria-hidden="true"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- End-selectedWeeklyShifts -->
+
+              <!-- Start-selectedWeeklyShifts Create Shift-->
+              <!-- <div class="col-sm-12" *ngIf="shiftGroupWeeklyShiftData?.Shifts">
+                <app-dutyroster-hr-shift-calendar [shiftGroupWeeklyShiftData]="shiftGroupWeeklyShiftData"
+                  [showShiftGroupWeeklyShiftLoader]="showShiftGroupWeeklyShiftLoader">
+                </app-dutyroster-hr-shift-calendar>
+              </div> -->
+              <!-- Create Shift -->
+              <div class="col-sm-12" *ngIf="shiftGroupWeeklyShiftData?.Shifts">
+                <!-- Create Shift -->
+                <section>
+                  <!-- <main role="main" class="container-fluid"> -->
+                  <main role="main">
+                    <div class="row">
+                      <div class="col-sm-12" style="padding-top: 6px;">
+                        <nav aria-label="breadcrumb">
+                          <ol class="breadcrumb bg-primary-50" style="margin-bottom: 5px;">
+                            <li class="breadcrumb-item font-weight-bold">
+                              <a (click)="unSelectWeekDutyRoster()">
+                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Go Back
+                              </a>
+                            </li>
+                            <li class="breadcrumb-item active font-weight-bold" aria-current="page">
+                              <span class="text-primary-700">WeeklyShift | View Shifts </span>
+                            </li>
+                          </ol>
+                        </nav>
+                      </div>
+
+                      <div class="col-sm-12"
+                        *ngIf="!shiftGroupsWeeklyShift?.IsReleased && shiftGroupsWeeklyShift?.ReleasedOn !== null">
+                        <div class="alert alert-dismissible alert-danger">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <strong>Oh Snap!</strong> This Week Shift is not Publish from HR Department. Please Contact HR
+                          Department for more information ...
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <app-dutyroster-loader *ngIf="showShiftGroupWeeklyShiftLoader"></app-dutyroster-loader>
+                          </div>
+
+                          <div class="col-sm-12">
+                            <div class="row" style="padding-top: 5px;">
+                              <div class="col-sm-2">
+                                <button type="button"
+                                  class="{{showCancelledHistory ? 'btn btn-success btn-sm btn-block isWeeklyShiftStatus' : 'btn btn-light btn-sm btn-block isWeeklyShiftStatus'}}"
+                                  (click)="toggleshowCancelledHistory()">
+                                  <i class="material-icons btnWithMaterial-icon">&#xe53c;</i> Show Cancelled
+                                  Shifts</button>
+
+                                <button type="button"
+                                  class="{{showDeletedEmployees ? 'btn btn-success btn-sm btn-block' : 'btn btn-light btn-sm btn-block'}}"
+                                  (click)="toggleShowDeletedEmployees()">
+                                  <i class="material-icons btnWithMaterial-icon">&#xe53c;</i> Show Deleted
+                                  Employees</button>
+
+                              </div>
+                              <div class="col-sm-5">
+                                <button type="button" class="btn btn-success btn-sm isWeeklyShiftStatus"
+                                  *ngIf="shiftEmployeesDetails" (click)="printDutyRosterDetail()">
+                                  <i class="material-icons btnWithMaterial-icon">&#xe555;</i> DutyRoster Details
+                                </button>
+                                <button type="button" class="btn btn-success btn-sm isWeeklyShiftStatus"
+                                  *ngIf="shiftEmployeesDetails" (click)="printDutyRoster()">
+                                  <i class="material-icons btnWithMaterial-icon">&#xe8ad;</i> DutyRoster</button>
+                              </div>
+                              <div class="col-sm-5">
+                                <div class="pull-right">
+                                  <!-- <div *ngIf="shiftGroupsWeeklyShift?.StartsOn > todayDate && !shiftGroupsWeeklyShift?.StatusText === 'Supervisor_Realeased' else locked"> -->
+                                  <div *ngIf="!shiftGroupsWeeklyShift?.IsReleased else locked">
+                                    <div class="pull-right">
+                                      <span class="badge badge-secondary"
+                                        *ngIf="shiftGroupsWeeklyShift?.IsEditingPossible">Editing
+                                        possible upto
+                                        {{shiftGroupsWeeklyShift?.EditingPossibleUpto | date : 'dd MMM yyyy'}}</span>
+                                      <span class="badge badge-secondary"
+                                        *ngIf="!shiftGroupsWeeklyShift?.IsEditingPossible">Editing
+                                        possible upto
+                                        {{shiftGroupsWeeklyShift?.EditingPossibleUpto | date : 'dd MMM yyyy'}}</span>
+                                      <button type="button" class="btn btn-primary btn-sm isWeeklyShiftStatus"
+                                        title="updateRealse" *ngIf="!shiftGroupsWeeklyShift?.IsReleased"
+                                        (click)="getWeeklyShiftSupervisorRelease(shiftGroupsWeeklyShift)"><i
+                                          class="material-icons btnWithMaterial-icon">&#xe86c;</i>
+                                        Release Week</button>
+                                    </div>
+                                  </div>
+                                  <ng-template #locked>
+                                    <div class="pull-right">
+                                      <div>
+                                        <span class="badge badge-secondary"
+                                          *ngIf="shiftGroupsWeeklyShift?.IsEditingPossible">Editing
+                                          possible upto
+                                          {{shiftGroupsWeeklyShift?.EditingPossibleUpto | date : 'dd MMM yyyy'}}</span>
+                                        <span class="badge badge-secondary"
+                                          *ngIf="!shiftGroupsWeeklyShift?.IsEditingPossible">Editing
+                                          possible upto
+                                          {{shiftGroupsWeeklyShift?.EditingPossibleUpto | date : 'dd MMM yyyy'}}</span>
+                                        <span class="badge badge-success"
+                                          *ngIf="shiftGroupsWeeklyShift?.IsReleased">Released</span>
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row" id="printDutyRosterDetailSection">
+                              <div class="col-sm-12">
+                                <div class="row" *ngIf="shiftEmployeesDetails">
+                                  <div class="col-sm-2" style="padding-top: 43px;">
+                                    <div class="row">
+                                      <div class="col-sm-12" style="padding-right: 0px;">
+                                        <table class="table table-hover shiftListTbl" id="shiftListTbl">
+                                          <thead class="thead-light thead-custom">
+                                            <tr>
+                                              <th class="col-sm-8" scope="col">Employee</th>
+                                              <th class="col-sm-2" scope="col">Shifts</th>
+                                              <th class="col-sm-2" scope="col">Offs</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody class="tbody-custom">
+
+                                            <ng-container *ngFor="let shiftEmployeesDetail of shiftEmployeesDetails">
+                                              <tr
+                                                *ngIf="!shiftEmployeesDetail.IsRemoved || (showDeletedEmployees && shiftEmployeesDetail.IsRemoved)"
+                                                (click)="showStaffStuff(shiftEmployeesDetail)"
+                                                class=" {{ selectedStaff && selectedStaff.EmployeeId === shiftEmployeesDetail.EmployeeId ? 'table-primary' : ''}}">
+                                                <td>
+                                                  <div class="text-muted" *ngIf="shiftEmployeesDetail.IsRemoved">
+                                                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                                    {{ shiftEmployeesDetail.Name }}
+                                                  </div>
+                                                  <div class="text-success" *ngIf="!shiftEmployeesDetail.IsRemoved">
+                                                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                                    {{ shiftEmployeesDetail.Name }}
+                                                  </div>
+                                                </td>
+                                                <td>{{ shiftEmployeesDetail.noOfNormalShifts }}</td>
+                                                <td>{{ shiftEmployeesDetail.noOfOffShifts }}</td>
+                                              </tr>
+                                            </ng-container>
+
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-10" id="printDutyRosterThisSection">
+                                    <div class="row">
+                                      <div class="col-sm-6">
+                                        <h2 class="text-muted" id="tabTitle"><span class="text-muted">Shift
+                                            Group:</span>
+                                          {{selectedShiftGroup.Name}} ({{selectedShiftGroup.Description}})</h2>
+                                      </div>
+                                      <div class="col-sm-6">
+                                        <div class="pull-right">
+                                          <h2 id="cardTitle">
+                                            Week #{{selectedWeekNo}}
+                                            {{shiftGroupsWeeklyShift.StartsOn | date : 'dd MMM yyyy'}} -
+                                            {{shiftGroupsWeeklyShift.EndsOn | date : 'dd MMM yyyy'}}</h2>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-sm-12">
+                                        <table class="table table-bordered dutyRosterTbl" id="dutyRosterTbl">
+                                          <thead class="thead-custom">
+                                            <tr class="text-info">
+                                              <th scope="col" class="text-center custom-th custom-th-txt"></th>
+                                              <th scope="col" class="text-center custom-th custom-th-sun table-info"
+                                                *ngFor="let weekDetail of weekDetails">
+                                                <div><span class="header-day">{{weekDetail.date | date: 'EEEE'}}</span>
+                                                </div>
+                                                <div><span class="header-date">{{weekDetail.date | date: 'dd MMM
+                                                    yyyy'}}</span>
+                                                </div>
+                                              </th>
+                                            </tr>
+                                          </thead>
+                                          <tbody class="tbody-custom">
+                                            <ng-container
+                                              *ngFor="let shiftTempateTimes of shiftGroupsWeeklyShift.ShiftTemplate.Times">
+                                              <tr>
+                                                <th scope="row">
+                                                  <div>
+                                                    <span class="header-shift">{{shiftTempateTimes.Name}}</span>
+                                                  </div>
+                                                  <div>
+                                                    <span class="header-time">{{shiftTempateTimes.StartingHour | number:
+                                                      '2.'}}:{{shiftTempateTimes.StartingMinute | number: '2.'}}
+                                                      -
+                                                      {{shiftTempateTimes.EndingHour | number:
+                                                      '2.'}}:{{shiftTempateTimes.EndingMinute | number: '2.'}}</span>
+                                                  </div>
+                                                </th>
+                                                <td *ngFor="let weekDetail of weekDetails"
+                                                  (click)="zshowShiftAssignModal(weekDetail, shiftTempateTimes, false)">
+                                                  <!-- Shift Start -->
+                                                  <div class="card card-custom-001">
+                                                    <div class="card-body">
+                                                      <div
+                                                        *ngFor="let shift of getShiftsByDateAndShiftTime(weekDetail, shiftTempateTimes)">
+                                                        <span class="badge badge-success custom-badge-dutyOn shiftCell"
+                                                          *ngIf="!shift.ShiftEmployee.IsRemoved">
+                                                          {{shift.ShiftEmployee.Name}}
+                                                          ({{shift.ShiftEmployee.EmployeeId}})
+                                                        </span>
+                                                        <span
+                                                          class="badge badge-success custom-badge-dutyOn-DisableEmployee shiftCell"
+                                                          *ngIf="shift.ShiftEmployee.IsRemoved">
+                                                          {{shift.ShiftEmployee.Name}}
+                                                          ({{shift.ShiftEmployee.EmployeeId}})
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <div class="card card-custom-001" *ngIf="showCancelledHistory">
+                                                    <div class="card-body">
+                                                      <div
+                                                        *ngFor="let shift of getCancelledShiftsByDateAndShiftTime(weekDetail, shiftTempateTimes)">
+                                                        <span
+                                                          class="badge badge-secondary custom-badge-dutyOn-Removed shiftCell"
+                                                          *ngIf="!selectedStaff || (selectedStaff && selectedStaff.EmployeeId === shift.ShiftEmployee.EmployeeId)">
+                                                          {{shift.ShiftEmployee.Name}}
+                                                          ({{shift.ShiftEmployee.EmployeeId}}) </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                  <!-- Shift End -->
+                                                </td>
+                                              </tr>
+                                            </ng-container>
+                                            <tr>
+                                              <th scope="row">
+                                                <div>
+                                                  <span class="header-shift">Shift Holiday</span>
+                                                </div>
+                                                <div>
+                                                  <span class="header-time">00:00 - 23:59</span>
+                                                </div>
+                                              </th>
+                                              <td
+                                                (click)="showOffShiftAssignModal(weekDetail, weekDetail.date, '00:00', '23:59' , true)"
+                                                *ngFor="let weekDetail of weekDetails">
+                                                <!-- Shift Start -->
+                                                <div class="card card-custom-001">
+                                                  <div class="card-body">
+                                                    <div *ngFor="let shift of weekDetail.offShifts">
+                                                      <div
+                                                        *ngIf="shift.CancelledOn === null && !selectedStaff || (selectedStaff && selectedStaff.EmployeeId === shift.ShiftEmployee.EmployeeId)">
+                                                        <span class="badge badge-success custom-badge-dutyOff shiftCell"
+                                                          *ngIf="!shift.ShiftEmployee.IsRemoved && shift.CancelledOn === null">
+                                                          {{shift.ShiftEmployee.Name}}
+                                                          ({{shift.ShiftEmployee.EmployeeId}})
+                                                        </span>
+                                                        <span
+                                                          class="badge badge-success custom-badge-dutyOff-DisableEmployee shiftCell"
+                                                          *ngIf="shift.ShiftEmployee.IsRemoved && shift.CancelledOn === null">
+                                                          {{shift.ShiftEmployee.Name}}
+                                                          ({{shift.ShiftEmployee.EmployeeId}})
+                                                        </span>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="card card-custom-001" *ngIf="showCancelledHistory">
+                                                  <div class="card-body">
+                                                    <div *ngFor="let shift of weekDetail.offShifts">
+                                                      <span
+                                                        class="badge badge-secondary custom-badge-dutyOn-Removed shiftCell"
+                                                        *ngIf="shift.CancelledOn !== null && !selectedStaff || (selectedStaff && selectedStaff.EmployeeId === shift.ShiftEmployee.EmployeeId)">
+                                                        {{shift.ShiftEmployee.Name}}
+                                                        ({{shift.ShiftEmployee.EmployeeId}}) </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <!-- Shift End -->
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </main>
+                </section>
+              </div>
+              <!-- End-selectedWeeklyShifts Create Shift -->
+            </div>
+          </div>
+          <!-- End-weeklyShifts -->
+
+          <!-- Start-shiftSupervisorsTab -->
+          <div role="tabpanel" class="tab-pane py-2 fade show active" id="shiftSupervisors"
+            [ngClass]="{ active:selectedTab ==='shiftSupervisors'}" *ngIf="selectedTab ==='shiftSupervisors'">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-6 align-text-bottom">
+                    <h5 class="dutyroster-tab-title-01">Manage Shift Supervisors</h5>
+                  </div>
+                  <div class="col-sm-6 align-text-bottom">
+                    <div class="mt-3 float-right">
+                      <a class="add" title="Add" (click)="addShiftSupervisorsModal.show()">
+                        <i class="material-icons">&#xe147;</i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <hr style="margin-bottom: 10px; margin-top: 5px;">
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info"
+                      *ngIf="!selectedShiftGroup.ShiftSupervisors || selectedShiftGroup.ShiftSupervisors.length ==0">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <strong>Oh Snap!</strong> No Shift Supervisor Found, Please and new Shift Supervisor...
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <table class="table table-hover shiftSupervisorsTbl" id="shiftSupervisorsTbl">
+                      <thead class="thead-light  thead-custom">
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="tbody-custom">
+                        <tr *ngFor="let shiftsSupervisor of selectedShiftGroup.ShiftSupervisors; let i = index;"
+                          class="{{shiftsSupervisor.IsRemoved === true? 'text-danger': ''}}">
+                          <th scope="row"></th>
+                          <td><span
+                              class="badge badge-secondary badge-employeeId">{{shiftsSupervisor.EmployeeId}}</span>
+                            {{shiftsSupervisor.Name}}
+                          </td>
+                          <td>
+                            <a class="restore-table" title="Restore" *ngIf="shiftsSupervisor.IsRemoved"
+                              (click)="restoreShiftsSupervisors(shiftsSupervisor)">
+                              <i class="material-icons">&#xe929;</i>
+                            </a>
+                            <a class="delete-table" title="Delete" *ngIf="!shiftsSupervisor.IsRemoved"
+                              (click)="deleteShiftsSupervisors(shiftsSupervisor)">
+                              <i class="material-icons">&#xe92b;</i>
+                            </a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End-shiftSupervisorsTab -->
+
+          <!-- Start-shiftEmployeesTab -->
+          <div role="tabpanel" class="tab-pane py-2 fade" id="shiftEmployees"
+            [ngClass]="{ active:selectedTab ==='shiftEmployees'}" *ngIf="selectedTab ==='shiftEmployees'">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-6 align-text-bottom">
+                    <h5 class="dutyroster-tab-title-01">Manage Shift Employee</h5>
+                  </div>
+                  <div class="col-sm-6 align-text-bottom">
+                    <div class="mt-3 float-right">
+                      <a class="add" title="Add" (click)="addShiftEmployeesModal.show()">
+                        <i class="material-icons">&#xe147;</i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <hr style="margin-bottom: 10px; margin-top: 5px;">
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info"
+                      *ngIf="!selectedShiftGroup.ShiftEmployees || selectedShiftGroup.ShiftEmployees.length ==0">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <strong>Oh Snap!</strong> No Shift Employee Found, Please and new Shift Employee...
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <table class="table table-hover shiftEmployeesTbl" id="shiftEmployeesTbl">
+                      <thead class="thead-light  thead-custom">
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="tbody-custom">
+                        <tr *ngFor="let shiftEmployee of selectedShiftGroup.ShiftEmployees; let j = index;"
+                          class="{{shiftEmployee.IsRemoved === true? 'text-danger': ''}}">
+                          <th scope="row"></th>
+                          <td><span class="badge badge-secondary badge-employeeId">{{shiftEmployee.EmployeeId}}</span>
+                            {{shiftEmployee.Name}}
+                          </td>
+                          <td>
+                            <a class="restore-table" title="Restore" *ngIf="shiftEmployee.IsRemoved"
+                              (click)="restoreShiftEmployees(shiftEmployee)"><i class="material-icons">&#xe929;</i></a>
+                            <a class="delete-table" title="Delete" *ngIf="!shiftEmployee.IsRemoved"
+                              (click)="deleteShiftEmployees(shiftEmployee)"><i class="material-icons">&#xe92b;</i></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End-shiftEmployeesTab -->
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+
+
+
+<!-- addShiftGroupModal -->
+<div bsModal #addShiftGroupModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add NewShiftGroups</h5>
+        <button type="button" class="close pull-right" (click)="addShiftGroupModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 form-control-label">Name</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" [(ngModel)]="newShiftGroup.Name" name="newShiftGroupName"
+                id="newShiftGroupName" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 form-control-label">Description</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" [(ngModel)]="newShiftGroup.Description"
+                name="newShiftGroupDescription" id="newShiftGroupDescription"
+                (keydown)="onKeydownAddShiftGroup($event)" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addShiftGroupModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addShiftGroupModal.hide()"
+          (click)="addNewShiftGroups()">Add
+          New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- addShiftSupervisorsModal -->
+<div bsModal #addShiftSupervisorsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Shift Supervisors</h5>
+        <button type="button" class="close pull-right" (click)="addShiftSupervisorsModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 form-control-label">Employee ID</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" [(ngModel)]="newShiftSupervisor.EmployeeId"
+                name="newShiftSupervisorEmployeeId" id="newShiftSupervisorEmployeeId"
+                (keydown)="onKeydownAddShiftsSupervisor($event)" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addShiftSupervisorsModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addShiftSupervisorsModal.hide()"
+          (click)="addNewShiftsSupervisor()">Add
+          New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- addShiftEmployeesModal -->
+<div bsModal #addShiftEmployeesModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Shift Employees</h5>
+        <button type="button" class="close pull-right" (click)="addShiftEmployeesModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 form-control-label">Employee ID</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" [(ngModel)]="newShiftEmployees.EmployeeId"
+                name="newShiftEmployeesEmployeeId" id="newShiftEmployeesEmployeeId"
+                (keydown)="onKeydownAddShiftEmployee($event)" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addShiftEmployeesModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addShiftEmployeesModal.hide()"
+          (click)="addNewShiftEmployee()">Add New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- addWeeklyShiftsModal -->
+<div bsModal #addWeeklyShiftsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Add New Weekly Shift</h4>
+        <button type="button" class="close pull-right" (click)="addWeeklyShiftsModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Year</label>
+            <div class="col-sm-7">
+              <select [(ngModel)]="newWeeklyShift.Year" #Id="ngModel" class="hideLabel form-control"
+                id="newWeeklyShiftYear" name="newWeeklyShiftYear">
+                <option [ngValue]="weeklyShiftYear.Year" *ngFor="let weeklyShiftYear of weeklyShiftYears">
+                  {{weeklyShiftYear.Year}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Shift Template</label>
+            <div class="col-sm-7">
+              <select [(ngModel)]="newWeeklyShift.ShiftTemplateId" #Id="ngModel" class="hideLabel form-control"
+                id="newWeeklyShiftShiftTemplateId" name="newWeeklyShiftShiftTemplateId"
+                (keydown)="onKeydownAddWeeklyShift($event)">
+                <option [ngValue]="shiftTemplate.Id" *ngFor="let shiftTemplate of shiftTemplates">
+                  {{shiftTemplate.Name}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addWeeklyShiftsModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addWeeklyShiftsModal.hide()"
+          (click)="addNewWeeklyShifts()">Add New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- updateWeeklyShiftsModal -->
+<div bsModal #updateWeeklyShiftsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Extend WeeklyShift</h4>
+        <button type="button" class="close pull-right" (click)="updateWeeklyShiftsModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="updateWeeklyShift">
+        <form>
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Year</label>
+            <div class="col-sm-7">
+              <input type="date" class="form-control" [(ngModel)]="updateWeeklyShift.EditingPossibleUpto"
+                name="updateWeeklyShiftEditingPossibleUpto" id="updateWeeklyShiftEditingPossibleUpto" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="updateWeeklyShiftsModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="updateWeeklyShiftsModal.hide()"
+          (click)="getWeeklyShiftExtend(updateWeeklyShift)">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- updateShiftsTemplateModal -->
+<div bsModal #updateShiftsTemplateModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Update WeeklyShift Template</h4>
+        <button type="button" class="close pull-right" (click)="updateShiftsTemplateModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="updateWeeklyShift">
+        <form>
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Shift Template</label>
+            <div class="col-sm-7">
+              <select [(ngModel)]="updateWeeklyShift.ShiftTemplateId" #Id="ngModel" class="hideLabel form-control"
+                id="updateWeeklyShiftTemplateId" name="updateWeeklyShiftTemplateId">
+                <option [ngValue]="shiftTemplate.Id" *ngFor="let shiftTemplate of shiftTemplates">
+                  {{shiftTemplate.Name}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="updateShiftsTemplateModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="updateShiftsTemplateModal.hide()"
+          (click)="getWeeklyShiftUpdateTemplate(updateWeeklyShift)">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- shiftAddModel -->
+<div bsModal #shiftAddModel="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Shift</h5>
+        <button type="button" class="close pull-right" (click)="shiftAddModel.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <h3>
+              <i class="material-icons">&#xe192;</i> {{ assignShiftDate | date : 'EEEE dd MMM yyyy' }}
+            </h3>
+          </div>
+          <div class="col-sm-3">
+            <h3>
+              <span class="badge badge-primary"
+                style="max-width: 100% !important; min-width: 100% !important; margin-right: 0px !important;">{{
+                assignShiftStartTime }}
+                - {{ assignShiftEndTime }}</span>
+            </h3>
+          </div>
+          <div class="col-sm-3">
+            <h3>
+              <span class="badge badge-secondary" *ngIf="shiftAddModalIsOff"
+                style="max-width: 100% !important; min-width: 100% !important; margin-left: 0px !important;">Off
+                Shift</span>
+            </h3>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col col-sm-6">
+            <h4><span class="badge badge-info custom-badge-modalHeader">Select Employee to Assign</span>
+            </h4>
+            <ul class="list-group">
+              <li
+                class="{{shiftUnassignedEmployee.IsRemoved ? 'list-group-item d-flex justify-content-between align-items-center staff-list bg-light text-dark' : 'list-group-item d-flex justify-content-between align-items-center staff-list'}}"
+                style="font-size:0.75em" (click)="assignStafftoShift(shiftUnassignedEmployee)"
+                *ngFor="let shiftUnassignedEmployee of shiftAddModalUnassignedEmployees">
+                <div>
+                  <!-- <span class="badge badge-light">{{shiftUnassignedEmployee.Id}}</span>  -->
+                  <span class="badge badge-secondary">{{shiftUnassignedEmployee.EmployeeId}}</span>
+                  {{shiftUnassignedEmployee.Name}}
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="col col-sm-6">
+            <h4>
+              <span class="badge badge-info custom-badge-modalHeader">Select Employee to Remove</span>
+            </h4>
+            <ul class="list-group">
+              <li
+                class="{{shift.ShiftEmployee.IsRemoved ? 'list-group-item d-flex justify-content-between align-items-center staff-list bg-light text-dark' : 'list-group-item d-flex justify-content-between align-items-center staff-list'}}"
+                style="font-size:0.75em" (click)="unAssignStafftoShift(shift)"
+                *ngFor="let shift of shiftAddModalAssignedEmployees">
+                <div *ngIf="shift.ShiftEmployee">
+                  <!-- <span class="badge badge-light">{{shift.Id}}</span>  -->
+                  <span class="badge badge-secondary">{{shift.ShiftEmployee.EmployeeId}}</span>
+                  {{shift.ShiftEmployee.Name}}
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

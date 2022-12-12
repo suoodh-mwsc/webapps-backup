@@ -1,0 +1,18 @@
+@import "../../../../../assets/bootswatch/yeti/variables.scss";
+@import "../../../../../assets/bootswatch/yeti/bootstrap.css";
+@import "../../../../../assets/bootswatch/yeti/bootstrap.min.css";
+// @import "../../../../../assets/bootswatch/yeti/bootswatch";
+@import "./../../online-application-styles.scss";
+.table {
+    thead {
+        th {
+            padding: 8px 10px 8px 10px !important;
+        }
+    }
+    tbody {
+        th,
+        td {
+            padding: 5px 10px 5px 10px !important;
+        }
+    }
+}

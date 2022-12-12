@@ -1,0 +1,113 @@
+<!-- <div class="row" style="padding-bottom: 15px;">
+  <div class="col-sm-12">
+    <app-finance-profile-card></app-finance-profile-card>
+  </div>
+</div> -->
+
+<div class="row">
+  <div class="col-sm-12">
+    <ul class="sidebar-nav">
+
+      <li class="nav-item-header">
+        <h5 class="nav-link-header"> TPPA Payment</h5>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['tppa-payment-search']}}]"> <i
+            class="fa fa-search"></i> Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['tppa-payment-pending']}}]"> <i
+            class="fa fa-file-powerpoint-o"></i> Pending</a>
+      </li>
+
+      <li class="nav-item-header">
+        <h5 class="nav-link-header"> Third Party Payment</h5>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['external-payment-search']}}]"> <i
+            class="fa fa-search"></i> Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['external-payment-pending']}}]"> <i
+            class="fa fa-file-powerpoint-o"></i> Pending</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['external-payment-daily']}}]"> <i
+            class="fa fa-calendar-o"></i> Daily</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['external-payment-dc-payments']}}]"> <i
+            class="fa fa-calendar-o"></i> DC Payments</a>
+      </li>
+
+      <li class="nav-item-header">
+        <h5 class="nav-link-header"> Online Payment</h5>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['online-payment-search']}}]"> <i
+            class="fa fa-search"></i> Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['online-payment-pending']}}]"> <i
+            class="fa fa-file-powerpoint-o"></i> Pending</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['online-payment-pending-sap-mulitiple-pay']}}]"> <i
+            class="fa fa-file-powerpoint-o"></i> Pending SAP Multiple Payment</a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['online-payment-daily']}}]"> <i
+            class="fa fa-calendar-o"></i> Daily</a>
+      </li>
+
+
+      <li class="nav-item-header">
+        <h5 class="nav-link-header">Multiple Payments</h5>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['online-payment-pending-sap-mulitiple-pay']}}]"> <i
+            class="fa fa-file-powerpoint-o"></i> Pending SAP Multiple Payment</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['online-payment-multiple-account-daily']}}]"> <i
+            class="fa fa-calendar-o"></i> Daily</a>
+      </li>
+ 
+
+ 
+
+
+      <li class="nav-item-header">
+        <h5 class="nav-link-header"> Online Application Payment</h5>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"
+          [routerLink]="['/finance', {outlets: {pages: ['online-payment-online-application-payments']}}]">
+          <i class="fa fa-search"></i> Online Application Payments
+        </a>
+      </li>
+
+      <li class="nav-item-header">
+        <h5 class="nav-link-header"> Tender Document Payments</h5>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link"
+          [routerLink]="['/finance', {outlets: {pages: ['online-payment-online-application-payments']}}]">
+          <i class="fa fa-search"></i> Online Application Payments
+        </a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['tender-payment-search']}}]"> <i
+            class="fa fa-search"></i> Search</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['tender-payment-pending']}}]"> <i
+            class="fa fa-file-powerpoint-o"></i> Pending</a>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/finance', {outlets: {pages: ['tender-payment-daily']}}]"> <i
+            class="fa fa-calendar-o"></i> Daily</a>
+      </li>
+    </ul>
+  </div>
+</div>

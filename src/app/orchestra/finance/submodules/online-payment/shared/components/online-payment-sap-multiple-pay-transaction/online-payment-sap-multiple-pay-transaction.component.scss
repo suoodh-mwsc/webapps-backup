@@ -1,0 +1,253 @@
+@import "../../../../../../../../assets/bootswatch/yeti/variables.scss";
+@import "../../../../../../../../assets/bootswatch/yeti/bootstrap.css";
+@import "../../../../../../../../assets/bootswatch/yeti/bootstrap.min.css";
+@import "../../../../../../../../variables";
+@import "./../../../online-payment-styles.scss";
+
+
+
+.transactionDataTbl {
+  width: 100% !important;
+  font-size: 13px !important;
+
+  thead {
+    tr {
+      padding-top: 5px !important;
+      padding-bottom: 5px !important;
+
+      th {
+        color: $light !important;
+        background: $bg-primary-400 !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+
+      th {
+        background: $bg-primary-50 !important;
+      }
+
+      th,
+      td {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+      }
+    }
+  }
+}
+
+
+/* -----------------> can start accordion style copy from here ------------------------*/
+
+.accordion-started.accordion-bral {
+  min-height: 0;
+  min-width: 220px;
+  width: 100%;
+  background-color: #FFF;
+  margin: 0px!important;
+  color: #484848;
+}
+.accordion-started.accordion-bral img {
+    width: 100%;
+    height: 100%;
+}
+.accordion-started.accordion-bral .ac-label {
+  font-family: Arial, sans-serif;
+  padding: 5px 20px;
+  position: relative;
+  display: block;
+  height: auto;
+  cursor: pointer;
+  color: #5c5e5f;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  line-height: 33px;
+  font-size: 15px;
+  font-weight: 300;
+  margin-bottom: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.accordion-started.accordion-bral .ac-label:hover {
+  
+}
+.accordion-started.accordion-bral input + .ac-label  {
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.accordion-started.accordion-bral input:checked + .ac-label,
+.accordion-started.accordion-bral input:checked + .ac-label:active {
+  
+}
+.accordion-started.accordion-bral input.ac-input {
+  display: none;
+}
+.accordion-started.accordion-bral .article {
+  overflow: hidden;
+  height: 0px;
+  max-height: auto;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.accordion-started.accordion-bral .article p {
+  line-height: 23px;
+  padding-left: 5px;
+}
+.accordion-started.accordion-bral input:checked ~ .article i {
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+.accordion-started.accordion-bral input:checked ~ .article.ac-content {
+  height: auto;
+}
+
+.accordion-started.accordion-bral i {
+  position: absolute;
+  transform: translate(-30px, 0);
+  margin-top: 16px;
+  right: 0;
+}
+.accordion-started.accordion-bral input:checked ~ .ac-label i:before {
+  transform: translate(2px, 0) rotate(-45deg);
+}
+.accordion-started.accordion-bral input:checked ~ .ac-label i:after {
+  transform: translate(-2px, 0) rotate(45deg);
+}
+.accordion-started.accordion-bral i:before, .accordion-bral i:after {
+  content: "";
+  position: absolute;
+  background-color: #173B6B;
+  width: 3px;
+  height: 9px;
+}
+.accordion-started.accordion-bral i:before {
+  transform: translate(-2px, 0) rotate(-45deg);
+}
+.accordion-started.accordion-bral i:after {
+  transform: translate(2px, 0) rotate(45deg);
+}
+
+.accordion-started ul.ac-list {
+  padding-left: 40px;
+  list-style-type: disc;  
+}
+
+
+/* ---------- accordion style end --------------------------------------- */
+// img{
+//   max-width:100%;
+//   max-height:100%;
+// }
+
+// .borderless {
+//  border: none;
+// }
+body{
+	background-color: #eee;
+}
+.card{
+	background-color: #fff;
+	width: 100%;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	padding: 1rem !important;
+}
+.top-container{
+	display: flex;
+	align-items: center;
+}
+.profile-image{
+	border-radius: 10px;
+	border: 2px solid #5957f9;
+}
+.name{
+	font-size: 15px;
+	font-weight: bold;
+	color: #272727;
+	position: relative;
+	top: 8px;
+}
+.mail{
+	font-size: 14px;
+	color: grey;
+	position: relative;
+	top: 2px;
+}
+.middle-container{
+	background-color: #eee;
+	border-radius: 12px;
+
+}
+.middle-container:hover {
+	border: 1px solid #5957f9;
+}
+.dollar-div{
+	background-color: #1a1a1b;
+	padding: 12px;
+	border-radius: 10px;
+}
+.round-div{
+	border-radius: 50%;
+	width: 35px;
+	height: 35px;
+	background-color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+
+
+.recent-border{
+	border-left: 2px solid #5957f9;
+	display: flex;
+	align-items: center;
+
+}
+.recent-border:hover {
+	border-bottom: 1px solid #dee2e6!important;
+}
+
+.recent-orders{
+	font-size: 16px;
+	font-weight: 700;
+	color: #5957f9;
+	margin-left: 2px;
+}
+
+.wishlist{
+	font-size: 16px;
+	font-weight: 700;
+	color: #272727;
+
+}
+.wishlist-border:hover{
+	border-bottom: 1px solid #dee2e6!important;
+}
+.fashion-studio{
+	font-size: 16px;
+	font-weight: 700;
+	color: #272727;
+}
+.fashion-studio-border:hover {
+	border-bottom: 1px solid #dee2e6!important;
+}
+
+
+
+

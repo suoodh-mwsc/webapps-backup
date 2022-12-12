@@ -1,0 +1,45 @@
+<div class="row" style="padding-bottom: 15px;">
+    <div class="col-sm-12">
+        <app-nfc-guard-patrol-profile-card></app-nfc-guard-patrol-profile-card>
+    </div>
+</div>
+
+<div class="row" style="">
+    <div class="col-sm-12">
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/nfc-guard-patrol']"><i class="fa fa-home"></i> Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/nfc-guard-patrol', {outlets: {pages: ['dashboard']}}]">
+                    <i class="fa fa-file-text"></i> Admin Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/nfc-guard-patrol', {outlets: {pages: ['routes']}}]">
+                    <i class="fa fa-file-text"></i> Manage Routes
+                </a>
+            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/nfc-guard-patrol', {outlets: {pages: ['pending']}}]">
+                    <i class="fa fa-file"></i> Assign Routes Old
+                </a>
+            </li> -->
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/nfc-guard-patrol', {outlets: {pages: ['routesAssign']}}]">
+                    <i class="fa fa-file"></i> Assign Routes
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/nfc-guard-patrol', {outlets: {pages: ['overview']}}]">
+                    <i class="fa fa-file"></i> Overview
+                </a>
+            </li>
+            <!-- <li class="nav-item">
+        <a class="nav-link" [routerLink]="['/nfc-guard-patrol', {outlets: {pages: ['guard']}}]">
+          <i class="fa fa-times-circle-o"></i> Guards
+        </a>
+      </li> -->
+        </ul>
+    </div>
+</div>

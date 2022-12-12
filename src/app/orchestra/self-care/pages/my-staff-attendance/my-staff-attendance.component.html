@@ -1,0 +1,125 @@
+<!-- selectedShiftGroup -->
+<section>
+  <main role="main" class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <h5 class="selfcare-page-title-01">Attendance</h5>
+        <hr style="margin-bottom: 10px; margin-top: 5px;">
+      </div>
+
+      <div class="col-sm-12" *ngIf="dailyRollCallList.InactiveStaffs && dailyRollCallList.InactiveStaffs.length == 0 && dailyRollCallList.ActiveStaffs.length == 0">
+        <div class="alert alert-dismissible alert-info">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Information !</strong> No Rollcall data found. Please check with HR Department...
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <app-self-care-loader *ngIf="showLoader"></app-self-care-loader>
+      </div>
+
+      <div class="col-sm-12" *ngIf="dailyRollCallList.ActiveStaffs">
+        <table class="table table-hover attendanceDataTbl" id="attendanceDataTbl">
+          <thead class="thead-light thead-custom">
+            <tr>
+              <th scope="col">Employee</th>
+              <th scope="col">Last Known Location</th>
+              <th scope="col">Punch Record</th>
+              <th scope="col">Details</th>
+            </tr>
+          </thead>
+          <tbody class="tbody-custom">
+
+            <ng-container *ngIf="dailyRollCallList.ActiveStaffs">
+              <tr>
+                <th colspan="4">
+                  <h6 class="selfcare-table-title-01 justify-content-between align-items-center">Attendance
+                    <span class="badge badge-pill badge-info">{{dailyRollCallList.ActiveStaffs.length}}</span>
+                  </h6>
+                </th>
+              </tr>
+              <tr *ngFor="let item of dailyRollCallList.ActiveStaffs">
+                <td scope="row">
+                  <div>
+                    <strong class="text-primary">
+                      {{item.Employee.Name}} ({{item.Employee.Id}})
+                    </strong>
+                  </div>
+                  <div>
+                    <span class="badge badge-secondary">{{item.Employee.Designation}}</span>
+                    <span class="badge badge-secondary">{{item.Employee.Department}} Department</span>
+                  </div>
+                  <div class="alert alert-warning" *ngFor="let warning of item.WarningMessages">
+                    <p class="mb-0">{{warning}}</p>
+                  </div>
+                </td>
+                <td>{{item.Employee.LastKnownLocation}}</td>
+                <td>{{item.PunchInRecord}}</td>
+                <td>
+                  <div class="form-group row" style="margin-bottom: 0px;">
+                    <div class="col-sm-12">
+                      <div class="form-check form-check-inline has-danger"
+                        *ngFor="let status of dailyRollCallList.StatusList">
+                        <input class="form-check-input" type="radio" name="statusRadioButton{{item.Employee.Id}}"
+                          id="statusRadioButton{{item.Employee.Id}}{{status.Id}}" [value]="status.Id"
+                          [disabled]="disableAllButtons" [(ngModel)]="item.StatusId">
+                        <label class="form-check-label"
+                          for="statusRadioButton{{item.Employee.Id}}{{status.Id}}">{{status.Status}}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="text-danger" *ngIf="item.hasError">Please select a value</p>
+                </td>
+              </tr>
+            </ng-container>
+
+            <tr>
+              <td colspan="3">
+              </td>
+              <td>
+                <button type="button" class="btn btn-info btn-sm" [disabled]="disableAllButtons"
+                  (click)="dailyRollcall(dailyRollCallList)">Save</button>
+              </td>
+            </tr>
+            
+            <ng-container *ngIf="dailyRollCallList.InactiveStaffs">
+              <tr>
+                <th colspan="4">
+                  <h6 class="selfcare-table-title-01 justify-content-between align-items-center">Informed Absences
+                    <span class="badge badge-pill badge-info">{{dailyRollCallList.InactiveStaffs.length}}</span>
+                  </h6>
+                </th>
+              </tr>
+              <tr *ngFor="let item of dailyRollCallList.InactiveStaffs">
+                <td scope="row">{{item.Employee.Name}} ({{item.Employee.Id}})</td>
+                <td>{{item.Employee.LastKnownLocation}}</td>
+                <td></td>
+                <td *ngFor="let Detail of item.Details">{{ Detail }}</td>
+              </tr>
+            </ng-container>
+
+            <ng-container *ngIf="dailyRollCallList.DutyStaffs">
+              <tr>
+                <th colspan="4">
+                  <h6 class="selfcare-table-title-01 justify-content-between align-items-center">Duty Employee
+                    <span class="badge badge-pill badge-info">{{dailyRollCallList.DutyStaffs.length}}</span>
+                  </h6>
+                </th>
+              </tr>
+              <tr *ngFor="let item of dailyRollCallList.DutyStaffs">
+                <td scope="row">{{item.Employee.Name}} ({{item.Employee.Id}})</td>
+                <td>{{item.Employee.LastKnownLocation}}</td>
+                <td></td>
+                <td></td>
+                <!-- <td *ngFor="let Detail of item.Details">{{ Detail }}</td> -->
+              </tr>
+            </ng-container>
+
+            
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</section>

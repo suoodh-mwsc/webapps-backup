@@ -1,0 +1,88 @@
+<!-- Pending Applications | List Pending Application -->
+<section>
+    <!-- <div class="card sm-12" *ngIf="applicationList && !selectedApplication"> -->
+    <div class="card card-main-1 sm-12">
+        <div class="card-header text-primary-500 bg-primary-100 font-weight-bold">
+            <div class="row">
+                <div class="col-sm-6">
+                    Applications | Search ByPeriod
+                </div>
+                <div class="col-sm-6">
+                    <div class="btn-custom">
+                        <a class="btn-custom" (click)="reloadApplications()">
+                            <i class="fa fa-refresh fa-lg fa-pull-right fa-border" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- <div class="alert alert-dismissible alert-info" *ngIf="applicationList?.length < 1">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Information !</strong> No Pending Application...
+            </div> -->
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="form-control-label" for="inputEmail4">From Date</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" [(ngModel)]="fromDate" name="fromDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-control-label" for="inputEmail4">To Date</label>
+                                <div class="input-group">
+                                    <input type="date" class="form-control" [(ngModel)]="toDate" name="toDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2" style="padding-top: 30px;">
+                                <button type="button" class="btn btn-success" [disabled]="!fromDate && !toDate" (click)="getApplicationsByPeriod(fromDate, toDate)">
+                                  <i class="fa fa-search" aria-hidden="true"></i> Search 
+                                </button>
+                            </div>
+                            <div class="form-group col-md-4" style="padding-top: 30px;">
+                                <div class="float-right" *ngIf="!applicationList || applicationList?.length < 1">
+                                    <button type="button" class="btn btn-success" [disabled]="!applicationList || applicationList?.length < 1" (click)="download()">
+                                        <i class="fa fa-file-excel-o" aria-hidden="true"></i> Download 
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <app-online-application-loader *ngIf="showLoader"></app-online-application-loader>
+
+            <table class="table table-hover" id="accordion" *ngIf="applicationList?.length > 0">
+                <thead>
+                    <tr class="text-primary-600 bg-primary-100">
+                        <th scope="col">Application Type</th>
+                        <th scope="col">Current Stage Description</th>
+                        <th scope="col">Contact Name</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Created By</th>
+                        <th scope="col">Created On</th>
+                        <!-- <th scope="col">Actions</!-->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let application of applicationList; let p = index">
+                        <td>{{application.ApplicationType.Description}}</td>
+                        <td>{{application.CurrentStageDescription}}</td>
+                        <td>{{application.ContactName}}</td>
+                        <td>{{application.ContactNumber}}</td>
+                        <td>{{application.CreatedBy}}</td>
+                        <td>{{application.CreatedOn | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                        <!-- <td>
+                            <i class="fa fa-bars fa-lg text-warning bg-secondary" (click)="hideRejectReason(); viewSelectedApplication(pending)"></i>
+                        </td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,353 @@
+@import "./../../../../../variables";
+@import "./../../self-care-styles.scss";
+
+/*==============================================*/
+
+.list-group-custom-1 .list-group-item {
+  font-size: 13px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+.attendanceDataTbl {
+  width: 100% !important;
+  font-size: 13px !important;
+  thead {
+    tr {
+      padding-top: 5px !important;
+      padding-bottom: 5px !important;
+      th {
+        color: $light !important;
+        background: $bg-primary-400 !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      padding-top: 4px !important;
+      padding-bottom: 4px !important;
+      th {
+        background: $bg-primary-50 !important;
+      }
+      th,
+      td {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+      }
+    }
+  }
+}
+
+// #attendanceDataTbl {
+//   width: 100% !important;
+//   font-size: 13px !important;
+//   padding-top: 5px !important;
+//   padding-bottom: 5px !important;
+// }
+
+// #attendanceDataTbl .thead-custom th:nth-child(1) {
+//   background-color: #f1fbfd;
+//   font-size: 13px;
+//   padding-top: 5px;
+//   padding-bottom: 5px;
+//   margin-top: 0px;
+//   margin-bottom: 0px;
+//   // min-width: 40px;
+//   // max-width: 5%;
+//   // width: 5%;
+// }
+
+// #attendanceDataTbl .thead-custom th:nth-child(2),
+// #attendanceDataTbl .thead-custom th:nth-child(3),
+// #attendanceDataTbl .thead-custom th:nth-child(4),
+// #attendanceDataTbl .thead-custom th:nth-child(5),
+// #attendanceDataTbl .thead-custom th:nth-child(6),
+// #attendanceDataTbl .thead-custom th:nth-child(7),
+// #attendanceDataTbl .thead-custom th:nth-child(8) {
+//   background-color: #f1fbfd;
+//   font-size: 13px;
+//   padding-top: 5px;
+//   padding-bottom: 5px;
+//   margin-top: 0px;
+//   margin-bottom: 0px;
+//   // max-width: 13%;
+//   // min-width: 13%;
+//   // width: 13%;
+// }
+
+// #attendanceDataTbl .thead-custom th:nth-child(7),
+// #attendanceDataTbl .thead-custom th:nth-child(8) {
+//   color: #970000;
+// }
+
+// #attendanceDataTbl .tbody-custom th:nth-child(1) {
+//   background-color: #f1fbfd;
+//   font-size: 13px;
+//   padding-top: 5px;
+//   padding-bottom: 5px;
+//   margin-top: 0px;
+//   margin-bottom: 0px;
+// }
+
+// #attendanceDataTbl .tbody-custom td:nth-child(2),
+// #attendanceDataTbl .tbody-custom td:nth-child(3),
+// #attendanceDataTbl .tbody-custom td:nth-child(4),
+// #attendanceDataTbl .tbody-custom td:nth-child(5),
+// #attendanceDataTbl .tbody-custom td:nth-child(6),
+// #attendanceDataTbl .tbody-custom td:nth-child(7),
+// #attendanceDataTbl .tbody-custom td:nth-child(8) {
+//   font-size: 13px;
+//   padding-top: 5px;
+//   padding-bottom: 5px;
+//   padding-left: 5px;
+//   padding-right: 0px;
+//   max-height: 30px !important;
+//   height: 30px !important;
+// }
+
+// #attendanceDataTbl .tbody-custom td:nth-child(7),
+// #attendanceDataTbl .tbody-custom td:nth-child(8) {
+//   color: #970000;
+// }
+
+// #attendanceDataTbl .header-shift {
+//   font-size: 13px;
+//   font-family: Arial Narrow, Arial, sans-serif;
+// }
+
+// #attendanceDataTbl .header-time {
+//   // font-size: 13px;
+//   font-family: Arial Narrow, Arial, sans-serif;
+// }
+
+
+// =====================================================
+#employeeListTbl .thead-custom th:nth-child(1) {
+  background-color: #f1fbfd;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  //max-width: 50px !important;
+  //width: 50px !important;
+  vertical-align: middle;
+  font-size: 11px;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
+
+#employeeListTbl .thead-custom th:nth-child(2),
+#employeeListTbl .thead-custom th:nth-child(3),
+#employeeListTbl .thead-custom th:nth-child(4),
+#employeeListTbl .thead-custom th:nth-child(5),
+#employeeListTbl .thead-custom th:nth-child(6),
+#employeeListTbl .thead-custom th:nth-child(7),
+#employeeListTbl .thead-custom th:nth-child(8),
+#employeeListTbl .thead-custom th:nth-child(9),
+#employeeListTbl .thead-custom th:nth-child(10),
+#employeeListTbl .thead-custom th:nth-child(11) {
+  background-color: #f1fbfd;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  vertical-align: middle;
+  font-size: 11px;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
+
+#employeeListTbl .thead-custom td:last-child {
+  //max-width: 300px;
+  //width: 300px;
+  color: #970000;
+  font-size: 11px;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
+
+#employeeListTbl .tbody-custom th:nth-child(1) {
+  background-color: #f1fbfd;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  vertical-align: middle;
+  color: red;
+  font-size: 11px;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
+
+#employeeListTbl .tbody-custom td:nth-child(1),
+#employeeListTbl .tbody-custom td:nth-child(2),
+#employeeListTbl .tbody-custom td:nth-child(3) {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  vertical-align: middle; // font-size: 0.7em;
+  font-weight: bold;
+  font-size: 11px;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
+
+#employeeListTbl .tbody-custom td:nth-child(2),
+#employeeListTbl .tbody-custom td:nth-child(3),
+#employeeListTbl .tbody-custom td:nth-child(4),
+#employeeListTbl .tbody-custom td:nth-child(5),
+#employeeListTbl .tbody-custom td:nth-child(6),
+#employeeListTbl .tbody-custom td:nth-child(7),
+#employeeListTbl .tbody-custom td:nth-child(8),
+#employeeListTbl .tbody-custom td:nth-child(9),
+#employeeListTbl .tbody-custom td:nth-child(10),
+#employeeListTbl .tbody-custom td:nth-child(11) {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  vertical-align: middle; // font-size: 0.7em;
+  font-size: 11px;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
+
+#employeeListTbl .tbody-custom td:last-child {
+  // max-width: 300px;
+  // width: 300px;
+  color: #970000;
+}
+
+#employeeListTbl .tbody-custom .td.btn {
+  color: #970000 !important;
+  padding-top: 1px !important;
+  padding-bottom: 2px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+  font-size: 11px;
+  font-family: Arial Narrow, Arial, sans-serif;
+}
+
+/*==============================================*/
+
+.card.card-custom-001 {
+  border-radius: 0rem !important;
+  margin: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 3px !important; // padding-right: 0px !important;
+  // padding-left: 0px !important;
+  // margin: 3px !important;
+  // max-width: 140px !important;
+  // min-width: 140px !important;
+  border-radius: 0rem !important;
+  border: none !important;
+}
+
+.card.card-custom-001>.card-header {
+  // background-color: #0a3761;
+  color: white; // font-weight: bold;
+  // font-size: 14px;
+  padding-top: 2px !important;
+  padding-bottom: 0px !important; // padding-right: 3px !important;
+  // padding-left: 3px !important;
+  margin: 0px !important;
+  text-align: center !important;
+  align-items: center !important;
+  border-radius: 0rem !important;
+  border: none !important;
+}
+
+.card.card-custom-001>.card-body {
+  // overflow-y: auto;
+  padding-top: 1px !important;
+  padding-bottom: 2px !important;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+  margin: 0px !important; // display:flex;
+  text-align: center !important;
+  align-items: center !important;
+  border-radius: 0rem !important;
+  border: none !important;
+}
+
+.card.card-custom-001>.card-footer {
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-right: 0px !important;
+  padding-left: 0px !important;
+  margin: 0px !important;
+  background-color: #738aa6; // border: 1px;
+  text-align: center !important;
+  align-items: center !important;
+  border-radius: 0rem !important;
+  border: none !important;
+}
+
+/*==============================================*/
+.custom-badge-dutyOn {
+  background: $blue-100 !important;
+  color: $blue-900 !important;
+  // color: $indigo-900 !important;
+  max-width: 97% !important;
+  min-width: 97% !important;
+  white-space: normal !important;
+  font-family: Arial Narrow, Arial, sans-serif;
+  font-size: 12px;
+  border-radius: 12px;
+}
+
+.custom-badge-dutyOn-DisableEmployee {
+  background: $teal-50 !important;
+  color: $teal-500 !important;
+  // color: $teal-900 !important;
+  max-width: 97% !important;
+  min-width: 97% !important;
+  white-space: normal !important;
+  font-family: Arial Narrow, Arial, sans-serif;
+  font-size: 12px;
+  border-radius: 12px;
+}
+
+
+.p-custom-8 {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.font-size-custom-8 {
+  font-size: 8px !important;
+}
+
+.font-size-custom-10 {
+  font-size: 10px !important;
+}
+
+.font-size-custom-12 {
+  font-size: 12px !important;
+}
+
+.font-size-custom-14 {
+  font-size: 14px !important;
+}
+
+.font-size-custom-16 {
+  font-size: 16px !important;
+}
+
+/*==============================================*/
+// .table {
+//   thead {
+//       font-size: 13px !important;
+//       th {
+//           // padding: 8px 10px 8px 10px !important;
+//       }
+//   }
+//   tbody {
+//       font-size: 13px !important;
+//       th,
+//       td {
+//           // padding: 6px 10px 6px 10px !important;
+//       }
+//   }
+// }
+/*==============================================*/

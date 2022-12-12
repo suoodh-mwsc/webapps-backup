@@ -1,0 +1,48 @@
+@import "../../../../../../../variables";
+@import "./../../hr-management-styles.scss";
+
+
+.medicalReportTbl {
+    width: 100% !important;
+    font-size: 13px !important;
+  
+    thead {
+      tr {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+  
+        th {
+          // &:nth-child(2),
+          // &:nth-child(3),
+          // &:nth-child(4),
+          // &:nth-child(5) {
+          //   width: 360px !important;
+          // }
+          color: $light !important;
+          background: $bg-primary-400 !important;
+          padding-top: 5px !important;
+          padding-bottom: 5px !important;
+        }
+      }
+    }
+  
+    tbody {
+      tr {
+        padding-top: 3px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        padding-bottom: 3px !important;
+        th {
+          background: $bg-primary-50 !important;
+        }
+  
+        th,
+        td {
+          padding-top: 3px !important;
+          padding-left: 8px !important;
+          padding-right: 8px !important;
+          padding-bottom: 3px !important;
+        }
+      }
+    }
+  }

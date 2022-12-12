@@ -1,0 +1,187 @@
+<!-- selectedShiftGroup -->
+<section>
+  <main role="main" class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="row">
+          <div class="col-sm-6">
+            <h5 class="selfcare-page-title-01">Attendance Report</h5>
+          </div>
+          <div class="col-sm-6">
+            <div class="pull-right align-items-end">
+              <button type="button" class="btn btn-info btn-sm" *ngIf="!showDetail" (click)="showDetails()">Show Details</button>
+              <button type="button" class="btn btn-info btn-sm" *ngIf="showDetail"  (click)="hideDetails()">Hide Details</button>
+            </div>
+          </div>
+        </div>
+
+        <hr style="margin-bottom: 10px; margin-top: 5px;">
+
+        <div class="col-sm-12">
+          <app-self-care-loader *ngIf="showLoader"></app-self-care-loader>
+        </div>
+
+        <div *ngIf="myDivisions">
+          <div class="row" *ngFor="let divisionDetail of myDivisions">
+            <div class="col-sm-12">
+              <h5 class="selfcare-page-title-02">{{divisionDetail.DivisionName}}</h5>
+              <hr style="margin-bottom: 10px; margin-top: 5px;">
+
+
+              <div class="col-sm-12">
+                <table class="table table-bordered attendanceDataTbl" id="attendanceDataTbl">
+                  <thead class="thead-light thead-custom">
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col" class="text-center" *ngFor="let status of StatusList">{{status.Status}}</th>
+                    </tr>
+                  </thead>
+                  <tbody class="tbody-custom">
+                    <tr>
+                      <th colspan="7">
+                        <h6 class="selfcare-table-title-01 justify-content-between align-items-center">
+                          {{divisionDetail.DivisionName}}
+                        </h6>
+                      </th>
+                    </tr>
+                    <tr>
+                      <td scope="row">
+                        {{divisionDetail.DivisionName}}
+                        <span class="badge badge-pill badge-info">{{divisionDetail.AllAttendence.length}}</span>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{divisionDetail.Present.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of divisionDetail?.Present">
+                              <span class="badge badge-success custom-badge-attendancePresent attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{divisionDetail.AWOL.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of divisionDetail?.AWOL">
+                              <span class="badge badge-success custom-badge-attendanceAWOL attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{divisionDetail.Medical.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of divisionDetail?.Medical">
+                              <span class="badge badge-success custom-badge-attendanceMedical attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{divisionDetail.Compassionate.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of divisionDetail?.Compassionate">
+                              <span class="badge badge-success custom-badge-attendanceCompassionate attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <th colspan="7">
+                        <h6 class="selfcare-table-title-01 justify-content-between align-items-center">Departments</h6>
+                      </th>
+                    </tr>
+
+                    <tr *ngFor="let department of divisionDetail?.Departments">
+                      <td scope="row">
+                        {{department.DepartmentName}}
+                        <span class="badge badge-pill badge-info">{{department.AllAttendence.length}}</span>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{department.Present.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail && department.Present?.length > 0">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of department?.Present">
+                              <span class="badge badge-success custom-badge-attendancePresent attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{department.AWOL.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail && department.AWOL?.length > 0">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of department?.AWOL">
+                              <span class="badge badge-success custom-badge-attendanceAWOL attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{department.Medical.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail && department.Medical?.length > 0">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of department?.Medical">
+                              <span class="badge badge-success custom-badge-attendanceMedical attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="row">
+                          <div class="col-sm-12" *ngIf="!showDetail">
+                            {{department.Compassionate.length}}
+                          </div>
+                          <div class="attendanceContainer d-flex align-items-start flex-wrap" *ngIf="showDetail && department.Compassionate?.length > 0">
+                            <div class="col-sm-6 attendanceCellpadding" *ngFor="let attendance of department?.Compassionate">
+                              <span class="badge badge-success custom-badge-attendanceCompassionate attendanceCell" *ngIf="attendance.Employee">
+                                {{attendance.Employee.Name}} ({{attendance.Employee.Id}})
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>

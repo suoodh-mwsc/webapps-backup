@@ -1,0 +1,45 @@
+<div class="row" style="padding-bottom: 15px;">
+    <div class="col-sm-12">
+        <app-online-application-profile-card></app-online-application-profile-card>
+    </div>
+</div>
+
+<div class="row" style="">
+    <div class="col-sm-12">
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/online-application']"><i class="fa fa-home"></i> Home</a>
+            </li>
+            <li class="nav-item-header">
+                <h5 class="nav-link-header"> Online Application</h5>
+              </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/online-application', {outlets: {pages: ['pending-application']}}]">
+                    <i class="fa fa-file-text"></i> Pending</a>
+            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/online-application', {outlets: {pages: ['pending-application-v2']}}]">
+                    <i class="fa fa-file-text"></i> Pending v2</a>
+            </li> -->
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/online-application', {outlets: {pages: ['quotation-upload']}}]">
+                    <i class="fa fa-file"></i> Quotation</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/online-application', {outlets: {pages: ['reject-application']}}]">
+                    <i class="fa fa-times-circle-o"></i> Incomplete Applications</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/online-application', {outlets: {pages: ['view-report-by-period']}}]">
+                    <i class="fa fa-file-text"></i> Reports</a>
+            </li>
+            <li class="nav-item-header">
+                <h5 class="nav-link-header"> E-Service</h5>
+              </li>
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/online-application', {outlets: {pages: ['search-user']}}]">
+                    <i class="fa fa-search"></i> Search </a>
+            </li>
+        </ul>
+    </div>
+</div>

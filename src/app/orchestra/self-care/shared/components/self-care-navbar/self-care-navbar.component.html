@@ -1,0 +1,96 @@
+<nav class="navbar navbar-expand-sm  navbar-dark fixed-top bg-dark">
+  <div class="row row-custom">
+      <div class="col-sm-03 col-custom-01">
+          <div class="sidebar-brand">
+              <a class="navbar-brand"> <i class="fa fa-shield" aria-hidden="true"></i> My Profile </a>
+          </div>
+      </div>
+
+      <div class="col-sm-07 col-custom-02">
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav mr-auto">
+                  <!-- <li class="nav-item">
+                      <a class="nav-link" [routerLink]="['/hr', {outlets: {pages: ['dashboard']}}]">Dashboard</a>
+                  </li> -->
+                  <!-- <li class="nav-item dropdown dmenu">
+                      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">Duty Roster</a>
+                      <div class="dropdown-menu sm-menu">
+                          <a class="dropdown-item" [routerLink]="['/hr', {outlets: {pages: ['dutyroster']}}]">Manage DutyRoster</a>
+                      </div>
+                  </li> -->
+                  <!-- <li class="nav-item dropdown dmenu">
+                      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">Attendance Roll Call</a>
+                      <div class="dropdown-menu sm-menu">
+                          <a class="dropdown-item" [routerLink]="['/my-profile', {outlets: {pages: ['my-staff-attendance']}}]">Staff Attendance</a>
+                          <a class="dropdown-item" [routerLink]="['/my-profile', {outlets: {pages: ['my-staff-attendance-report']}}]">Staff Attendance Report</a>
+                          <a class="dropdown-item" [routerLink]="['/my-profile', {outlets: {pages: ['my-staff-attendance-detail-report']}}]">Staff Attendance Detailed Report</a>
+                      </div>
+                  </li> -->
+                  <!-- <li class="nav-item dropdown dmenu">
+                      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown"> User Management </a>
+                      <div class="dropdown-menu sm-menu">
+                          <a class="dropdown-item" [routerLink]="['/hr', {outlets: {pages: ['users']}}]">Manage Users</a>
+                          <a class="dropdown-item" [routerLink]="['/hr', {outlets: {pages: ['users']}}]">Manage Users</a>
+                          <a class="dropdown-item" [routerLink]="['/hr', {outlets: {pages: ['users']}}]">Manage Users</a>
+                      </div>
+                  </li> -->
+                  <!-- <li class="nav-item dropdown dmenu">
+                      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown"> Admin </a>
+                      <div class="dropdown-menu sm-menu">
+                          <a class="dropdown-item">service2</a>
+                          <a class="dropdown-item">service 2</a>
+                          <a class="dropdown-item">service 3</a>
+                      </div>
+                  </li> -->
+              </ul>
+          </div>
+      </div>
+
+      <div class="col-sm-02 col-custom-03">
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                  <li class="nav-item">
+                      <a class="nav-link text-success">Welcome {{loggedInUserFullname}}</a>
+                  </li>
+
+                  <!-- <li class="nav-item dropdown dmenu">
+                      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+                          <i class="material-icons">&#xe5c3;</i>
+                      </a>
+                      <div class="dropdown-menu sm-menu dropdown-menu-right">
+                          <a class="dropdown-item" (click)="logout()">Log Out</a>
+                      </div>
+                  </li> -->
+
+                  <!-- <li class="nav-item dropdown dmenu">
+                      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+                          <i class="material-icons">&#xe88a;</i>
+                      </a>
+                      <div class="dropdown-menu sm-menu dropdown-menu-right">
+                          <a class="dropdown-item" (click)="logout()">Log Out</a>
+                      </div>
+                  </li> -->
+
+                  <li class="nav-item dropdown dmenu">
+                      <!-- <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown" style="padding: 0px; margin-top: 4px;">
+                          <div class="inset" *ngIf="myProfilePictureBase64">
+                              <img [src]="myProfilePictureBase64" alt="{{myProfile.Name}}">
+                          </div>
+                      </a> -->
+                      <div class="dropdown-menu sm-menu dropdown-menu-right">
+                          <a class="dropdown-item" (click)="logout()">Log Out</a>
+                      </div>
+                  </li>
+              </ul>
+
+              <!-- <ul class="navbar-nav navbar-right">
+        <li>
+          <div class="inset" *ngIf="myProfilePictureBase64">
+            <img [src]="myProfilePictureBase64" alt="{{myProfile.Name}}">
+          </div>
+        </li>
+      </ul> -->
+          </div>
+      </div>
+  </div>
+</nav>

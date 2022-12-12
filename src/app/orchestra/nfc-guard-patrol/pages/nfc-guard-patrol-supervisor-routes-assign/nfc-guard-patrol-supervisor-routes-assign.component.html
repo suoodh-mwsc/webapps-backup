@@ -1,0 +1,519 @@
+<!-- Security Group -->
+<section>
+    <div class="card card-main-4 sm-12" *ngIf="!selectedPatrollingGroup">
+        <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+            <div class="row">
+                <div class="col-sm-8">
+                    Assign Security Route | Security Groups (Supervisor)
+                </div>
+                <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                        <div class="row">
+                            <div class="col-sm-7" *ngIf="!viewAsTile">
+                                <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a>
+                            </div>
+                            <div class="col-sm-7" *ngIf="viewAsTile">
+                                <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a>
+                            </div>
+                            <div class="col-sm-4">
+                                <!-- <a class="add" title="Add" (click)="addGroupModal.show()">
+                                    <i class="material-icons">&#xe147;</i>
+                                </a> -->
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row" *ngIf="!groups || groups.length < 1">
+                <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information !</strong> No Security Group data found. Please add new No Security Group...
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="groups && groups.length > 0">
+                <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information !</strong> Please Select Security Group to Continue ...
+                    </div>
+                </div>
+            </div>
+            <!-- Show Loader -->
+            <div class="row" *ngIf="showLoader">
+                <div class="col-sm-12">
+                    <app-nfc-guard-patrol-loader></app-nfc-guard-patrol-loader>
+                </div>
+            </div>
+            <!-- SecurityGroup TilesView -->
+            <div *ngIf="groups && viewAsTile">
+                <div class="row">
+                    <div class="col-sm-3" *ngFor="let group of groups">
+                        <div class="card" [ngClass]="{'card-tabContent-09-Active': !group.IsDeleted, 'card-tabContent-09-InActive': group.IsDeleted}" (click)="!group.IsDeleted && selectSecurityGroup(group)">
+                            <div class="card-header">
+                                <div class="rotate">
+                                    <i class="fa fa-users fa-4x"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <span [ngClass]="{'cardTitle-02-Active': !group.IsDeleted, 'cardTitle-02-InActive': group.IsDeleted}">{{group.Name}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="float-right custom-button-div">
+                                            <!-- <a class="delete-data" title="Delete" *ngIf="!group.IsDeleted" (click)="updateSecurityGroupDelete(group)">
+                                                <i class="material-icons">&#xe92b;</i>
+                                            </a>
+                                            <a class="restore-data" title="Restore" *ngIf="group.IsDeleted" (click)="updateSecurityGroupRestore(group)">
+                                                <i class="material-icons">&#xe929;</i>
+                                            </a> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row" *ngIf="groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber"> -->
+                <div class="row" *ngIf="groupsPaginationInfo && (groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber)">
+                    <div class="col-sm-3">
+                        <button type="button" title="(Select New Security Group)" class="btn btn-link btn-sm bg-primary-700 text-primary-50" (click)="postSecurityGroupAll(groupsPaginationInfo.PageSize, (groupsPaginationInfo.PageNumber + 1))">
+                            Show More  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SecurityGroup TableView -->
+            <div *ngIf="groups && !viewAsTile">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-hover groupTbl" id="groupTbl" *ngIf="groups?.length > 0">
+                            <thead class="thead-light  thead-custom">
+                                <tr class="text-primary-600 bg-primary-100">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody-custom">
+                                <tr *ngFor="let group of groups; let p = index" [ngClass]="{'text-danger bg-light': group.IsDeleted}">
+                                    <th scope="row"></th>
+                                    <td>{{group.Name}}</td>
+                                    <td>
+                                        <span class="badge badge-secondary" *ngIf="group.IsDeleted">InActive</span>
+                                        <span class="badge badge-success" *ngIf="!group.IsDeleted">Active</span>
+                                    </td>
+                                    <td>
+                                        <a class="delete-data" title="Delete" *ngIf="!group.IsDeleted" (click)="updateSecurityGroupDelete(group)"><i class="material-icons">&#xe92b;</i></a>
+                                        <a class="restore-data" title="Restore" *ngIf="group.IsDeleted" (click)="updateSecurityGroupRestore(group)"><i class="material-icons">&#xe929;</i></a>
+                                        <a class="view" title="Manage Group" (click)="!group.IsDeleted && selectSecurityGroup(group)"><i class="material-icons">&#xe8ee;</i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" *ngIf="groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber">
+                    <div class="col-sm-3">
+                        <button type="button" title="(Select New Security Group)" class="btn btn-link btn-sm bg-primary-700 text-primary-50" (click)="postSecurityGroupAll(groupsPaginationInfo.PageSize, (groupsPaginationInfo.PageNumber + 1))">
+                                Show More  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Security Group Manage -->
+<section>
+    <div class="card card-main-4 sm-12" *ngIf="selectedPatrollingGroup">
+        <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+            <div class="row">
+                <div class="col-sm-6">
+                    Assign Security Route (Supervisor)
+                </div>
+                <div class="col-sm-5">
+                </div>
+                <div class="col-sm-1">
+                    <a class="btn-custom" (click)="viewPendingAssignedRoutesList()">
+                        <i class="fa fa-refresh fa-lg fa-pull-right fa-border" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb bg-primary-50">
+                            <li class="breadcrumb-item font-weight-bold">
+                                <a (click)="unSelectSecurityGroup()">
+                                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Go Back
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active font-weight-bold" aria-current="page">
+                                <span class="text-primary-400">Security Group: </span>
+                                <span class="text-primary-700">{{selectedPatrollingGroup.Name}}</span>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label class="form-control-label" for="inputEmail4">Start Date</label>
+                                <div class="input-group">
+                                    <!-- <input type="datetime-local" class="form-control" [(ngModel)]="startDate" name="startDate" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
+                                    <input type="date" class="form-control" [(ngModel)]="startDate" name="startDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="form-control-label" for="inputEmail4">To Date</label>
+                                <div class="input-group">
+                                    <!-- <input type="datetime-local" class="form-control" [(ngModel)]="toDate" name="toDate" aria-label="Input group example" aria-describedby="btnGroupAddon"> -->
+                                    <input type="date" class="form-control" [(ngModel)]="toDate" name="toDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2" style="padding-top: 30px;">
+                                <button type="button" class="btn btn-success" [disabled]="!startDate && !toDate" (click)="getPendingAssignedRoutesSearch(10,1)"><i class="fa fa-search" aria-hidden="true"></i>
+                        Search</button>
+                            </div>
+                            <div class="form-group col-md-2" style="padding-top: 30px;">
+                            </div>
+                            <div class="form-group col-md-1" style="padding-top: 30px;">
+                                <div class="float-right custom-button-div">
+                                    <a class="add" title="Add" (click)="showAssignSingleRoute(startDate, toDate)">
+                                        <i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="add" title="Add" (click)="showAssignBulkRoute(startDate, toDate)">
+                                        <i class="fa fa-th-list fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-1" style="padding-top: 30px;">
+                                <div class="float-right custom-button-div">
+                                    <a class="add" title="Download" *ngIf="downloadDataReport?.length > 1" (click)="download()">
+                                        <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="alert alert-dismissible alert-info" *ngIf="pendingAssignedRoutes?.length < 1">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Information !</strong> No Pending Routes...
+            </div>
+
+            <!-- Show Loader -->
+            <app-nfc-guard-patrol-loader *ngIf="showLoader"></app-nfc-guard-patrol-loader>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-hover assignedRoutesTbl" id="assignedRoutesTbl" *ngIf="pendingAssignedRoutes?.length > 0">
+                        <thead>
+                            <tr class="text-primary-600 bg-primary-100">
+                                <th scope="col"></th>
+                                <th scope="col">Route</th>
+                                <th scope="col">From</th>
+                                <th scope="col">To</th>
+                                <th scope="col">Assigned To</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let assignedRoute of pendingAssignedRoutes; let p = index">
+                                <!-- <td>{{assignedRoute.SecurityRoute.Name}} ({{assignedRoute.SecurityRoute_Id}})</td> -->
+                                <th></th>
+                                <td>{{assignedRoute.PatrollingRoute.Name}}</td>
+                                <td>{{assignedRoute.From | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                                <td>{{assignedRoute.To | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                                <td>{{assignedRoute.AssignedTo_Id}}</td>
+                                <td>{{assignedRoute.Status}}</td>
+                                <td>
+                                    <a class="add" title="Add" (click)="showAssignRoute(assignedRoute)">
+                                        <i class="fa fa-bars fa-lg text-info" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row" *ngIf="pendingAssignedRoutesPaginationInfo?.TotalPages > pendingAssignedRoutesPaginationInfo?.PageNumber">
+                        <div class="col-sm-12">
+                            <button type="button" class="btn btn-info" (click)="getPendingAssignedRoutes(pendingAssignedRoutesPaginationInfo.PageSize, (pendingAssignedRoutesPaginationInfo.PageNumber + 1))">Show
+                      More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- showAssignSingleRouteModal -->
+<div bsModal #showAssignSingleRouteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Assign Security Route</h5>
+                <button type="button" class="close pull-right" (click)="showAssignSingleRouteModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" *ngIf="selectedPatrollingGroup">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- startDate -->
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="inputEmail4">Start Date</label>
+                                        <div class="input-group">
+                                            <input type="datetime-local" class="form-control" [(ngModel)]="startDate" name="startDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <!-- toDate -->
+                                    <div class="form-group">
+                                        <label class="form-control-label" for="inputEmail4">To Date</label>
+                                        <div class="input-group">
+                                            <input type="datetime-local" class="form-control" [(ngModel)]="toDate" name="toDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label" for="inputEmail4">Route</label>
+                                    <!-- <select [(ngModel)]="newPatrollingRouteId" (ngModelChange)="onChangeRoute($event)" #Id="ngModel" class="hideLabel form-control" id="newPatrollingRouteId" name="newPatrollingRouteId"> -->
+                                    <!-- <select [(ngModel)]="newPatrollingRouteId" (ngModelChange)="onChangeRoute($event)" class="hideLabel form-control" id="newPatrollingRouteId" name="newPatrollingRouteId">
+                                        <option [ngValue]="route.Id" *ngFor="let route of selectedPatrollingGroup.PatrollingRoutes">
+                                            {{route.Name}}
+                                        </option>
+                                    </select> -->
+
+                                    <select [(ngModel)]="newSingleRouteAssign.RouteId" #Id="ngModel" class="hideLabel form-control" id="newSingleRouteAssignRouteId" name="newSingleRouteAssignRouteId">
+                                        <option [value]="" disabled selected hidden>Select a Route</option>
+                                        <option [ngValue]="route.Id" *ngFor="let route of selectedPatrollingGroup.PatrollingRoutes">
+                                            {{route.Name}}
+                                        </option>
+                                    </select>
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label" for="inputEmail4">Assign To</label>
+                                    <!-- <select [(ngModel)]="newEmployeeId" (ngModelChange)="onChangeEmployee($event)" #Id="ngModel" class="hideLabel form-control" id="newEmployeeId" name="newEmployeeId"> -->
+
+                                    <!-- <select [(ngModel)]="newEmployee1Id" (ngModelChange)="onChangeEmployee($event)" class="hideLabel form-control" id="newEmployee1Id" name="newEmployee1Id">
+                                        <option [ngValue]="employee.Employee_Id" *ngFor="let employee of selectedPatrollingGroup.PatrollingEmployees">
+                                            {{employee.Name}} ({{employee.Employee_Id}}) <p *ngIf="employee.IsRemoved">(InActive)</p>
+                                        </option>
+                                    </select> -->
+
+                                    <select [(ngModel)]="newSingleRouteAssign.Employee_Id" #Id="ngModel" class="hideLabel form-control" id="newSingleRouteAssignEmployee_Id" name="newSingleRouteAssignEmployee_Id">
+                                        <option [value]="" disabled selected hidden>Select a Employee</option>
+                                        <option [ngValue]="employee.Employee_Id" *ngFor="let employee of selectedPatrollingGroup.PatrollingEmployees">
+                                            {{employee.Name}} ({{employee.Employee_Id}}) <p *ngIf="employee.IsRemoved">(InActive)</p>
+                                        </option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showAssignSingleRouteModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="showAssignSingleRouteModal.hide()" (click)="assignRoute()">Add New</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- showAssignBulkRouteModal -->
+<div bsModal #showAssignBulkRouteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Bulk Assign Security Route</h5>
+                <button type="button" class="close pull-right" (click)="showAssignBulkRouteModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" *ngIf="selectedPatrollingGroup">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <!-- startDate -->
+                        <div class="form-group">
+                            <label class="form-control-label" for="inputEmail4">Start Date</label>
+                            <div class="input-group">
+                                <input type="datetime-local" class="form-control" [(ngModel)]="startDate" name="startDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- toDate -->
+                        <div class="form-group">
+                            <label class="form-control-label" for="inputEmail4">To Date</label>
+                            <div class="input-group">
+                                <input type="datetime-local" class="form-control" [(ngModel)]="toDate" name="toDate" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label class="form-control-label" for="inputEmail4">Assign To</label>
+                                    <!-- <select [(ngModel)]="newEmployeeId" (ngModelChange)="onChangeEmployee($event)" #Id="ngModel" class="hideLabel form-control" id="newEmployeeId" name="newEmployeeId"> -->
+                                    <!-- <select [(ngModel)]="newEmployee2Id" (ngModelChange)="onChangeEmployeeTwo($event)" class="hideLabel form-control" id="newEmployee2Id" name="newEmployee2Id">
+                                        <option [ngValue]="employee.Employee_Id" *ngFor="let employee of selectedPatrollingGroup.PatrollingEmployees">
+                                            {{employee.Name}} ({{employee.Employee_Id}}) <p *ngIf="employee.IsRemoved">(InActive)</p>
+                                        </option>
+                                    </select> -->
+
+                                    <select [(ngModel)]="newBulkRouteAssign.Employee_Id" #Id="ngModel" class="hideLabel form-control" id="newBulkRouteAssignEmployee_Id" name="newBulkRouteAssignEmployee_Id">
+                                        <option [value]="" disabled selected hidden>Select a Employee</option>
+                                        <option [ngValue]="employee.Employee_Id" *ngFor="let employee of selectedPatrollingGroup.PatrollingEmployees">
+                                            {{employee.Name}} ({{employee.Employee_Id}}) <p *ngIf="employee.IsRemoved">(InActive)</p>
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-row">
+                                <div class="form-group col-md-12" style="padding: 0px; margin: 0px;">
+                                    <label class="form-control-label" for="inputEmail4">Routes</label>
+                                </div>
+                                <div class="form-group col-md-6" *ngFor="let route of selectedPatrollingGroup.PatrollingRoutes" style="padding: 0px; margin: 0px;">
+                                    <div class="list-group-item" style="padding: 3px 10px 3px 5px; margin: 5px;">
+                                        <div class="row">
+                                            <div class="col-sm-1 justify-content-center align-items-center">
+                                                <input type="checkbox" name="routeSelected" value="{{route.Selected}}" (change)="updateSelected(route, $event)" />
+                                            </div>
+                                            <div class="col-sm-11 align-items-start">
+                                                <label class="form-check-label">{{route.Name}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showAssignBulkRouteModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="showAssignBulkRouteModal.hide()" (click)="assignRouteBulk()">Add New</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- showAssignRouteDetailsModal -->
+<div bsModal #showAssignRouteDetailsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Assign Route Details</h5>
+                <button type="button" class="close pull-right" (click)="showAssignRouteDetailsModal.hide()" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+            </div>
+            <div class="modal-body" *ngIf="assignedRouteDetails && assignedRouteDetails.PatrollingRoute">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="card card-main-4 sm-12">
+                            <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        {{assignedRouteDetails.PatrollingRoute.Name}}
+                                        <span class="badge badge-success" *ngIf="assignedRouteDetails.Status ==='Completed'">Completed</span>
+                                        <span class="badge badge-danger" *ngIf="assignedRouteDetails.Status ==='Pending'">Pending</span>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="float-right">
+                                            {{assignedRouteDetails.AssignedTo_Id}} <i class="fa fa-user-circle-o"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6 col-md-4" *ngFor="let assignedTag of assignedRouteDetails.PatrollingRoute?.PatrollingTags">
+                                        <div class="card" [ngClass]="{'card-tabContent-08-Active': assignedTag.IsActive, 'card-tabContent-08-InActive': !assignedTag.IsActive}">
+                                            <div class="card-header">
+                                                <div class="rotate">
+                                                    <i class="fa fa-users fa-4x"></i>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <span [ngClass]="{'cardTitle-02-Active': !assignedTag.IsActive, 'cardTitle-02-InActive': assignedTag.IsActive}">{{assignedTag.Name}}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="card-body" *ngIf="assignedTag.Tasks || !assignedTag.Tasks.length < 1"> -->
+                                            <div class="card-body">
+                                                <ul class="list-group" *ngFor="let assignedTask of assignedTag?.PatrollingTask">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: 3px;">
+                                                        {{assignedTask.Name}}
+                                                        <span class="badge badge-danger badge-pill" *ngIf="assignedRouteDetails.Status ==='Pending'"></span>
+                                                        <span class="badge badge-success badge-pill" *ngIf="assignedRouteDetails.Status ==='Completed'"></span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="showAssignRouteDetailsModal.hide()">Cancel</button>
+                <!-- <button type="button" class="btn btn-success" (click)="showAssignRouteDetailsModal.hide()" (click)="assignRouteBulk()">Add New</!-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<!-- <app-finance-online-payments-nav></app-finance-online-payments-nav> -->
+
+<div class="card card-main-3 mb-3">
+    <h3 class="card-header text-primary-900 bg-primary-200 font-weight-bold"> Online Payments | View Daily Transactions</h3>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <input class="form-control" [(ngModel)]="searchDate" type="date">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" (click)="search()">Search  <i class="fa fa-search" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <app-online-payments [transactions]="transactions" [pageTopStatus]="pageTopStatus"></app-online-payments>!-->
+        <app-online-payment-transaction [transactions]="transactions" [pageTopStatus]="pageTopStatus"></app-online-payment-transaction>
+    </div>
+</div>

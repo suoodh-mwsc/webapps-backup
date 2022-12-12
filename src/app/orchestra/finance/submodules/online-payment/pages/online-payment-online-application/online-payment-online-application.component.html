@@ -1,0 +1,85 @@
+<div class="card card-main-3 mb-3">
+  <h3 class="card-header text-primary-900 bg-primary-200 font-weight-bold"> Online Application Payments</h3>
+  <div class="card-body">
+    <app-online-payment-loader *ngIf="showLoader"> </app-online-payment-loader>
+
+    <div class="row" *ngIf="transactions && transactions.length > 0">
+      <div class="col-lg-12">
+        <table class="table table-hover table-bordered transactionDataTbl">
+          <thead class="thead-light thead-custom">
+            <tr>
+              <th scope="col">Transaction</th>
+              <th scope="col">Paid Date & User</th>
+              <th scope="col">Sales Order No</th>
+              <th scope="col">Payment Details</th>
+              <th scope="col">Bank Response & SAP Status</th>
+            </tr>
+          </thead>
+          <tbody class="tbody-custom">
+            <tr *ngFor="let transaction of transactions">
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-primary">{{transaction.Transaction.OurReference}}</span>
+                </div>
+                <div class="col-lg-12 p-0">
+                  <span class="text-muted">{{transaction.Transaction.PaymentGatewayDescription}}</span>
+                </div>
+                <div class="col-lg-12 p-0">
+                  <span class="text-muted">
+                    <strong>{{transaction.Transaction.PaymentTypeDescription}}</strong>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-primary">{{transaction.Transaction.PaidOn | date: 'dd MMM yyyy HH:mm'}}</span>
+                </div>
+                <div class="col-lg-12 p-0">
+                  <span class="text-muted">{{transaction.Transaction.PaidBy}}</span>
+                </div>
+              </td>
+    
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-primary"><strong>{{transaction.UtilityApplication.SalesOrderNo}}</strong> </span>
+                </div>
+              </td>
+    
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-primary float-right">Payment Amount MVR
+                    <strong>{{transaction.Transaction.PaymentAmount | number: '0.2'}}</strong>
+                  </span>
+                </div>
+              </td>
+
+              <td>
+                <div class="col-lg-12 p-0">
+                  <span class="text-primary">{{transaction.Transaction.PaidOn | date: 'dd MMM yyyy HH:mm'}}</span>
+                </div>
+                <div class="col-lg-12 p-0" *ngIf="transaction.Transaction.IsSuccessful">
+                  <span class="text-success">Transaction is successful</span>
+                  <div>
+                    <span class="text-success">Updated to SAP on
+                      {{transaction.Transaction.UpdatedToSAPOn | date: 'dd MMM yyyy HH:mm'}} Ref #
+                      {{transaction.Transaction.SAPReference}}
+                    </span>
+                  </div>
+                </div>
+                <div class="col-lg-12 p-0"
+                  *ngIf="!transaction.Transaction.IsSuccessful && transaction.Transaction.BanksReasonCodeDescription">
+                  <br>
+                  <span class="text-danger">Gateway Response: {{transaction.Transaction.BanksReasonCodeDescription}}</span>
+                </div>
+                <div class="col-lg-12 p-0" *ngIf="!transaction.Transaction.ResponseRecievedOn">
+                  <br>
+                  <span class="text-warning">No Response recieved from Bank</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

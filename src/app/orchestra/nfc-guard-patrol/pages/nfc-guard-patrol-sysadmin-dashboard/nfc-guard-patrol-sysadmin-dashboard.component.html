@@ -1,0 +1,939 @@
+<!-- Security Group -->
+<section>
+    <div class="card card-main-4 sm-12" *ngIf="!selectedPatrollingGroup">
+        <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+            <div class="row">
+                <div class="col-sm-8">
+                    Manage Security Groups (SysAdmin)
+                </div>
+                <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                        <div class="row">
+                            <div class="col-sm-7" *ngIf="!viewAsTile">
+                                <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a>
+                            </div>
+                            <div class="col-sm-7" *ngIf="viewAsTile">
+                                <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a>
+                            </div>
+                            <div class="col-sm-4">
+                                <a class="add" title="Add" (click)="addGroupModal.show()">
+                                    <i class="material-icons">&#xe147;</i>
+                                </a>
+                            </div>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row" *ngIf="!groups || groups.length < 1">
+                <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information !</strong> No Security Group data found. Please add new No Security Group...
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="groups && groups.length > 0">
+                <div class="col-sm-12">
+                    <div class="alert alert-dismissible alert-info">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Information !</strong> Please Select Security Group to Continue ...
+                    </div>
+                </div>
+            </div>
+            <!-- Show Loader -->
+            <div class="row" *ngIf="showLoader && (!groups || groups.length < 1)">
+                <div class="col-sm-12">
+                    <app-nfc-guard-patrol-loader></app-nfc-guard-patrol-loader>
+                </div>
+            </div>
+            <!-- SecurityGroup TilesView -->
+            <div *ngIf="groups && viewAsTile">
+                <div class="row">
+                    <div class="col-sm-3" *ngFor="let group of groups">
+                        <div class="card" [ngClass]="{'card-tabContent-08-Active': !group.IsDeleted, 'card-tabContent-08-InActive': group.IsDeleted}" (click)="!group.IsDeleted && selectSecurityGroup(group)">
+                            <div class="card-header">
+                                <div class="rotate">
+                                    <i class="fa fa-users fa-4x"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <span [ngClass]="{'cardTitle-02-Active': !group.IsDeleted, 'cardTitle-02-InActive': group.IsDeleted}">{{group.Name}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="float-right custom-button-div">
+                                            <a class="delete-data" title="Delete" *ngIf="!group.IsDeleted" (click)="updateSecurityGroupDelete(group)">
+                                                <i class="material-icons">&#xe92b;</i>
+                                            </a>
+                                            <a class="restore-data" title="Restore" *ngIf="group.IsDeleted" (click)="updateSecurityGroupRestore(group)">
+                                                <i class="material-icons">&#xe929;</i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row" *ngIf="groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber"> -->
+                <div class="row" *ngIf="groupsPaginationInfo && (groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber)">
+                    <div class="col-sm-3">
+                        <button type="button" title="(Select New Security Group)" class="btn btn-link btn-sm bg-primary-700 text-primary-50" (click)="postSecurityGroupAll(groupsPaginationInfo.PageSize, (groupsPaginationInfo.PageNumber + 1))">
+                            Show More  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SecurityGroup TableView -->
+            <div *ngIf="groups && !viewAsTile">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-hover groupTbl" id="groupTbl" *ngIf="groups?.length > 0">
+                            <thead class="thead-light  thead-custom">
+                                <tr class="text-primary-600 bg-primary-100">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody-custom">
+                                <tr *ngFor="let group of groups; let p = index" [ngClass]="{'text-danger bg-light': group.IsDeleted}">
+                                    <th scope="row"></th>
+                                    <td>{{group.Name}}</td>
+                                    <td>
+                                        <span class="badge badge-secondary" *ngIf="group.IsDeleted">InActive</span>
+                                        <span class="badge badge-success" *ngIf="!group.IsDeleted">Active</span>
+                                    </td>
+                                    <td>
+                                        <a class="delete-data" title="Delete" *ngIf="!group.IsDeleted" (click)="updateSecurityGroupDelete(group)"><i class="material-icons">&#xe92b;</i></a>
+                                        <a class="restore-data" title="Restore" *ngIf="group.IsDeleted" (click)="updateSecurityGroupRestore(group)"><i class="material-icons">&#xe929;</i></a>
+                                        <a class="view" title="Manage Group" (click)="!group.IsDeleted && selectSecurityGroup(group)"><i class="material-icons">&#xe8ee;</i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row" *ngIf="groupsPaginationInfo.TotalPages > groupsPaginationInfo.PageNumber">
+                    <div class="col-sm-3">
+                        <button type="button" title="(Select New Security Group)" class="btn btn-link btn-sm bg-primary-700 text-primary-50" (click)="postSecurityGroupAll(groupsPaginationInfo.PageSize, (groupsPaginationInfo.PageNumber + 1))">
+                                Show More  <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Security Group Manage -->
+<section>
+    <div class="card card-main-4 sm-12" *ngIf="selectedPatrollingGroup">
+        <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+            <div class="row">
+                <div class="col-sm-12">
+                    Manage Security Groups | Security Routes
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- <div class="row" *ngIf="!selectedPatrollingRoute && !selectedPatrollingTag"> -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb bg-primary-50">
+                            <li class="breadcrumb-item font-weight-bold">
+                                <a (click)="unSelectSecurityGroup()">
+                                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Go Back
+                                </a>
+                            </li>
+                            <li class="breadcrumb-item active font-weight-bold" aria-current="page">
+                                <span class="text-primary-400">Security Group: </span>
+                                <span class="text-primary-700">{{selectedPatrollingGroup.Name}}</span>
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="nav-item" [ngClass]="{active: selectedTab === 'groupSupervisors'}">
+                            <a class="nav-link active" href="#groupSupervisors" aria-controls="groupSupervisors" role="tab" data-toggle="tab" (click)="selectActive('groupSupervisors')">Group Supervisors</a>
+                        </li>
+                        <li role="presentation" class="nav-item" [ngClass]="{active: selectedTab === 'groupEmployees'}">
+                            <a class="nav-link" href="#groupEmployees" aria-controls="groupEmployees" role="tab" data-toggle="tab" (click)="selectActive('groupEmployees')">Group Employees</a>
+                        </li>
+                        <li role="presentation" class="nav-item" [ngClass]="{active: selectedTab === 'groupRoutes'}">
+                            <!-- <a class="nav-link" href="#groupRoutes" aria-controls="groupRoutes" role="tab" data-toggle="tab" (click)="getAllRoutes(); selectActive('groupRoutes')">Group Routes</!-->
+                            <a class="nav-link" href="#groupRoutes" aria-controls="groupRoutes" role="tab" data-toggle="tab" (click)="selectActive('groupRoutes')">Group Routes</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane tab-pane-custom fade" id="groupRoutes" [ngClass]="{active:selectedTab ==='groupRoutes'}" *ngIf="selectedTab ==='groupRoutes'">
+                            <!-- Start-TabContentHere -->
+                            <!-- Route Start -->
+                            <!-- <div class="card card-tabContent-022" *ngIf="selectedPatrollingGroup.PatrollingRoutes && !selectedPatrollingRoute && !selectedPatrollingTag"> -->
+                            <div class="card card-tabContent-022" *ngIf="selectedPatrollingGroup.PatrollingRoutes">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <h2 id="cardTitle">Manage Routes</h2>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="float-right">
+                                                <a class="add" title="Download" *ngIf="downloadDataReport?.length > 1" (click)="download()">
+                                                    <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Show Loader -->
+                                    <div class="row" *ngIf="!selectedPatrollingGroup.PatrollingRoutes && showLoader">
+                                        <div class="col-sm-12">
+                                            <app-nfc-guard-patrol-loader></app-nfc-guard-patrol-loader>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-4" style="padding: 3px 3px 3px 3px;">
+                                            <div class="card card-main-5 sm-12">
+                                                <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+                                                    <div class="row">
+                                                        <div class="col-sm-8">
+                                                            <h2 id="cardTitle">Routes</h2>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="float-right">
+                                                                <div class="row">
+                                                                    <div class="col-sm-7" *ngIf="!viewAsTile">
+                                                                        <!-- <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a> -->
+                                                                    </div>
+                                                                    <div class="col-sm-7" *ngIf="viewAsTile">
+                                                                        <!-- <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a> -->
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <a class="add" title="Add" (click)="addRouteModal.show()">
+                                                                            <i class="material-icons">&#xe147;</i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="col-sm-1">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row" *ngIf="!selectedPatrollingGroup.PatrollingRoutes || selectedPatrollingGroup.PatrollingRoutes.length < 1">
+                                                        <div class="col-sm-12" style="padding: 3px 3px 3px 3px;">
+                                                            <div class="alert alert-routes alert-dismissible alert-info">
+                                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                <strong>Information !</strong> No Patrolling Route data found. Please add new Patrolling Route...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" *ngIf="!selectedPatrollingRoute && selectedPatrollingGroup.PatrollingRoutes?.length > 1">
+                                                        <div class="col-sm-12" style="padding: 3px 3px 3px 3px;">
+                                                            <div class="alert alert-routes alert-dismissible alert-info">
+                                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                <strong>Information !</strong> Please select Patrolling Route to Continue...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Routes TilesView -->
+                                                    <div class="row" *ngIf="selectedPatrollingGroup.PatrollingRoutes && viewAsTile">
+                                                        <div class="col-sm-12" *ngFor="let route of selectedPatrollingGroup?.PatrollingRoutes">
+                                                            <div class="card" [ngClass]="{'card-tabContent-08-Active': route.IsActive, 'card-tabContent-08-InActive': !route.IsActive, 'card-tabContent-selected': route.Id === selectedPatrollingRoute?.Id}" (click)="route.IsActive && selectPatrollingRoute(route)">
+                                                                <div class="card-header">
+                                                                    <div class="rotate">
+                                                                        <i class="fa fa-code-fork fa-4x"></i>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-9">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12">
+                                                                                    <span [ngClass]="{'cardTitle-02-Active': route.IsActive, 'cardTitle-02-InActive': !route.IsActive}">
+                                                                                        {{route.Name}}  <span class="badge badge-pill badge-info">{{route.PatrollingTags?.length}}</span>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <div class="float-right custom-button-div">
+                                                                                <a class="delete-data" title="Delete" *ngIf="route.IsActive" (click)="updateRouteStatusInActive(route)">
+                                                                                    <i class="material-icons">&#xe92b;</i>
+                                                                                </a>
+                                                                                <a class="restore-data" title="Restore" *ngIf="!route.IsActive" (click)="updateRouteStatusActive(route)">
+                                                                                    <i class="material-icons">&#xe929;</i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4" style="padding: 3px 0px 3px 0px;">
+                                            <div class="card card-main-5 sm-12">
+                                                <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+                                                    <div class="row">
+                                                        <div class="col-sm-8">
+                                                            <h2 id="cardTitle">Sub-Routes (Checkpoints)</h2>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="float-right">
+                                                                <div class="row">
+                                                                    <div class="col-sm-7" *ngIf="!viewAsTile">
+                                                                        <!-- <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a> -->
+                                                                    </div>
+                                                                    <div class="col-sm-7" *ngIf="viewAsTile">
+                                                                        <!-- <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a> -->
+                                                                    </div>
+                                                                    <div class="col-sm-4" *ngIf="selectedPatrollingRoute">
+                                                                        <a class="add" title="Add" (click)="addTagModal.show()">
+                                                                            <i class="material-icons">&#xe147;</i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="col-sm-4" *ngIf="!selectedPatrollingRoute">
+                                                                    </div>
+                                                                    <div class="col-sm-1">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row" *ngIf="selectedPatrollingRoute && (!selectedPatrollingGroup.PatrollingRoutes.PatrollingTags || selectedPatrollingGroup.PatrollingRoutes?.PatrollingTags?.length < 1)">
+                                                        <div class="col-sm-12" style="padding: 3px 3px 3px 3px;">
+                                                            <div class="alert alert-routes alert-dismissible alert-info">
+                                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                <strong>Information !</strong> No Patrolling Tag data found. Please add new No Patrolling Tag...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" *ngIf="!selectedPatrollingTag && selectedPatrollingGroup.PatrollingRoutes?.PatrollingTags?.length > 1">
+                                                        <div class="col-sm-12" style="padding: 3px 3px 3px 3px;">
+                                                            <div class="alert alert-routes alert-dismissible alert-info">
+                                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                <strong>Information !</strong> Please select Patrolling Tag to Continue...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Tag TilesView -->
+                                                    <div class="row" *ngIf="selectedPatrollingGroup.PatrollingRoutes.PatrollingTags && viewAsTile">
+                                                        <div class="col-sm-12" *ngFor="let tag of selectedPatrollingGroup.PatrollingRoutes.PatrollingTags">
+                                                            <div class="card" [ngClass]="{'card-tabContent-08-Active': tag.IsActive, 'card-tabContent-08-InActive': !tag.IsActive, 'card-tabContent-selected': tag.Id === selectedPatrollingTag?.Id}" (click)="tag.IsActive && selectPatrollingTag(tag)">
+                                                                <div class="card-header">
+                                                                    <div class="rotate">
+                                                                        <i class="fa fa-tags fa-4x"></i>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-9">
+                                                                            <span class="cardTitle-02">
+                                                                                {{tag.Name}}  <span class="badge badge-pill badge-info">{{tag.PatrollingTask?.length}}</span>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <div class="float-right custom-button-div">
+                                                                                <a class="delete-data" title="Delete" *ngIf="tag.IsActive" (click)="updateTagStatusInActive(tag)">
+                                                                                    <i class="material-icons">&#xe92b;</i>
+                                                                                </a>
+                                                                                <a class="restore-data" title="Restore" *ngIf="!tag.IsActive" (click)="updateTagStatusActive(tag)">
+                                                                                    <i class="material-icons">&#xe929;</i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4" style="padding: 3px 3px 3px 3px;">
+                                            <div class="card card-main-5 sm-12">
+                                                <div class="card-header text-primary-900 bg-primary-100 font-weight-bold">
+                                                    <div class="row">
+                                                        <div class="col-sm-8">
+                                                            <h2 id="cardTitle">Tasks</h2>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="float-right">
+                                                                <div class="row">
+                                                                    <div class="col-sm-7" *ngIf="!viewAsTile">
+                                                                        <!-- <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a> -->
+                                                                    </div>
+                                                                    <div class="col-sm-7" *ngIf="viewAsTile">
+                                                                        <!-- <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a> -->
+                                                                    </div>
+                                                                    <div class="col-sm-4" *ngIf="selectedPatrollingRoute && selectedPatrollingTag">
+                                                                        <a class="add" title="Add" (click)="addTaskModal.show()">
+                                                                            <i class="material-icons">&#xe147;</i>
+                                                                        </a>
+                                                                    </div>
+                                                                    <div class="col-sm-4" *ngIf="!selectedPatrollingTag">
+                                                                    </div>
+                                                                    <div class="col-sm-1">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row" *ngIf="selectedPatrollingRoute && selectedPatrollingTag && (!selectedPatrollingGroup.PatrollingRoutes.PatrollingTags.PatrollingTask || selectedPatrollingGroup.PatrollingRoutes?.PatrollingTags?.PatrollingTask.length < 1)">
+                                                        <div class="col-sm-12" style="padding: 3px 3px 3px 3px;">
+                                                            <div class="alert alert-routes alert-dismissible alert-info">
+                                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                                <strong>Information !</strong> No Patrolling Task data found. Please add new Patrolling Task...
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Task TilesView -->
+                                                    <div class="row" *ngIf="selectedPatrollingGroup.PatrollingRoutes.PatrollingTags?.PatrollingTask && viewAsTile">
+                                                        <div class="col-sm-12" *ngFor="let task of selectedPatrollingGroup.PatrollingRoutes.PatrollingTags?.PatrollingTask">
+                                                            <div class="card" [ngClass]="{'card-tabContent-08-Active': task.IsActive, 'card-tabContent-08-InActive': !task.IsActive}">
+                                                                <div class="card-header">
+                                                                    <div class="rotate">
+                                                                        <i class="fa fa-tasks fa-4x"></i>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-9">
+                                                                            <div class="row">
+                                                                                <div class="col-sm-12">
+                                                                                    <span class="cardTitle-02">{{task.Name}}  </span>
+                                                                                    <span class="cardTitle-02">
+                                                                                            <span class="badge badge-pill badge-info">  {{task.PatrollingTaskTypeDescription}}</span>
+                                                                                    </span>
+                                                                                    <!-- <button type="button" class="btn btn-link btn-sm" (click)="showUpdateTaskTypeModal(task)">
+                                                                                        <i class="fa fa-pencil-square-o text-warning" aria-hidden="true"></i>
+                                                                                    </button> -->
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-3">
+                                                                            <div class="float-right custom-button-div">
+                                                                                <a class="delete-data" title="Delete" *ngIf="task.IsActive" (click)="updateTaskStatusInActive(task)">
+                                                                                    <i class="material-icons">&#xe92b;</i>
+                                                                                </a>
+                                                                                <a class="restore-data" title="Restore" *ngIf="!task.IsActive" (click)="updateTaskStatusActive(task)">
+                                                                                    <i class="material-icons">&#xe929;</i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End-TabContentHere -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane tab-pane-custom fade show active" id="groupSupervisors" [ngClass]="{ active:selectedTab ==='groupSupervisors'}" *ngIf="selectedTab ==='groupSupervisors'">
+                        <!-- Start-TabContentHere -->
+                        <div class="card card-tabContent-01">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <h2 id="cardTitle">Manage Group Supervisors</h2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="float-right">
+                                            <div class="row">
+                                                <div class="col-sm-7" *ngIf="!viewAsTile">
+                                                    <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a>
+                                                </div>
+                                                <div class="col-sm-7" *ngIf="viewAsTile">
+                                                    <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a class="add" title="Add" (click)="addSupervisorModal.show()">
+                                                        <i class="material-icons">&#xe147;</i>
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Start Body -->
+                                <div class="alert alert-dismissible alert-info" *ngIf="!selectedPatrollingGroup.PatrollingSupervisors || selectedPatrollingGroup.PatrollingSupervisors.length ==0">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Oh Snap!</strong> No Group Supervisor Found, Please and new Group Supervisor...
+                                </div>
+
+                                <!-- groupSupervisors TilesView -->
+                                <div class="row" *ngIf="selectedPatrollingGroup.PatrollingSupervisors && viewAsTile">
+                                    <div class="col-sm-3" *ngFor="let groupSupervisor of selectedPatrollingGroup.PatrollingSupervisors">
+                                        <div class="card" [ngClass]="{'card-tabContent-08-Active': !groupSupervisor.IsRemoved, 'card-tabContent-08-InActive': groupSupervisor.IsRemoved}">
+                                            <div class="card-header">
+                                                <div class="rotate">
+                                                    <i class="fa fa-user-secret fa-4x"></i>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-9">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <span [ngClass]="{'cardTitle-02-Active': !groupSupervisor.IsRemoved, 'cardTitle-02-InActive': !groupSupervisor.IsRemoved}">
+                                                                        <span class="badge badge-secondary badge-employeeId">{{groupSupervisor.EmployeeId}}</span> {{groupSupervisor.Name}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="float-right custom-button-div">
+                                                            <a class="delete-data" title="Delete" *ngIf="!groupSupervisor.IsRemoved" (click)="deleteSupervisor(groupSupervisor)">
+                                                                <i class="material-icons">&#xe92b;</i>
+                                                            </a>
+                                                            <a class="restore-data" title="Restore" *ngIf="groupSupervisor.IsRemoved" (click)="restoreSupervisor(groupSupervisor)">
+                                                                <i class="material-icons">&#xe929;</i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- groupSupervisors TableView -->
+                                <div class="row" *ngIf="selectedPatrollingGroup.PatrollingSupervisors && !viewAsTile">
+                                    <div class="col-sm-12">
+                                        <table class="table table-hover groupSupervisorsTbl" id="groupSupervisorsTbl" *ngIf="selectedPatrollingGroup.PatrollingSupervisors?.length > 0">
+                                            <thead class="thead-light  thead-custom">
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="tbody-custom">
+                                                <tr *ngFor="let groupSupervisor of selectedPatrollingGroup.PatrollingSupervisors; let i = index;" [ngClass]="{'text-danger bg-light': groupSupervisor.IsRemoved}">
+                                                    <th scope="row"></th>
+                                                    <td>
+                                                        <span class="badge badge-secondary badge-employeeId">{{groupSupervisor.EmployeeId}}</span> {{groupSupervisor.Name}}
+                                                    </td>
+                                                    <td>
+                                                        <a class="restore-table" title="Restore" *ngIf="groupSupervisor.IsRemoved" (click)="restoreSupervisor(groupSupervisor)">
+                                                            <i class="material-icons">&#xe929;</i>
+                                                        </a>
+                                                        <a class="delete-table" title="Delete" *ngIf="!groupSupervisor.IsRemoved" (click)="deleteSupervisor(groupSupervisor)">
+                                                            <i class="material-icons">&#xe92b;</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- End Body -->
+                            </div>
+                        </div>
+                        <!-- End-TabContentHere -->
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane tab-pane-custom fade" id="groupEmployees" [ngClass]="{ active:selectedTab ==='groupEmployees'}" *ngIf="selectedTab ==='groupEmployees'">
+                        <!-- Start-TabContentHere -->
+                        <div class="card card-tabContent-01">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <h2 id="cardTitle">Manage Group Employee</h2>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="float-right">
+                                            <div class="row">
+                                                <div class="col-sm-7" *ngIf="!viewAsTile">
+                                                    <a class="view" title="Tiles" (click)="changeViewAsTile()"><i class="fa fa-th fa-lg" aria-hidden="true"></i></a>
+                                                </div>
+                                                <div class="col-sm-7" *ngIf="viewAsTile">
+                                                    <a class="view" title="Table" (click)="changeViewAsTable()"><i class="fa fa-table fa-lg" aria-hidden="true"></i></a>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <a class="add" title="Add" (click)="addEmployeeModal.show()">
+                                                        <i class="material-icons">&#xe147;</i>
+                                                    </a>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Start Body -->
+                                <div class="alert alert-dismissible alert-info" *ngIf="!selectedPatrollingGroup.PatrollingEmployees || selectedPatrollingGroup.PatrollingEmployees.length ==0">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>Oh Snap!</strong> No Group Employee Found, Please and new Group Employee...
+                                </div>
+
+                                <!-- groupEmployees TilesView -->
+                                <div class="row" *ngIf="selectedPatrollingGroup.PatrollingEmployees && viewAsTile">
+                                    <div class="col-sm-3" *ngFor="let groupEmployee of selectedPatrollingGroup.PatrollingEmployees">
+                                        <div class="card" [ngClass]="{'card-tabContent-08-Active': !groupEmployee.IsRemoved, 'card-tabContent-08-InActive': groupEmployee.IsRemoved}">
+                                            <div class="card-header">
+                                                <div class="rotate">
+                                                    <i class="fa fa-user fa-4x"></i>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-9">
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <span [ngClass]="{'cardTitle-02-Active': !groupEmployee.IsRemoved, 'cardTitle-02-InActive': !groupEmployee.IsRemoved}">
+                                                                    <span class="badge badge-secondary badge-employeeId">{{groupEmployee.Employee_Id}}</span> {{groupEmployee.Name}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="float-right custom-button-div">
+                                                            <a class="delete-data" title="Delete" *ngIf="!groupEmployee.IsRemoved" (click)="deleteEmployee(groupEmployee)">
+                                                                <i class="material-icons">&#xe92b;</i>
+                                                            </a>
+                                                            <a class="restore-data" title="Restore" *ngIf="groupEmployee.IsRemoved" (click)="restoreEmployee(groupEmployee)">
+                                                                <i class="material-icons">&#xe929;</i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- groupEmployees TableView -->
+                                <div class="row" *ngIf="selectedPatrollingGroup.PatrollingEmployees && !viewAsTile">
+                                    <div class="col-sm-12">
+                                        <table class="table table-hover groupEmployeesTbl" id="groupEmployeesTbl" *ngIf="selectedPatrollingGroup.PatrollingEmployees?.length > 0">
+                                            <thead class="thead-light  thead-custom">
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="tbody-custom">
+                                                <tr *ngFor="let groupEmployee of selectedPatrollingGroup.PatrollingEmployees; let j = index;" [ngClass]="{'text-danger bg-light': groupEmployee.IsRemoved}">
+                                                    <th scope="row"></th>
+                                                    <td>
+                                                        <span class="badge badge-secondary badge-employeeId">{{groupEmployee.Employee_Id}}</span> {{groupEmployee.Name}}
+                                                    </td>
+                                                    <td>
+                                                        <a class="restore-table" title="Restore" *ngIf="groupEmployee.IsRemoved" (click)="restoreEmployee(groupEmployee)">
+                                                            <i class="material-icons">&#xe929;</i>
+                                                        </a>
+                                                        <a class="delete-table" title="Delete" *ngIf="!groupEmployee.IsRemoved" (click)="deleteEmployee(groupEmployee)">
+                                                            <i class="material-icons">&#xe92b;</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div>
+                                </div>
+                                <!-- End Body -->
+                            </div>
+                        </div>
+                        <!-- End-TabContentHere -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- addGroupModal -->
+<div bsModal #addGroupModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Group</h5>
+                <button type="button" class="close pull-right" (click)="addGroupModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-3 form-control-label">Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" [(ngModel)]="newGroup.Name" name="newGroupName" id="newGroupName" />
+                        </div>
+                    </div>
+                    <!-- <div class="form-group row">
+                        <label for="inputName" class="col-sm-3 form-control-label">Description</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" [(ngModel)]="newGroup.Description" name="newGroupDescription" id="newGroupDescription" (keydown)="onKeydownAddGroup($event)" />
+                        </div>
+                    </div> -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="addGroupModal.hide()" (click)="addNewGroup()">
+                    Add New
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- addEmployeeModal -->
+<div bsModal #addEmployeeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Employee</h5>
+                <button type="button" class="close pull-right" (click)="addEmployeeModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group col-md-1">
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label class="form-control-label" for="inputEmail4">Staff ID</label>
+                                    <input class="form-control" [(ngModel)]="newEmployee.EmployeeId" placeholder="Staff ID" name="staffID" id="staffID" type="number" />
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label class="form-control-label" for="inputEmail4">User Role</label>
+                                    <select [(ngModel)]="newEmployee.Role" #Id="ngModel" class="hideLabel form-control" id="newEmployeeRole" name="newEmployeeRole">
+                                        <option [ngValue]="role.Name" *ngFor="let role of roles">{{role.Name}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-1">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="addEmployeeModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="addEmployeeModal.hide()" (click)="addGuard()">
+                    Add New
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- addSupervisorModal -->
+<div bsModal #addSupervisorModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Supervisor</h5>
+                <button type="button" class="close pull-right" (click)="addSupervisorModal.hide()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form>
+                            <div class="form-group row">
+                                <label for="inputName" class="col-sm-3 form-control-label">Staff ID</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" [(ngModel)]="newSupervisor.EmployeeId" placeholder="Staff ID" name="staffID" id="staffID" type="number" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="addSupervisorModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="addSupervisorModal.hide()" (click)="addSupervisor()">
+                    Add New
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- addRouteModal -->
+<div bsModal #addRouteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Route</h5>
+                <button type="button" class="close pull-right" (click)="addRouteModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-3 form-control-label">Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" [(ngModel)]="newRoute.Name" name="newRouteName" id="newRouteName" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-3 form-control-label">Description</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" [(ngModel)]="newRoute.Description" name="newRouteDescription" id="newRouteDescription" (keydown)="onKeydownAddRoute($event)" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="addRouteModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="addRouteModal.hide()" (click)="addNewRoute()">
+                    AddNew
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- addTagModal -->
+<div bsModal #addTagModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Sub-Routes (Checkpoints)</h5>
+                <button type="button" class="close pull-right" (click)="addTagModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" *ngIf="selectedPatrollingRoute">
+                <form>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-3 form-control-label">Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" [(ngModel)]="newTag.Name" name="newTagName" id="newTagName" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-3 form-control-label">Description</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" [(ngModel)]="newTag.Description" name="newTagDescription" id="newTagDescription" (keydown)="onKeydownAddTag($event)" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="addTagModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="addTagModal.hide()" (click)="addNewTag()">Add
+          New</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- addTaskModal -->
+<div bsModal #addTaskModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Task</h5>
+                <button type="button" class="close pull-right" (click)="addTaskModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body" *ngIf="selectedPatrollingRoute && selectedPatrollingTag">
+                <form>
+                    <div class="form-group row">
+                        <label for="inputName" class="col-sm-3 form-control-label">Name</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="form-control" [(ngModel)]="newTask.Name" name="newTaskName" id="newTaskName" (keydown)="onKeydownAddTask($event)" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputYear" class="col-sm-3 form-control-label">Task Type</label>
+                        <div class="col-sm-7">
+                            <select [(ngModel)]="newTask.SecurityTaskTypeId" #Id="ngModel" class="hideLabel form-control" id="newTaskSecurityTaskTypeId" name="newSecurityTaskTypeId">
+                                    <option [ngValue]="taskType.Id" *ngFor="let taskType of taskTypes">
+                                        {{taskType.Name}}
+                                    </option>
+                                </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="addTaskModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="addTaskModal.hide()" (click)="addNewTask()">Add
+          New</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- updateTaskTypeModal -->
+<div bsModal #updateTaskTypeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id="dialog-sizes-name1" class="modal-title pull-left">Update Task Type</h4>
+                <button type="button" class="close pull-right" (click)="updateTaskTypeModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="updateTask">
+                <form>
+                    <div class="form-group row">
+                        <label for="inputYear" class="col-sm-3 form-control-label">Task Type</label>
+                        <div class="col-sm-7">
+                            <select [(ngModel)]="updateTask.SecurityTaskTypeId" #Id="ngModel" class="hideLabel form-control" id="updateTaskSecurityTaskTypeId" name="SecurityTaskTypeId">
+                                <option [ngValue]="taskType.Id" *ngFor="let taskType of taskTypes">
+                                    {{taskType.Name}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="updateTaskTypeModal.hide()">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="updateTaskTypeModal.hide()" (click)="postTaskTypeUpdate(updateTask)">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

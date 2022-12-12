@@ -1,0 +1,274 @@
+<!-- Search Completed Applications | with SalesOrderNo -->
+<section>
+  <div class="card card-main-1 sm-12" *ngIf="!userDetails.UserName">
+    <div class="card-header text-primary-500 bg-primary-100 font-weight-bold">
+      <div class="row">
+        <div class="col-sm-6">
+          Search E-Portal User
+        </div>
+        <div class="col-sm-6">
+          <div class="btn-custom">
+            <a class="btn-custom" (click)="clearSearch(searchText)"><i
+                class="fa fa-refresh fa-lg fa-pull-right fa-border" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <form>
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <input class="form-control" placeholder="Mobile No | Email | Account No | Meter No"
+                  [(ngModel)]="searchText" name="searchText" id="searchText" type="text" />
+                <!-- <label class="col-form-label" for="inputEmail4"></label> -->
+              </div>
+              <div class="form-group col-md-3">
+                <button type="button" class="btn btn-success" [disabled]="!searchText"
+                  (click)="searchPortalUser(searchText)"><i class="fa fa-search" aria-hidden="true"></i> Search
+                </button>
+                <!-- <label class="col-form-label" for="inputPassword4"></label> -->
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div class="col-sm-12" *ngIf="showLoader">
+          <app-online-application-loader *ngIf="showLoader"></app-online-application-loader>
+        </div>
+        <div class="col-sm-12" *ngIf="!showLoader && applicationList">
+          <!-- Pending Applications | Select Application -->
+
+          <div class="card card-main-4 sm-12" *ngFor="let selectedApplication of applicationList">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                      <div class="row">
+                        <div class="col-sm-12 application-label">
+                          Name
+                        </div>
+                        <div class="col-sm-12 application-text">
+                          {{selectedApplication.Name}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                      <div class="row">
+                        <div class="col-sm-12 application-label">
+                          User Name
+                        </div>
+                        <div class="col-sm-12 application-text">
+                          {{selectedApplication.UserName}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                      <div class="row">
+                        <div class="col-sm-12 application-label">
+                          Email
+                        </div>
+                        <div class="col-sm-12 application-text">
+                          {{selectedApplication.Email}}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                      <div class="row">
+                        <div class="col-sm-12 application-label">
+                          Phone Number
+                        </div>
+                        <div class="col-sm-12 application-text">
+                          {{selectedApplication.PhoneNumber}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer text-white bg-default">
+              <div class="row">
+                <div class="col-sm-7">
+                </div>
+                <div class="col-sm-5">
+                  <button type="button" class="btn btn-primary float-right"
+                    (click)="selectDetails(selectedApplication)"><i class="fa fa-file-text fa-fw"></i> View
+                    Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<!-- User Details | userDetails -->
+<section>
+  <!-- <div *ngIf="userDetails && applicationList?.length < 1 && !applicationList"> -->
+  <div *ngIf="userDetails.UserName">
+    <div class="row" style="padding-bottom: 7px;">
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-primary" (click)="goBackToSearch(searchText)"><i
+            class="fa fa-chevron-circle-left" aria-hidden="true"></i> Go Back</button>
+      </div>
+      <div class="col-sm-9">
+      </div>
+    </div>
+
+    <div class="card card card-main-2 sm-12">
+      <div class="card-header text-primary-500 bg-primary-100 font-weight-bold"> E-Portal User Details</div>
+      <div class="card-body">
+
+        <h3 class="application-title-main-1">{{userDetails.UserName}}</h3>
+
+        <!-- User Details -->
+        <div class="row application-fieldset bg-secondary">
+          <h6 class="application-legend"> User Details</h6>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{userDetails.Name}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    User Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{userDetails.UserName}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Email
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{userDetails.Email}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-3 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    PhoneNumber
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{userDetails.PhoneNumber}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Details -->
+        <div class="row application-fieldset bg-secondary" *ngIf="userDetails.UtilityAccounts?.length > 0">
+          <h6 class="application-legend"> Account Details</h6>
+          <div class="col-sm-12" style="padding-left:0px; padding-right:0px;" *ngIf="userDetails.UtilityAccounts?.length > 0">
+            <div class="flex-container application-accounts-flex-container">
+              <div class="col-sm-2" *ngFor="let utilityAccount of userDetails.UtilityAccounts" style="padding-left:0px; padding-right:5px;">
+                <div class="list-group-item application-accounts-list-group-item">
+                  <a class="col-sm-2" title="{{utilityAccount.AccountNo}}" style="margin:0px; padding:0px;">
+                    <div class="row" style="margin:0px; padding:0px;">
+                      <div class="col-sm-6 application-accounts-label">
+                        <p class="text-center account-label">Account No</p>
+                      </div>
+                      <div class="col-sm-6 application-accounts-label">
+                        <p class="text-center account-label">Meter No</p>
+                      </div>
+                    </div>
+                    <div class="row" style="margin:0px; padding:0px;">
+                      <div class="col-sm-6 application-accounts-text">
+                        <h4 class="text-center account-text">{{utilityAccount.AccountNo}}</h4>
+                      </div>
+                      <div class="col-sm-6 application-accounts-text">
+                        <h4 class="text-center account-text">{{utilityAccount.MeterNo}}</h4>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- Online Applications Details -->
+        <div class="row application-fieldset bg-secondary"
+          *ngIf="userDetails.OnlineApplications.UtilityApplications?.length > 0">
+          <h6 class="application-legend"> Online Applications Details</h6>
+          <div class="col-sm-12">
+            <div class="row">
+
+              <div class="col-sm-12 list-group-item list-group-item-action flex-column align-items-start">
+                <table class="table table-hover" id="accordion">
+                  <thead>
+                    <tr class="text-primary-600 bg-primary-100">
+                      <th scope="col">Created On</th>
+                      <th scope="col">Created By</th>
+                      <th scope="col">Application Type</th>
+                      <th scope="col">Sales Order No</th>
+                      <th scope="col">Application Status</th>
+                      <!-- <th scope="col">Actions</th> -->
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let onlineApplication of userDetails.OnlineApplications.UtilityApplications">
+                    <tr>
+                      <td>{{onlineApplication.CreatedOn | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                      <td>{{onlineApplication.CreatedBy}}</td>
+                      <td>{{onlineApplication.ApplicationType.Description}}</td>
+                      <td>{{onlineApplication.SalesOrderNo}}</td>
+                      <td>{{onlineApplication.CurrentStageDescription}}</td>
+                      <!-- <td>
+                        <i class="fa fa-bars fa-lg text-warning bg-secondary"
+                          (click)="hideRejectReason(); viewSelectedApplication(pending)"></i>
+                      </td> -->
+                    </tr>
+                    <tr *ngIf="userDetails.OnlineApplications.PaginationInfo?.TotalPages > userDetails.OnlineApplications.PaginationInfo?.PageNumber">
+                      <th scope="row" colspan="5">
+                        <button type="button" class="btn btn-primary"
+                          *ngIf="userDetails.OnlineApplications.PaginationInfo?.TotalPages > userDetails.OnlineApplications.PaginationInfo?.PageNumber"
+                          (click)="getPendingApplications(userDetails.OnlineApplications.PaginationInfo?.PageSize, (userDetails.OnlineApplications.PaginationInfo?.PageNumber + 1))">Show
+                          More</button>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>

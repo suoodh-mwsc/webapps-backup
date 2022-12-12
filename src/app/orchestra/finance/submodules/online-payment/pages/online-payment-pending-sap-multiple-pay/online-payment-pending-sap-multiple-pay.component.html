@@ -1,0 +1,15 @@
+<div class="card card-main-3 mb-3">
+  <h3 class="card-header text-primary-900 bg-primary-200 font-weight-bold"> Online Payments | Pending Transactions SAP Multiple Accounts</h3>
+
+  <div class="card-body">
+      <!-- <app-online-payments [transactions]="transactions" [pageTopStatus]="pageTopStatus"></app-online-payments>!-->
+      <h3 *ngIf="showLoader">LOADING  
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+
+      </h3>
+      
+      <app-online-payment-sap-multiple-pay-transaction [transactions]="transactions" [pageTopStatus]="pageTopStatus"></app-online-payment-sap-multiple-pay-transaction>
+  </div>
+</div>

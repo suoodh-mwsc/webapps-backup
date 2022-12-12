@@ -1,0 +1,55 @@
+<app-facility-booking-loader *ngIf="isRunning"></app-facility-booking-loader>
+<div class="container">
+  <table class="table table-bordered">
+    <tr *ngFor="let bookingRequests of bookingRequest">
+      <td>
+        <div>
+          <span class="badge badge-secondary">Facility:</span>
+          <span class="badge badge-info">{{bookingRequests.SalesFacilities.Description}} - {{bookingRequests.SalesFacilities.Name}}</span>
+        </div>
+        <div>
+          <span class="badge badge-secondary">Booked By:</span>
+          <span class="badge badge-info">{{bookingRequests.BookingType.Name}}</span>
+        </div>
+        <div>
+          <span class="badge badge-secondary">Remarks</span>
+          <span class="badge badge-info">{{bookingRequests.Remarks}}</span>
+        </div>
+      </td>
+
+      <td>
+        <div>
+          <span class="badge badge-secondary">Taken From:</span>
+          <span class="badge badge-info">{{bookingRequests.TakenFrom | date: 'dd MMM yyyy HH:mm'}}</span>
+        </div>
+        <div>
+          <span class="badge badge-secondary">Taken To:</span>
+          <span class="badge badge-info">{{bookingRequests.TakenTo | date: 'dd MMM yyyy HH:mm'}}</span>
+        </div>
+        <div>
+          <span class="badge badge-secondary">Requested By:</span>
+          <span class="badge badge-info">{{bookingRequests.RequestedBy}}</span>
+        </div>
+      </td>
+      <td>
+        <div>
+          <span class="badge badge-secondary">Customer Type:</span>
+          <span class="badge badge-info">{{bookingRequests.SalesCustomerType.Name}}</span>
+        </div>
+        <div>
+          <span class="badge badge-secondary">Event:</span>
+          <span class="badge badge-info">{{bookingRequests.SalesReason.Name}}</span>
+        </div>
+        <div>
+          <span class="badge badge-secondary">Requested On:</span>
+          <span class="badge badge-info">{{bookingRequests.RequestedOn | date: 'dd MMM yyyy HH:mm'}}</span>
+        </div>
+      </td>
+
+    </tr>
+  </table>
+
+  <div class="alert alert-dismissible alert-info" *ngIf="bookingRequest && bookingRequest.length == 0">
+    There are no booking Request.
+  </div>
+</div>

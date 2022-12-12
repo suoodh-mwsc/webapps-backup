@@ -1,0 +1,681 @@
+<!-- Pending Applications | List Pending Application -->
+<section>
+  <!-- <div class="card sm-12" *ngIf="pendingApplications && !selectedApplication"> -->
+  <div class="card card-main-1 sm-12" *ngIf="showPendingList && !showSelectedApplication">
+    <div class="card-header text-primary-500 bg-primary-100 font-weight-bold">
+      <div class="row">
+        <div class="col-sm-6">
+          Pending Applications
+        </div>
+        <div class="col-sm-6">
+          <div class="btn-custom">
+            <a class="btn-custom" (click)="reloadPendingApplications()"><i
+                class="fa fa-refresh fa-lg fa-pull-right fa-border" aria-hidden="true"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="alert alert-dismissible alert-info" *ngIf="pendingApplications?.length < 1">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Information !</strong> No Pending Application...
+      </div>
+
+      <app-online-application-loader *ngIf="showLoader"></app-online-application-loader>
+
+      <table class="table table-hover" id="accordion" *ngIf="pendingApplications?.length > 0">
+        <thead>
+          <tr class="text-primary-600 bg-primary-100">
+            <th scope="col">Created On</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Application Type</th>
+            <th scope="col">Sales Order No</th>
+            <th scope="col">Application Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pending of pendingApplications; let p = index">
+            <td>{{pending.CreatedOn | date: 'dd/MM/yyyy hh:mm a'}}</td>
+            <td>{{pending.CreatedBy}}</td>
+            <td>{{pending.ApplicationType.Description}}</td>
+            <td>{{pending.SalesOrderNo}}</td>
+            <td>{{pending.CurrentStageDescription}}</td>
+            <td>
+              <i class="fa fa-bars fa-lg text-warning bg-secondary"
+                (click)="hideRejectReason(); viewSelectedApplication(pending)"></i>
+            </td>
+          </tr>
+          <!-- <tr>
+            <th scope="row" colspan="6">
+              <button type="button" class="btn btn-primary"
+                *ngIf="pendingApplicationsPaginationInfo.TotalPages > pendingApplicationsPaginationInfo.PageNumber"
+                (click)="getPendingApplications(pendingApplicationsPaginationInfo.PageSize, (pendingApplicationsPaginationInfo.PageNumber + 1))">Show
+                More</button>
+            </th>
+          </tr> -->
+        </tbody>
+      </table>
+
+      <div class="row"
+        *ngIf="pendingApplicationsPaginationInfo?.TotalPages > pendingApplicationsPaginationInfo?.PageNumber">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-primary"
+            (click)="getPendingApplications(pendingApplicationsPaginationInfo.PageSize, (pendingApplicationsPaginationInfo.PageNumber + 1))">Show
+            More</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Pending Applications | Select Application -->
+<section>
+  <!-- <div *ngIf="pendingApplications && (!selectedApplication | json) != '{}'"> -->
+  <div *ngIf="!showPendingList && showSelectedApplication">
+    <div class="row" style="padding-bottom: 7px;">
+      <div class="col-sm-3">
+        <button type="button" class="btn btn-primary" (click)="viewPendingApplicationList()"><i
+            class="fa fa-chevron-circle-left" aria-hidden="true"></i> Go Back</button>
+      </div>
+      <div class="col-sm-9">
+      </div>
+    </div>
+
+    <div class="card card card-main-2 sm-12">
+      <div class="card-header text-primary-500 bg-primary-100 font-weight-bold">Pending Application Details</div>
+      <div class="card-body">
+
+        <h3 class="application-title-main-1">{{selectedApplication.ApplicationType.Description}}</h3>
+
+        <!-- Application Details -->
+        <div class="row application-fieldset bg-secondary">
+          <h6 class="application-legend"> Application Details</h6>
+          <div class="col-sm-12">
+            <div class="row">
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Contact Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.ContactName}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Contact Number
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.ContactNumber}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Status
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.CurrentStageDescription}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Created By
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.CreatedBy}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Created On
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.CreatedOn  | date: 'dd/MM/yyyy hh:mm a'}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Sales Order No
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.SalesOrderNo}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Remarks
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.MWSCRemarks}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Owner Details -->
+        <div class="row application-fieldset bg-secondary"
+          *ngIf="selectedApplication.OwnerDetails || selectedApplication.OwnerDetails?.length > 0">
+          <h6 class="application-legend"> Owner Details</h6>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Secondary Contact
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.SecondaryContactNo}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Identification Details
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.IdentificationDetails}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Business Partner
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.BusinessPartnerId}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-12">
+                <h5 class="application-subtitle-1">Permenant Address</h5>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    House Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.PermenantAddress.Name}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Street Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.PermenantAddress.Street}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Premise
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.PermenantAddress.Premise}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Ward
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.PermenantAddress.Ward}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    City
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.PermenantAddress.City}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Postal Code
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.OwnerDetails.PermenantAddress.PostalCode}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Connection Details -->
+        <div class="row application-fieldset bg-secondary"
+          *ngIf="selectedApplication.ConnectionDetails && selectedApplication.ConnectionDetails?.length > 0">
+          <h6 class="application-legend"> Connection Details</h6>
+          <div class="col-sm-12">
+            <div class="row">
+
+              <div class="col-sm-12 list-group-item list-group-item-action flex-column align-items-start"
+                style="margin-top: 10px;">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <th>AccountNo</th>
+                    <th>MeterNo</th>
+                    <th>Address</th>
+                  </thead>
+                  <tr *ngFor="let connectionDetail of selectedApplication.ConnectionDetails">
+                    <td>{{connectionDetail.AccountNo}}</td>
+                    <td>{{connectionDetail.MeterNo}}</td>
+                    <td>{{connectionDetail.Address}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Connection Details -->
+        <div class="row application-fieldset bg-secondary"
+          *ngIf="selectedApplication.NewConnectionDetails || selectedApplication.NewConnectionDetails?.length > 0">
+          <h6 class="application-legend"> New Connection Details</h6>
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Service Category
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.ServiceCategoryDescription}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-12" style="margin-top:14px;">
+                <h5 class="application-subtitle-1">Service Required Location</h5>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    House Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.ServiceRequiredLocation.Name}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Street Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.ServiceRequiredLocation.Street}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Premise
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.ServiceRequiredLocation.Premise}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Ward
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.ServiceRequiredLocation.Ward}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    City
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.ServiceRequiredLocation.City}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    PostalCode
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.ServiceRequiredLocation.PostalCode}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-12" style="margin-top:14px;">
+                <h5 class="application-subtitle-1">Billing Address</h5>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    House Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.BillingAddress.Name}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Street Name
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.BillingAddress.Street}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Premise
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.BillingAddress.Premise}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Ward
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.BillingAddress.Ward}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    City
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.BillingAddress.City}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="row">
+                  <div class="col-sm-12 application-label">
+                    Postal Code
+                  </div>
+                  <div class="col-sm-12 application-text">
+                    {{selectedApplication.NewConnectionDetails.BillingAddress.PostalCode}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents Details -->
+        <div class="row application-fieldset bg-secondary"
+          *ngIf="selectedApplication.Documents && selectedApplication.Documents?.length > 0">
+          <h6 class="application-legend"> Documents Details</h6>
+          <div class="col-sm-12" style="padding-left:0px; padding-right:0px;"
+            *ngIf="selectedApplication.Documents?.length > 0">
+            <div class="flex-container application-documents-flex-container">
+              <div *ngFor="let document of selectedApplication.Documents">
+                <div class="list-group-item application-documents-list-group-item">
+                  <a class="col-sm-2" [href]="document.SafeFile" download="{{ document.File.FileName}}"
+                    title="{{document.File.FileName}}" style="margin:0px; padding:0px;">
+                    <div class="row" style="margin:0px; padding:0px;">
+                      <div class="col-sm-12 application-documents-download-icon">
+                        <i class="fa fa-file-pdf-o fa-3x text-secondary" aria-hidden="true"></i>
+                      </div>
+                      <div class="col-sm-12 application-documents-download-filename text-truncate">
+                        {{document.File.FileName}}
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col-sm-12" style="padding-left:0px; padding-right:0px;"
+            *ngIf="selectedApplication.Documents?.length > 0">
+            <div class="row" style="margin:0px; padding:0px;" *ngFor="let document of selectedApplication.Documents">
+              <div class="col-sm-12">
+                <div class="list-group-item">
+                  <img [src]="data:application/pdf;base64, 'https://yoda-dev-01.mwsc.com.mv/{{document.File.File}}'">
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+
+        <!-- <div class="list-group-item application-documents-list-group-item">
+              <a [href]="document.SafeFile" download="{{ document.File.FileName}}">
+                <i class="fa fa-file-pdf-o text-danger" aria-hidden="true" *ngIf="'document.File.FileType.Title'.search('pdf')" ></i> 
+                <i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i> {{document.File.FileName}}
+                * ({{document.File.FileType.Title}})
+              </a>
+              <object data="data:application/pdf;base64, your_base64_data" type="application/pdf">
+                      <iframe src="https://docs.google.com/viewer?&embedded=true"></iframe>
+                    </object>
+            </div> -->
+
+        <div class="row application-fieldset bg-secondary">
+          <h6 class="application-legend-button"> <button type="button" class="btn btn-success"
+              [disabled]="showApprove || selectedApplication.CurrentStageDescription ==='Completed' || selectedApplication.CurrentStageDescription ==='Incomplete'"
+              (click)="showApproveSalesOrderNo(selectedApplication)"><i class="fa fa-check-circle"
+                aria-hidden="true"></i> Approve</button>
+            <button type="button" class="btn btn-warning"
+              [disabled]="showReject || selectedApplication.CurrentStageDescription ==='Completed' || selectedApplication.CurrentStageDescription ==='Incomplete'"
+              (click)="showRejectReason(selectedApplication)"><i class="fa fa-times-circle" aria-hidden="true"></i>
+              Add Remark - Incomplete</button>
+          </h6>
+
+          <!-- Approve Model -->
+          <div class="col-sm-12" *ngIf="showApprove">
+            <div class="row">
+              <div class="col-sm-12">
+                <h5 class="application-subtitle-2">Approve & Assign Sales Order</h5>
+              </div>
+              <div class="col-sm-12 list-group-item list-group-item-action flex-column align-items-start">
+                <div class="alert alert-dismissible alert-info" style="margin-top: 5px;">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <strong>Heads up!</strong> <a class="alert-link">Please give Order Number for this request</a>, and
+                  Confirm
+                </div>
+                <form>
+                  <div class="form-group row">
+                    <div class="col-sm-4">
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Sales Order No</span>
+                        </div>
+                        <input type="number" class="form-control" [(ngModel)]="updateOnlineApplication.SalesOrderNo"
+                          name="updateOnlineApplicationSalesOrderNo" id="updateOnlineApplicationSalesOrderNo"
+                          aria-label="With textarea">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <button type="button" class="btn btn-success" [disabled]="!updateOnlineApplication.SalesOrderNo"
+                        (click)="approve(selectedApplication)"><i class="fa fa-times-circle" aria-hidden="true"></i>
+                        Update Sales Order No</button>
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reject Model -->
+          <div class="col-sm-12" *ngIf="showReject">
+            <div class="row">
+              <div class="col-sm-12">
+                <h5 class="application-subtitle-2">Reject & Update Remarks</h5>
+              </div>
+              <div class="col-sm-12 list-group-item application-list-group-item flex-column align-items-start">
+                <div class="alert alert-dismissible alert-warning" style="margin-top: 5px;">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <strong>Heads up!</strong> <a class="alert-link">Please State the Reason to Reject</a>, and Confirm
+                </div>
+
+                <form>
+                  <div class="form-group row">
+                    <div class="col-sm-12" *ngIf="inCompleteReasons">
+                      <div class="form-group row">
+                        <div class="col-sm-12">
+                          <textarea class="form-control" [(ngModel)]="selectedApplication.MWSCRemarks" rows="5"
+                            name="reason"></textarea>
+                        </div>
+                        <!-- <div class="col-sm-10">
+                          <select [(ngModel)]="applicationMWSCRemarks" class="hideLabel form-control"
+                            id="applicationMWSCRemarks" name="applicationMWSCRemarks">
+
+                            <option *ngFor="let inCompleteReason of inCompleteReasons" [ngValue]="inCompleteReason">
+                              {{inCompleteReason.UserFriendlyStatus}} </option>
+                          </select>
+                        </div>
+                        <div class="col-sm-2">
+                          <button type="button" class="btn btn-success float-right" [disabled]="!applicationMWSCRemarks"
+                            (click)="addToRemarks(selectedApplication, applicationMWSCRemarks)"><i
+                              class="fa fa-times-circle" aria-hidden="true"></i> Add to Remarks</button>
+                        </div> -->
+                      </div>
+                    </div>
+                    <!-- <div class="col-sm-12" style="padding-left:15px; padding-right:15px;"
+                      *ngIf="updateOnlineApplicationReason?.length > 0">
+                      <div class="flex-container application-reason-flex-container">
+                        <div *ngFor="let reason of updateOnlineApplicationReason">
+                          <div class="list-group-item text-danger application-reason-list-group-item">
+                            {{reason.UserFriendlyStatus}}
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="col-sm-12" style="margin-top:10px;">
+                      <button type="button" class="btn btn-warning" (click)="remarks(selectedApplication)"><i
+                          class="fa fa-times-circle" aria-hidden="true"></i>
+                        Update Remarks</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- viewOnlineApplicationModal -->
+<!-- <div bsModal #viewOnlineApplicationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+  aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Reject Application</h4>
+        <button type="button" class="close pull-right" (click)="viewOnlineApplicationModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="updateOnlineApplication">
+        <form>
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Application Status</label>
+            <div class="col-sm-7">
+              <input type="date" class="form-control" [(ngModel)]="updateOnlineApplication.InCompleteReason"
+                name="updateOnlineApplicationInCompleteReason" id="updateOnlineApplicationInCompleteReason" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Reason for Reject</label>
+            <div class="col-sm-7">
+              <input type="date" class="form-control" [(ngModel)]="updateOnlineApplication.InCompleteReason"
+                name="updateOnlineApplicationInCompleteReason" id="updateOnlineApplicationInCompleteReason" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Reason for Reject</label>
+            <div class="col-sm-7">
+              <input type="date" class="form-control" [(ngModel)]="updateOnlineApplication.InCompleteReason"
+                name="updateOnlineApplicationInCompleteReason" id="updateOnlineApplicationInCompleteReason" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Reason for Reject</label>
+            <div class="col-sm-7">
+              <input type="date" class="form-control" [(ngModel)]="updateOnlineApplication.InCompleteReason"
+                name="updateOnlineApplicationInCompleteReason" id="updateOnlineApplicationInCompleteReason" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="viewOnlineApplicationModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="viewOnlineApplicationModal.hide()"
+          (click)="reject(updateOnlineApplication)">Update</button>
+      </div>
+    </div>
+  </div>
+</div> -->

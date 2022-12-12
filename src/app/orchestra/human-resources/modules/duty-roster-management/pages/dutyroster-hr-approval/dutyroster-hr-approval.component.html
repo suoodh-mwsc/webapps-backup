@@ -1,0 +1,183 @@
+<script>
+  // Refresh Table
+  var $table = $('#table'),
+    $button = $('#button');
+  $(function () {
+    $button.click(function () {
+      $table.bootstrapTable('refresh');
+    });
+  });
+</script>
+
+<div class="card card-tabContent-02" *ngIf="yearList && !weekNumbersList">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2 id="cardTitle">Manage WeeklyShift</h2>
+      </div>
+      <div class="col-sm-4">
+        <div class="float-right custom-button-div">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-3" *ngFor="let yearArr of yearList">
+        <div class="card card-tabContent-03">
+          <div class="card-body">
+            <div class="row" style="padding-top: 0px !important; padding-bottom: 0px !important;">
+              <div class="col-sm-9" (click)="getWeekNumbers(); selectYear(yearArr.Year)">
+                <div class="row">
+                  <div class="col-sm-3 btn-card">
+                    <i class="material-icons">&#xe916;</i>
+                  </div>
+                  <div class="col-sm-9">
+                    <span class="card-title-Year">{{yearArr.Year}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12" *ngIf="!selectedWeeklyShifts && yearList.length < 1">
+        <div class="alert alert-dismissible alert-info">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Information !</strong> No ShiftWeek data found for this Shiftgroup. Please add new
+          ShiftWeek
+          ...
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="card card-tabContent-02" *ngIf="weekNumbersList">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2 id="cardTitle">Select WeeklyShift</h2>
+      </div>
+      <div class="col-sm-4">
+        <div class="float-right custom-button-div">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <!-- <div class="col-sm-2" *ngFor="let weekArr of weekNumbersList"> -->
+
+      <!-- <div class="row" style="padding-top: 0px !important; padding-bottom: 0px !important;">
+              <div class="col-sm-9" (click)="selectWeek(WeekNumber)">
+                <div class="row">
+                  <div class="col-sm-5 btn-card">
+                    <i class="material-icons">&#xe916;</i>
+                  </div>
+                  <div class="col-sm-7">
+                    <span class="card-title-Year">{{weekArr.WeekNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+
+      <!-- <table class="table table-hover weeklyShiftsTbl" id="weeklyShiftsTbl" *ngIf="weekNumbersList.length > 0"> -->
+      <table class="table table-hover weeklyShiftsTbl" id="weeklyShiftsTbl" *ngIf="weekNumbersList.length > 0">
+        <thead class="thead-light thead-custom">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Week No</th>
+            <th scope="col">ShiftGroup</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody class="tbody-custom">
+          <ng-container *ngFor="let weekArr of weekNumbersList; let r = index">
+            <tr (click)="setClickedRow(r)">
+              <th scope="row">{{r+1}}</th>
+              <td>
+                <span class="badge badge-secondary badge-weeklyShiftYear">{{this.selectedYear}}</span>
+                {{weekArr.WeekNumber}}</td>
+              <td>
+                <!-- <div class="col-sm-3" *ngFor="let weeklyShiftGroup of weeklyShiftGroups.getWeeklyShiftGroups(this.selectedWeek , this.selectedYear)">
+                  <div class="card card-tabContent-05">
+                    <div class="card-body">
+                      <div class="row" style="padding-top: 0px !important; padding-bottom: 0px !important;">
+                        <div class="row">
+                          <div class="col-sm-9">
+                            <span class="card-title-Year">{{weeklyShiftGroup.ShiftGroup.Name}}</span>
+                            <p>{{weeklyShiftGroup.ShiftGroup.Name}}</p>
+                          </div>
+                          <div class="col-sm-3 btn-card">
+                            <i class="material-icons">&#xe916;</i>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+              </td>
+
+              <td></td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="card card-tabContent-02" *ngIf="selectedYear && selectedWeek">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2 id="cardTitle">Manage WeeklyShift</h2>
+      </div>
+      <div class="col-sm-4">
+        <div class="float-right custom-button-div">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p>selected Year: {{selectedYear}}</p>
+    <p>selected Week: {{selectedWeek}}</p>
+
+    <!-- <div class="row">
+      <div class="col-sm-2" *ngFor="let weekArr of weekNumbersList">
+        <div class="card card-tabContent-04">
+          <div class="card-body">
+            <div class="row" style="padding-top: 0px !important; padding-bottom: 0px !important;">
+              <div class="col-sm-9" (click)="selectWeek(WeekNumber)">
+                <div class="row">
+                  <div class="col-sm-3 btn-card">
+                    <i class="material-icons">&#xe916;</i>
+                  </div>
+                  <div class="col-sm-9">
+                    <span class="card-title-Year">{{weekArr.WeekNumber}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12" *ngIf="!selectedWeeklyShifts && yearList.length < 1">
+        <div class="alert alert-dismissible alert-info">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Information !</strong> No ShiftWeek data found for this Shiftgroup. Please add new
+          ShiftWeek
+          ...
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

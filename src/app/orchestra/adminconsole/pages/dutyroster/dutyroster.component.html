@@ -1,0 +1,479 @@
+<script>
+  // Refresh Table
+  var $table = $('#table'),
+    $button = $('#button');
+  $(function () {
+    $button.click(function () {
+      $table.bootstrapTable('refresh');
+    });
+  });
+</script>
+
+<div class="card card-tabContent-02" div *ngIf="!selectedShiftGroup">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2 id="cardTitle">System Admin Dashboard | ShiftGroups</h2>
+      </div>
+      <div class="col-sm-4">
+        <div class="float-right custom-button-div">
+          <!-- <a class="add" title="Add" (click)="addShiftGroupModal.show()">
+              <i class="material-icons">&#xe147;</i>
+            </a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-3" *ngFor="let shiftGroup of shiftGroups">
+        <div class="card" [ngClass]="{'card-tabContent-02-Active': !shiftGroup.IsDeleted, 'card-tabContent-02-InActive': shiftGroup.IsDeleted}">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-9" (click)="selectShiftGroup(shiftGroup)">
+                <h6 class="card-title">{{shiftGroup.Name}}</h6>
+              </div>
+              <div class="col-sm-3">
+                <div class="float-right custom-button-div">
+                  <a class="delete-data" title="Delete" *ngIf="!shiftGroup.IsDeleted" (click)="deleteShiftGroups(shiftGroup)">
+                    <i class="material-icons">&#xe92b;</i>
+                  </a>
+                  <a class="restore-data" title="Restore" *ngIf="shiftGroup.IsDeleted" (click)="restoreShiftGroups(shiftGroup)">
+                    <i class="material-icons">&#xe929;</i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3">
+        <button type="btn btn-link" title="(Select New ShiftGroup)" class="btn btn-info float-left btn-gotoback" *ngIf="shiftGroupsPaginationInfo.TotalPages > shiftGroupsPaginationInfo.PageNumber"
+          (click)="getAllShiftGroups(shiftGroupsPaginationInfo.PageSize, (shiftGroupsPaginationInfo.PageNumber + 1))">
+          Show More <i class="material-icons" style="vertical-align: middle !important;">&#xe5cc;</i></button>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="card-footer">
+    </div> -->
+</div>
+
+
+
+
+<div class="card card-tabContent-02" div *ngIf="selectedShiftGroup">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2 id="cardTitle">System Admin Dashboard | Manage ShiftGroup</h2>
+      </div>
+      <div class="col-sm-4">
+        <div class="float-right custom-button-div">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <button type="button" title="(Select New ShiftGroup)" class="btn btn-info float-left btn-gotoback" (click)="unSelectShiftGroup()">
+          <i class="material-icons" style="vertical-align: middle !important; padding-left: 0px !important; margin-left: 0px !important;">&#xe5cb;</i>
+          Go Back </button>
+      </div>
+      <div class="col-sm-12">
+        <h2 class="text-muted" id="tabTitle"><span class="text-muted">Shift Group:</span> {{selectedShiftGroup.Name}}</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="nav-item">
+            <a class="nav-link active" href="#shiftSupervisors" aria-controls="shiftSupervisors" role="tab" data-toggle="tab"
+              (click)="selectActive('shiftSupervisors')">Shift
+              Supervisors</a>
+          </li>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link" href="#shiftEmployees" aria-controls="shiftEmployees" role="tab" data-toggle="tab"
+              (click)="selectActive('shiftEmployees')">Shift
+              Employees</a>
+          </li>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link" href="#weeklyShifts" aria-controls="weeklyShifts" role="tab" data-toggle="tab" (click)="initializeWeeklyShiftsTab(); selectActive('weeklyShifts')">Weekly
+              Shifts</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane tab-pane-custom fade" id="shiftGroups">
+            <!-- Start-TabContentHere -->
+            <div class="card card-tabContent-01">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-sm-8">
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                      <a class="add" title="Add" (click)="addShiftGroupModal.show()">
+                        <i class="material-icons">&#xe147;</i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+              </div>
+            </div>
+            <!-- End-TabContentHere -->
+          </div>
+          <div role="tabpanel" class="tab-pane tab-pane-custom fade" id="weeklyShifts" [ngClass]="{ 'active':selectedTab=='weeklyShifts'}">
+            <!-- Start-TabContentHere -->
+            <div class="card card-tabContent-02" *ngIf="!selectedWeeklyShifts && yearList">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <h2 id="cardTitle">Manage WeeklyShift</h2>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                      <a class="add" title="Add" (click)="addWeeklyShiftsModal.show()">
+                        <i class="material-icons">&#xe147;</i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3" *ngFor="let year of yearList">
+                    <div class="card card-tabContent-03">
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-sm-9" (click)="getWeeklyShiftsForYear(year)">
+                            <div class="row">
+                              <div class="col-sm-3 btn-card">
+                                <i class="material-icons">&#xe916;</i>
+                              </div>
+                              <div class="col-sm-9">
+                                <span class="card-title-Year">{{year}}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12" *ngIf="!selectedWeeklyShifts && yearList.length < 1">
+                    <div class="alert alert-dismissible alert-info">
+                      <button type="button" class="close" data-dismiss="alert">&times;</button>
+                      <strong>Information !</strong> No ShiftWeek data found for this Shiftgroup. Please add new
+                      ShiftWeek
+                      ...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card card-tabContent-01" *ngIf="selectedWeeklyShifts">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <h2 id="cardTitle">Manage WeeklyShift</h2>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <!-- Start Body -->
+                <div>
+                  <div class="alert alert-dismissible alert-info" *ngIf="selectedWeeklyShifts < 1">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Information !</strong> No ShiftWeek data found for this Shiftgroup. Please add new
+                    ShiftWeek
+                    ...
+                  </div>
+                  <table class="table table-hover weeklyShiftsTbl" id="weeklyShiftsTbl" *ngIf="selectedWeeklyShifts.length > 0">
+                    <thead class="thead-light thead-custom">
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Week No</th>
+                        <th scope="col">Starts On</th>
+                        <th scope="col">Ends On</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">ShiftGroup Id</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="tbody-custom">
+                      <ng-container *ngFor="let weeklyShift of selectedWeeklyShifts; let r = index">
+                        <tr (click)="setClickedRow(r)">
+                          <th scope="row">{{weeklyShift.Id}}</th>
+                          <td><span class="badge badge-secondary badge-weeklyShiftYear">{{weeklyShift.Year}}</span>
+                            {{weeklyShift.WeekNumber}}</td>
+                          <td>{{weeklyShift.StartsOn | date: 'dd MMM yyyy'}}</td>
+                          <td>{{weeklyShift.EndsOn | date: 'dd MMM yyyy'}}</td>
+                          <td>{{weeklyShift.StatusText}}</td>
+                          <td>{{weeklyShift.ShiftGroup_Id}}</td>
+                          <td>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- End Body -->
+              </div>
+              <!-- <div class="card-footer" *ngIf="!weeklyShiftsPaginationInfo.ItemCount > 0 || !weeklyShiftsPaginationInfo.ItemCount == '0'">
+                        <ng-pagination [position]="'left'" [pageSize]="weeklyShiftsPaginationInfo.PageSize" [itemsCount]="weeklyShiftsPaginationInfo.ItemCount"
+                          (getPageData)="getPageData($event)"></ng-pagination>
+                      </div> -->
+            </div>
+            <!-- End-TabContentHere -->
+          </div>
+
+          <div role="tabpanel" class="tab-pane tab-pane-custom fade show" id="shiftSupervisors" [ngClass]="{ 'active':selectedTab=='shiftSupervisors'}">
+            <!-- Start-TabContentHere -->
+            <div class="card card-tabContent-01">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <h2 id="cardTitle">Manage Shift Supervisors</h2>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                      <a class="add" title="Add" (click)="addShiftSupervisorsModal.show()">
+                        <i class="material-icons">&#xe147;</i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <!-- Start Body -->
+                <div>
+                  <table class="table table-hover shiftSupervisorsTbl" id="shiftSupervisorsTbl">
+                    <thead class="thead-light  thead-custom">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="tbody-custom">
+                      <tr *ngFor="let shiftsSupervisor of selectedShiftGroup.ShiftSupervisors; let i = index;" class="{{shiftsSupervisor.IsRemoved === true? 'text-danger': ''}}">
+                        <th scope="row">{{i+1}}</th>
+                        <td><span class="badge badge-secondary badge-employeeId">{{shiftsSupervisor.EmployeeId}}</span>
+                          {{shiftsSupervisor.Name}}</td>
+                        <td>
+                          <a class="restore-table" title="Restore" *ngIf="shiftsSupervisor.IsRemoved" (click)="restoreShiftsSupervisors(shiftsSupervisor)"><i
+                              class="material-icons">&#xe929;</i></a>
+                          <a class="delete-table" title="Delete" *ngIf="!shiftsSupervisor.IsRemoved" (click)="deleteShiftsSupervisors(shiftsSupervisor)"><i
+                              class="material-icons">&#xe92b;</i></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- End Body -->
+              </div>
+            </div>
+            <!-- End-TabContentHere -->
+          </div>
+
+          <div role="tabpanel" class="tab-pane tab-pane-custom fade" id="shiftEmployees" [ngClass]="{ 'active':selectedTab=='shiftEmployees'}">
+            <!-- Start-TabContentHere -->
+            <div class="card card-tabContent-01">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <h2 id="cardTitle">Manage Shift Employee</h2>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="float-right custom-button-div">
+                      <a class="add" title="Add" (click)="addShiftEmployeesModal.show()">
+                        <i class="material-icons">&#xe147;</i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <!-- Start Body -->
+                <div>
+                  <table class="table table-hover shiftEmployeesTbl" id="shiftEmployeesTbl">
+                    <thead class="thead-light  thead-custom">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="tbody-custom">
+                      <tr *ngFor="let shiftEmployee of selectedShiftGroup.ShiftEmployees; let j = index;" class="{{shiftEmployee.IsRemoved === true? 'text-danger': ''}}">
+                        <th scope="row">{{j+1}}</th>
+                        <td><span class="badge badge-secondary badge-employeeId">{{shiftEmployee.EmployeeId}}</span>
+                          {{shiftEmployee.Name}}</td>
+                        <td>
+                          <a class="restore-table" title="Restore" *ngIf="shiftEmployee.IsRemoved" (click)="restoreShiftEmployees(shiftEmployee)"><i
+                              class="material-icons">&#xe929;</i></a>
+                          <a class="delete-table" title="Delete" *ngIf="!shiftEmployee.IsRemoved" (click)="deleteShiftEmployees(shiftEmployee)"><i
+                              class="material-icons">&#xe92b;</i></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- End Body -->
+              </div>
+            </div>
+            <!-- End-TabContentHere -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- addShiftGroupModal -->
+<div bsModal #addShiftGroupModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add NewShiftGroups</h5>
+        <button type="button" class="close pull-right" (click)="addShiftGroupModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 form-control-label">Name</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" [(ngModel)]="newShiftGroup.Name" name="newShiftGroupName" id="newShiftGroupName"
+                (keydown)="onKeydownAddShiftGroup($event)" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addShiftGroupModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addShiftGroupModal.hide()" (click)="addNewShiftGroups()">Add
+          New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- addShiftSupervisorsModal -->
+<div bsModal #addShiftSupervisorsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Shift Supervisors</h5>
+        <button type="button" class="close pull-right" (click)="addShiftSupervisorsModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 form-control-label">Employee ID</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" [(ngModel)]="newShiftSupervisor.EmployeeId" name="newShiftSupervisorEmployeeId"
+                id="newShiftSupervisorEmployeeId" (keydown)="onKeydownAddShiftsSupervisor($event)" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addShiftSupervisorsModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addShiftSupervisorsModal.hide()" (click)="addNewShiftsSupervisor()">Add
+          New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- addShiftEmployeesModal -->
+<div bsModal #addShiftEmployeesModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-sizes-name1" class="modal-title pull-left">Add New Shift Supervisors</h5>
+        <button type="button" class="close pull-right" (click)="addShiftEmployeesModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputName" class="col-sm-3 form-control-label">Employee ID</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" [(ngModel)]="newShiftEmployees.EmployeeId" name="newShiftEmployeesEmployeeId"
+                id="newShiftEmployeesEmployeeId" (keydown)="onKeydownAddShiftEmployee($event)" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addShiftEmployeesModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addShiftEmployeesModal.hide()" (click)="addNewShiftEmployee()">Add
+          New</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- addWeeklyShiftsModal -->
+<div bsModal #addWeeklyShiftsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Add New Weekly Shift</h4>
+        <button type="button" class="close pull-right" (click)="addWeeklyShiftsModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="inputYear" class="col-sm-3 form-control-label">Year</label>
+            <div class="col-sm-7">
+              <select [(ngModel)]="newWeeklyShift.Year" #Id="ngModel" class="hideLabel form-control" id="newWeeklyShiftYear"
+                name="newWeeklyShiftYear" (keydown)="onKeydownAddWeeklyShift($event)">
+                <option [ngValue]="weeklyShiftYear.Year" *ngFor="let weeklyShiftYear of weeklyShiftYears">
+                  {{weeklyShiftYear.Year}}</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="addWeeklyShiftsModal.hide()">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="addWeeklyShiftsModal.hide()" (click)="addNewWeeklyShifts()">Add
+          New</button>
+      </div>
+    </div>
+  </div>
+</div>

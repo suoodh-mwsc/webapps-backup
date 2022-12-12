@@ -1,0 +1,27 @@
+<!-- <div class="d-flex justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div> -->
+
+<div class="card" *ngIf="!isLoaded">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-sm-8">
+        <h2 id="cardTitle">Loading ...</h2>
+      </div>
+      <div class="col-sm-4">
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="d-flex justify-content-center">
+          <div class="fa fa-spinner fa-spin"></div>
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

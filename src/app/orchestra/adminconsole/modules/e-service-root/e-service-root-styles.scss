@@ -1,0 +1,387 @@
+// @import "../../assets/bootswatch/yeti/yeti-variables.scss";
+// @import "../../assets/bootswatch/yeti/yeti-bootstrap.css";
+// @import "../../assets/bootswatch/yeti/yeti-bootstrap.min.css";
+// @import "../../assets/bootswatch/yeti/bootswatch";
+
+// @font-face {
+//   font-family: lato;
+//   src: url(../../assets/fonts/Lato.otf) format("opentype");
+// }
+
+$bg-primary-50: #EBF7FC;
+$bg-primary-100: #BCE2EF;
+$bg-primary-200: #8DCCE2;
+$bg-primary-300: #5EB7D4;
+$bg-primary-400: #2FA1C7;
+$bg-primary-500: #008CBA;
+$bg-primary-600: #0080A9;
+$bg-primary-700: #017399;
+$bg-primary-800: #016788;
+$bg-primary-900: #015A77;
+
+$bg-primary-1100: #0B79A0;
+$bg-primary-1200: #166585;
+$bg-primary-1300: #21526B;
+$bg-primary-1400: #2C3E50;
+
+.bg-primary-50 {
+    background-color: $bg-primary-50 !important;
+}
+
+.bg-primary-100 {
+    background-color: $bg-primary-100 !important;
+}
+
+.bg-primary-200 {
+    background-color: $bg-primary-200 !important;
+}
+
+.bg-primary-300 {
+    background-color: $bg-primary-300 !important;
+}
+
+.bg-primary-400 {
+    background-color: $bg-primary-400 !important;
+}
+
+.bg-primary-500 {
+    background-color: $bg-primary-500 !important;
+}
+
+.bg-primary-600 {
+    background-color: $bg-primary-600 !important;
+}
+
+.bg-primary-700 {
+    background-color: $bg-primary-700 !important;
+}
+
+.bg-primary-800 {
+    background-color: $bg-primary-800 !important;
+}
+
+.bg-primary-900 {
+    background-color: $bg-primary-900 !important;
+}
+
+.bg-primary-1100 {
+    background-color: $bg-primary-1100 !important;
+}
+
+.bg-primary-1200 {
+    background-color: $bg-primary-1200 !important;
+}
+
+.bg-primary-1300 {
+    background-color: $bg-primary-1300 !important;
+}
+
+.bg-primary-1400 {
+    background-color: $bg-primary-1400 !important;
+}
+
+.text-primary-50 {
+    color: $bg-primary-50 !important;
+}
+
+.text-primary-100 {
+    color: $bg-primary-100 !important;
+}
+
+.text-primary-200 {
+    color: $bg-primary-200 !important;
+}
+
+.text-primary-300 {
+    color: $bg-primary-300 !important;
+}
+
+.text-primary-400 {
+    color: $bg-primary-400 !important;
+}
+
+.text-primary-500 {
+    color: $bg-primary-500 !important;
+}
+
+.text-primary-600 {
+    color: $bg-primary-600 !important;
+}
+
+.text-primary-700 {
+    color: $bg-primary-700 !important;
+}
+
+.text-primary-800 {
+    color: $bg-primary-800 !important;
+}
+
+.text-primary-900 {
+    color: $bg-primary-900 !important;
+}
+
+
+// ------------------------------------------------------------
+.card.card-main-1 {
+    border-radius: 0rem !important;
+    // padding-bottom: 15px !important;
+    // padding-top: 15px !important;
+    // background-color: #17a2b8;
+    // border-color: #bee5eb;
+    // color: #ffffff;
+    // margin-bottom: 15px !important;
+    // cursor: pointer !important;
+}
+
+.card.card-main-1>.card-header {
+    font-size: 14px;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+    // margin: 0px !important;
+    border-radius: 0rem !important
+}
+
+.card.card-main-1>.card-body {
+    // overflow-y: auto;
+    // padding-top: 15px !important;
+    // padding-bottom: 15px !important;
+    // padding-right: 15px !important;
+    // padding-left: 15px !important;
+    padding: 16px !important;
+    margin: 0px !important;
+    // font-size: 55px;
+    // font-weight: bold;
+}
+
+.card.card-main-1>.card-footer {
+    // padding-top: 7px !important;
+    // padding-bottom: 3px !important;
+    // padding-right: 15px !important;
+    // padding-left: 15px !important;
+    // margin: 0px !important;
+}
+
+// .card.card-main-01:hover,
+// .card.card-main-01:focus {
+//     cursor: pointer !important;
+//     opacity: 0.7;
+//     filter: alpha(opacity=70);
+// }
+
+.card.card-main-2 {
+    border-radius: 0rem !important;
+}
+
+.card.card-main-2>.card-header {
+    font-size: 14px;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+    // margin: 0px !important;
+    border-radius: 0rem !important
+}
+
+.card.card-main-2>.card-body {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    margin: 12px !important;
+}
+
+.card.card-main-2>.card-footer {
+    // margin: 0px !important;
+}
+
+// .card.card-main-2:hover,
+// .card.card-main-2:focus {
+//     cursor: pointer !important;
+//     opacity: 0.7;
+//     filter: alpha(opacity=70);
+// }
+
+
+
+
+.card.card-main-3 {
+    border-radius: 0rem !important;
+    border-color: transparent;
+}
+
+.card.card-main-3>.card-header {
+    font-size: 14px;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+    // margin: 0px !important;
+    border-radius: 0rem !important
+}
+
+.card.card-main-3>.card-body {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    // margin: 12px !important;
+}
+
+.card.card-main-3>.card-footer {
+    // margin: 0px !important;
+}
+
+// .card.card-main-3:hover,
+// .card.card-main-3:focus {
+//     cursor: pointer !important;
+//     opacity: 0.7;
+//     filter: alpha(opacity=70);
+// }
+
+
+
+
+.card.card-main-4 {
+    border-radius: 0rem !important;
+    // border-color: transparent;
+    margin-bottom: 25px !important;
+    border-color: #c7c7c7 !important;
+}
+
+.card.card-main-4>.card-header {
+    font-size: 14px;
+    padding-top: 5px !important;
+    padding-bottom: 5x !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+    // margin: 0px !important;
+    border-radius: 0rem !important
+}
+
+.card.card-main-4>.card-body {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    // margin: 12px !important;
+}
+
+.card.card-main-4>.card-footer {
+    // margin: 0px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5x !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+    border-radius: 0rem !important;
+}
+
+// .card.card-main-4:hover,
+// .card.card-main-4:focus {
+//     cursor: pointer !important;
+//     opacity: 0.7;
+//     filter: alpha(opacity=70);
+// }
+
+
+
+
+.card.card-main-5 {
+    border-radius: 0rem !important;
+    // border-color: transparent;
+    margin-bottom: 25px !important;
+    border-color: #c7c7c7 !important;
+}
+
+.card.card-main-5>.card-header {
+    font-size: 14px;
+    padding-top: 5px !important;
+    padding-bottom: 5x !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+    // margin: 0px !important;
+    border-radius: 0rem !important
+}
+
+.card.card-main-5>.card-body {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    // margin: 12px !important;
+}
+
+.card.card-main-5>.card-footer {
+    // margin: 0px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5x !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+    border-radius: 0rem !important;
+}
+
+// .card.card-main-5:hover,
+// .card.card-main-5:focus {
+//     cursor: pointer !important;
+//     opacity: 0.7;
+//     filter: alpha(opacity=70);
+// }
+
+
+
+
+
+.card.card-application-details-1 {
+    border-radius: 0rem !important;
+}
+
+.card.card-application-details-1>.card-header {
+    font-size: 14px;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+    // margin: 0px !important;
+    border-radius: 0rem !important
+}
+
+.card.card-application-details-1>.card-body {
+    // padding: 16px !important;
+    margin: 10px !important;
+}
+
+.card.card-application-details-1>.card-footer {
+    border-radius: 0rem !important
+}
+
+
+// ------------------------------------------------------------
+
+
+
+.eServiceUsers-Name-label {
+    font-size: 14px;
+}
+
+.eServiceUsers-UserName-label {
+    font-size: 14px;
+}
+
+
+.eServiceUsers-Email-label {
+    font-size: 11px;
+}
+
+.eServiceUsers-PhoneNo-label {
+    font-size: 12px;
+}
+
+
+.eServiceNotifications-Subject-label {
+    font-size: 13px;
+}
+
+.eServiceNotifications-CreatedOn-label {
+    font-size: 10px;
+}
+
+.eServiceNotifications-Body-label {
+    font-size: 12px;
+}
+
+.eServiceNotifications-NotificationType-label {
+    font-size: 8px;
+}
